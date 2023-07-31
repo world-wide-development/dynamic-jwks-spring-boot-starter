@@ -13,9 +13,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: current
+      - name: Make gradlew executable
+        run: chmod +x gradlew
       - name: Execute Gradle test
-        run: ./gradlew clean test
+        run: gradlew clean test
