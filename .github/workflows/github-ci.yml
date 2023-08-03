@@ -1,7 +1,5 @@
 name: Vault based dynamic JWKS CI
-
 on: push
-
 jobs:
 
   validation:
