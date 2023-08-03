@@ -10,6 +10,7 @@ jobs:
       - uses: gradle/wrapper-validation-action@v1
 
   unit-test:
+    needs: validation
     runs-on: ubuntu-latest
     name: "Run JUnit tests"
     steps:
@@ -23,6 +24,7 @@ jobs:
           arguments: clean test
 
   relese:
+    needs: unit-test
     runs-on: ubuntu-latest
     name: "Build and publish"
     if: contains(github.ref, 'release')
