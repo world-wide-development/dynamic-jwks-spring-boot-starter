@@ -1,19 +1,56 @@
 name: Vault based dynamic JWKS CI
 
-on:
-  - push
+on: push
 
 jobs:
-  unit-test:
+
+  validation:
+    name: "Validation"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - uses: gradle/wrapper-validation-action@v1
+
+  unit-test:
+    runs-on: ubuntu-latest
+    name: "Run JUnit tests"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'corretto'
-      - name: Test with Gradle
-        uses: gradle/gradle-build-action@v2
+          java-version: 17
+          distribution: corretto
+      - uses: gradle/gradle-build-action@v2
         with:
-          arguments: test
+          arguments: clean test
+
+  relese:
+    runs-on: ubuntu-latest
+    name: "Build and publish"
+    if: contains(github.ref, 'release')
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: corretto
+      - uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean build publish -x test
+        env:
+          GIT_HUB_PACKAGES_TOKEN: ${{ secrets.GIT_HUB_PACKAGES_TOKEN }}
+          GIT_HUB_PACKAGES_USERNAME: ${{ secrets.GIT_HUB_PACKAGES_USERNAME }}
+
+  clenup:
+    runs-on: ubuntu-latest
+    name: "Delete all redundant data"
+    steps:
+      - uses: actions/delete-package-versions@v4
+        env:
+          GIT_HUB_PACKAGES_TOKEN: ${{ secrets.GIT_HUB_PACKAGES_TOKEN }}
+        name: "Cleanup org.development.wide.world.spring.vault-dynamic-jwks"
+        with:
+          package-type: maven
+          min-versions-to-keep: 3
+          token: "${GIT_HUB_PACKAGES_TOKEN}"
+          package-name: "org.development.wide.world.spring.vault-dynamic-jwks"

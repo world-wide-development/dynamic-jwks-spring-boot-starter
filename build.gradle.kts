@@ -3,7 +3,12 @@ plugins {
     id("org.springframework.boot") version "3.1.2" apply false
 }
 
+extra["nimbusJoseVersion"] = "9.31"
 extra["springVaultVersion"] = "3.0.2"
+
+repositories {
+    mavenCentral()
+}
 
 subprojects {
 
@@ -20,6 +25,7 @@ subprojects {
 
     dependencyManagement {
         dependencies {
+            dependency("com.nimbusds:nimbus-jose-jwt:${property("nimbusJoseVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")
         }
     }
