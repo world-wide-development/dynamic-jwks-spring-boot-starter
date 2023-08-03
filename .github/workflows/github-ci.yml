@@ -48,9 +48,11 @@ jobs:
       - uses: actions/delete-package-versions@v4
         env:
           GIT_HUB_PACKAGES_TOKEN: ${{ secrets.GIT_HUB_PACKAGES_TOKEN }}
+          GIT_HUB_PACKAGES_USERNAME: ${{ secrets.GIT_HUB_PACKAGES_USERNAME }}
         name: "Cleanup org.development.wide.world.spring.vault-dynamic-jwks"
         with:
           package-type: maven
           min-versions-to-keep: 3
           token: "${GIT_HUB_PACKAGES_TOKEN}"
+          owner: "${GIT_HUB_PACKAGES_USERNAME}"
           package-name: "org.development.wide.world.spring.vault-dynamic-jwks"
