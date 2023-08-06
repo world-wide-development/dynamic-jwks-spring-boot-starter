@@ -1,7 +1,7 @@
 package org.development.wide.world.spring.vault.jwks.data;
 
 import com.nimbusds.jose.jwk.JWKSet;
-import org.development.wide.world.spring.vault.jwks.util.X509CertificateUtils;
+import org.development.wide.world.spring.vault.jwks.util.CertificateUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.vault.support.CertificateBundle;
 import org.springframework.vault.support.Versioned;
@@ -10,7 +10,7 @@ import java.security.cert.X509Certificate;
 
 import static java.util.Optional.ofNullable;
 
-public record VaultJwkSetHolder(
+public record VaultJwkSetData(
         JWKSet jwkSet,
         X509Certificate x509Certificate,
         Versioned<CertificateBundle> versionedCertificateBundle
@@ -18,7 +18,7 @@ public record VaultJwkSetHolder(
 
     public boolean checkCertificateValidity() {
         return ofNullable(x509Certificate())
-                .map(X509CertificateUtils::checkValidity)
+                .map(CertificateUtils::checkValidity)
                 .orElse(Boolean.FALSE);
     }
 
@@ -50,8 +50,8 @@ public record VaultJwkSetHolder(
         }
 
         @NonNull
-        public VaultJwkSetHolder build() {
-            return new VaultJwkSetHolder(this.jwkSet, this.x509Certificate, this.versionedCertificateBundle);
+        public VaultJwkSetData build() {
+            return new VaultJwkSetData(this.jwkSet, this.x509Certificate, this.versionedCertificateBundle);
         }
 
     }

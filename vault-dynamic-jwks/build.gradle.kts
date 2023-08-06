@@ -18,11 +18,16 @@ tasks.javadoc {
 dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework.boot:spring-boot")
+    implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.vault:spring-vault-core")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     /* Test */
+    testImplementation("org.testcontainers:vault")
+    testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-vault-config")
 }
 
 tasks.test {

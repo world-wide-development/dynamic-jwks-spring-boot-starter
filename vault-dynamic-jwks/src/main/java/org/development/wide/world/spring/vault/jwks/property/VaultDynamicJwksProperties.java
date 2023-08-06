@@ -10,8 +10,8 @@ import java.time.Duration;
 public record VaultDynamicJwksProperties(
         @DefaultValue("pki") String pkiPath,
         @DefaultValue("false") Boolean enabled,
-        @DefaultValue("30m") Duration pkiCertificateTtl,
-        @DefaultValue("authorization.certificate") String pkiRoleName,
+        @DefaultValue("jwks") String pkiRoleName,
+        @DefaultValue("1s") Duration pkiCertificateTtl,
         @DefaultValue("authorization.certificate") String certificatePath,
         @DefaultValue("authorization.certificate") String pkiCertificateCommonName,
         @DefaultValue("vault-dynamic-jwks-spring-boot-starter") String versionedKeyValuePath

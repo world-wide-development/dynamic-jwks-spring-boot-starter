@@ -1,0 +1,5 @@
+### Spring ###
+spring:
+  cloud:
+    vault:
+      enabled: on
