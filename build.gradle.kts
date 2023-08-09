@@ -5,6 +5,7 @@ plugins {
 
 extra["nimbusJoseVersion"] = "9.31"
 extra["springVaultVersion"] = "3.0.2"
+extra["springCloudVersion"] = "2022.0.4"
 
 repositories {
     mavenCentral()
@@ -16,7 +17,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.0.3"
+    version = "0.0.4"
     group = "org.development.wide.world.spring"
 
     repositories {
@@ -27,6 +28,9 @@ subprojects {
         dependencies {
             dependency("com.nimbusds:nimbus-jose-jwt:${property("nimbusJoseVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")
+        }
+        imports {
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
         }
     }
 

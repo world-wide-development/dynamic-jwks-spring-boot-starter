@@ -12,7 +12,22 @@ jobs:
   unit-test:
     needs: validation
     runs-on: ubuntu-latest
-    name: "Run JUnit tests"
+    name: "Run Unit Tests"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: corretto
+      - uses: docker/setup-buildx-action@v2
+      - uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean test
+
+  integration-test:
+    needs: unit-test
+    runs-on: ubuntu-latest
+    name: "Run Integration Tests"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
@@ -21,12 +36,12 @@ jobs:
           distribution: corretto
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean test
+          arguments: clean integrationTest
 
-  relese:
-    needs: unit-test
+  release:
     runs-on: ubuntu-latest
-    name: "Build and publish"
+    needs: integration-test
+    name: "Build And Publish"
     if: contains(github.ref, '/release/')
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +51,7 @@ jobs:
           distribution: corretto
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean build publish -x test
+          arguments: clean build publish -x test -x integrationTest
         env:
           GIT_HUB_PACKAGES_TOKEN: ${{ secrets.GIT_HUB_PACKAGES_TOKEN }}
           GIT_HUB_PACKAGES_USERNAME: ${{ secrets.GIT_HUB_PACKAGES_USERNAME }}

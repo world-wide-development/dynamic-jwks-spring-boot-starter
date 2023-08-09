@@ -2,21 +2,45 @@ package org.development.wide.world.spring.vault.jwks.util;
 
 import org.springframework.lang.NonNull;
 
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.time.Instant;
 import java.util.Date;
 
 /**
- * A set of utilities for interacting with the x509 certificate
+ * A set of utilities for certificate interaction
  *
+ * @see KeySpec
+ * @see PrivateKey
  * @see X509Certificate
  */
-public final class X509CertificateUtils {
+public final class CertificateUtils {
 
-    private X509CertificateUtils() {
+    private CertificateUtils() {
         // Suppresses default constructor
+    }
+
+    /**
+     * Generates {@link PrivateKey} from given {@link KeySpec} according to given algorithm
+     *
+     * @param keySpec   key spec for private key generation
+     * @param algorithm algorithm of the target private key
+     * @return {@code  PrivateKey}
+     * @throws UnsupportedOperationException in case of wrong algorithm or invalid key speck
+     */
+    public static PrivateKey generatePrivateKey(final KeySpec keySpec, final String algorithm) {
+        try {
+            final KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+            return keyFactory.generatePrivate(keySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            throw new UnsupportedOperationException("Cant generate private key", e);
+        }
     }
 
     /**
