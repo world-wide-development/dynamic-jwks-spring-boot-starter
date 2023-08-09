@@ -1,0 +1,9 @@
+### Spring ###
+spring:
+  cloud:
+    vault:
+      enabled: on
+### Logging ###
+logging:
+  level:
+    org.development.wide.world: debug

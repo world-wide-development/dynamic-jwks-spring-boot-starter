@@ -6,7 +6,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.vault.VaultContainer;
 
-@Testcontainers(disabledWithoutDocker = true)
+@Testcontainers
 public abstract class BaseIntegrationTest {
 
     static final String VAULT_TOKEN = "vault-test-token";
