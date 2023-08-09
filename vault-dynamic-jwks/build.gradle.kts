@@ -30,7 +30,7 @@ testing {
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()
             testType.set(TestSuiteType.INTEGRATION_TEST)
-//            targets { all { testTask.configure { shouldRunAfter(test) } } }
+            targets { all { testTask.configure { shouldRunAfter(test) } } }
         }
     }
 }
