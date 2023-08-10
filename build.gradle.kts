@@ -17,7 +17,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.0.4"
+    version = "0.0.5"
     group = "org.development.wide.world.spring"
 
     repositories {
