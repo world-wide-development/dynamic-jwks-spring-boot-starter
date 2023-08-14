@@ -28,9 +28,9 @@ class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
     VaultDynamicJwksProperties vaultJwksProperties;
 
     @Mock
-    CertificateIssuer certificateIssuer;
-    @Mock
     KeyStoreKeeper keyStoreKeeper;
+    @Mock
+    CertificateIssuer certificateIssuer;
 
     JwksCertificateRotator certificateRotator;
 
