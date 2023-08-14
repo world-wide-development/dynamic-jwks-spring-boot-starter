@@ -7,7 +7,7 @@ import com.nimbusds.jose.proc.JWKSecurityContext;
 import com.nimbusds.jose.proc.SecurityContext;
 import core.base.BaseUnitTest;
 import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
-import org.development.wide.world.spring.vault.jwks.spi.VaultJwksCertificateRotator;
+import org.development.wide.world.spring.vault.jwks.spi.JwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class VaultDynamicJwkSetUnitTest extends BaseUnitTest {
     JWKSource<SecurityContext> jwkSource;
 
     @MockBean
-    VaultJwksCertificateRotator certificateRotator;
+    JwksCertificateRotator certificateRotator;
 
     @BeforeEach
     void setUpEach() {

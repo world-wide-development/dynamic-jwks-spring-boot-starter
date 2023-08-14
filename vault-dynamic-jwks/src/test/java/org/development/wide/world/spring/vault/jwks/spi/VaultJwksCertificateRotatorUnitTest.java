@@ -1,7 +1,8 @@
 package org.development.wide.world.spring.vault.jwks.spi;
 
 import core.base.BaseUnitTest;
-import org.development.wide.world.spring.vault.jwks.internal.DefaultVaultJwksCertificateRotator;
+import org.development.wide.world.spring.vault.jwks.internal.JwkSetConverter;
+import org.development.wide.world.spring.vault.jwks.internal.VaultJwksCertificateRotator;
 import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,12 +11,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.vault.core.VaultPkiOperations;
-import org.springframework.vault.core.VaultTemplate;
-import org.springframework.vault.core.VaultVersionedKeyValueOperations;
-import org.springframework.vault.support.CertificateBundle;
+
+import java.util.Optional;
 
 @SpringJUnitConfig({
         VaultJwksCertificateRotatorUnitTest.UnitTestConfiguration.class
@@ -23,51 +23,56 @@ import org.springframework.vault.support.CertificateBundle;
 class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
 
     @Autowired
-    VaultDynamicJwksProperties properties;
+    JwkSetConverter jwkSetConverter;
+    @Autowired
+    VaultDynamicJwksProperties vaultJwksProperties;
 
-    VaultJwksCertificateRotator certificateRotator;
+    @Mock
+    CertificateIssuer certificateIssuer;
+    @Mock
+    KeyStoreKeeper keyStoreKeeper;
 
-    @Mock
-    VaultTemplate vaultTemplate;
-    @Mock
-    VaultPkiOperations pkiOperations;
-    @Mock
-    VaultVersionedKeyValueOperations keyValueOperations;
+    JwksCertificateRotator certificateRotator;
 
     @BeforeEach
     void setUpEach() {
-        Mockito.when(vaultTemplate.opsForPki(Mockito.any()))
-                .thenReturn(pkiOperations);
-        Mockito.when(vaultTemplate.opsForVersionedKeyValue(Mockito.any()))
-                .thenReturn(keyValueOperations);
-        this.certificateRotator = new DefaultVaultJwksCertificateRotator(vaultTemplate, properties);
+        this.certificateRotator = new VaultJwksCertificateRotator(
+                keyStoreKeeper,
+                jwkSetConverter,
+                certificateIssuer,
+                vaultJwksProperties
+        );
     }
 
     @Test
     void testRotate() {
         // When
-        Mockito.when(keyValueOperations.get(Mockito.anyString(), Mockito.eq(CertificateBundle.class)))
-                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractExpiredVersionedCertificateBundle());
-        Mockito.when(pkiOperations.issueCertificate(Mockito.anyString(), Mockito.any()))
-                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractExpiredVaultCertificateResponse());
-        Mockito.when(keyValueOperations.put(Mockito.anyString(), Mockito.any()))
-                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractVersionedMetadata());
-        Mockito.when(keyValueOperations.get(Mockito.anyString(), Mockito.eq(CertificateBundle.class)))
-                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractExpiredVersionedCertificateBundle());
+        Mockito.when(keyStoreKeeper.findOne(Mockito.anyString()))
+                .thenReturn(Optional.of(VaultJwksCertificateRotatorUnitTestData.extractExpiredKeyStoreData()));
+        Mockito.when(certificateIssuer.issueOne())
+                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractExpiredCertificateBundle());
+        Mockito.when(keyStoreKeeper.saveOne(Mockito.anyString(), Mockito.any(), Mockito.any()))
+                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractExpiredKeyStoreData());
         // Then
         Assertions.assertDoesNotThrow(() -> certificateRotator.rotate());
         // Verify
-        Mockito.verify(keyValueOperations, Mockito.times(2))
-                .get(Mockito.anyString(), Mockito.eq(CertificateBundle.class));
-        Mockito.verify(pkiOperations, Mockito.times(1))
-                .issueCertificate(Mockito.anyString(), Mockito.any());
-        Mockito.verify(keyValueOperations, Mockito.times(1))
-                .put(Mockito.anyString(), Mockito.any());
+        Mockito.verify(keyStoreKeeper, Mockito.times(1))
+                .findOne(Mockito.anyString());
+        Mockito.verify(certificateIssuer, Mockito.times(1))
+                .issueOne();
+        Mockito.verify(keyStoreKeeper, Mockito.times(1))
+                .saveOne(Mockito.anyString(), Mockito.any(), Mockito.any());
     }
 
     @Configuration(proxyBeanMethods = false)
     @EnableConfigurationProperties({VaultDynamicJwksProperties.class})
     static class UnitTestConfiguration {
+
+        @Bean
+        public JwkSetConverter jwkSetConverter() {
+            return new JwkSetConverter();
+        }
+
     }
 
 }

@@ -1,11 +1,14 @@
 package org.development.wide.world.spring.vault.jwks.spi;
 
+import org.development.wide.world.spring.vault.jwks.data.KeyStoreData;
+import org.development.wide.world.spring.vault.jwks.util.KeyStoreUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.vault.support.CertificateBundle;
 import org.springframework.vault.support.VaultCertificateResponse;
 import org.springframework.vault.support.Versioned;
 import org.springframework.vault.support.Versioned.Metadata;
 
+import java.security.KeyStore;
 import java.time.Instant;
 import java.util.Collections;
 
@@ -13,6 +16,20 @@ public final class VaultJwksCertificateRotatorUnitTestData {
 
     private VaultJwksCertificateRotatorUnitTestData() {
         // Suppresses default constructor
+    }
+
+    @NonNull
+    public static KeyStoreData extractExpiredKeyStoreData() {
+        final String alias = "expired.key.store";
+        final CharSequence password = "password";
+        final CertificateBundle certificateBundle = extractExpiredCertificateBundle();
+        final KeyStore keyStore = certificateBundle.createKeyStore(alias, password);
+        return KeyStoreData.builder()
+                .privateKey(KeyStoreUtils.getPrivateKey(alias, password, keyStore))
+                .x509Certificate(certificateBundle.getX509Certificate())
+                .serialNumber(certificateBundle.getSerialNumber())
+                .version(Versioned.Version.from(1))
+                .build();
     }
 
     @NonNull
