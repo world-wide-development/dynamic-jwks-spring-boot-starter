@@ -1,58 +1,66 @@
 package core.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.development.wide.world.spring.vault.jwks.internal.DefaultVaultJwksCertificateRotator;
-import org.development.wide.world.spring.vault.jwks.internal.VaultDynamicJwkSet;
-import org.development.wide.world.spring.vault.jwks.jackson.CertificateBundleJacksonMixIn;
+import org.development.wide.world.spring.vault.jwks.internal.*;
+import org.development.wide.world.spring.vault.jwks.property.KeyStoreProperties;
 import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
-import org.development.wide.world.spring.vault.jwks.spi.VaultJwksCertificateRotator;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.development.wide.world.spring.vault.jwks.spi.CertificateIssuer;
+import org.development.wide.world.spring.vault.jwks.spi.JwksCertificateRotator;
+import org.development.wide.world.spring.vault.jwks.spi.KeyStoreKeeper;
+import org.development.wide.world.spring.vault.jwks.template.KeyStoreTemplate;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.lang.NonNull;
-import org.springframework.vault.client.RestTemplateCustomizer;
 import org.springframework.vault.core.VaultTemplate;
-import org.springframework.vault.support.CertificateBundle;
-
-import java.util.List;
 
 @TestConfiguration
-@EnableConfigurationProperties({VaultDynamicJwksProperties.class})
+@EnableConfigurationProperties({
+        KeyStoreProperties.class,
+        VaultDynamicJwksProperties.class
+})
 @SuppressWarnings({"SpringJavaInjectionPointsAutowiringInspection"})
 public class VaultJwkSetIntegrationTestConfiguration {
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-        return jacksonObjectMapperBuilder -> {
-            // Customize CertificateBundle serialization
-            jacksonObjectMapperBuilder.mixIn(CertificateBundle.class, CertificateBundleJacksonMixIn.class);
-        };
+    public JwkSetConverter jwkSetConverter() {
+        return new JwkSetConverter();
     }
 
     @Bean
-    public RestTemplateCustomizer restTemplateCustomizer(@NonNull final ObjectMapper objectMapper) {
-        return restTemplate -> {
-            final List<HttpMessageConverter<?>> messageConverters = List.of(
-                    new MappingJackson2HttpMessageConverter(objectMapper)
-            );
-            restTemplate.setMessageConverters(messageConverters);
-        };
+    public InternalKeyStore internalKeyStore(final KeyStoreProperties properties) {
+        return new InternalKeyStore(properties);
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(final VaultJwksCertificateRotator certificateRotator) {
+    public KeyStoreTemplate keyStoreTemplate(final InternalKeyStore internalKeyStore) {
+        return new KeyStoreTemplate(internalKeyStore);
+    }
+
+    @Bean
+    public CertificateIssuer certificateIssuer(final VaultTemplate vaultTemplate,
+                                               final VaultDynamicJwksProperties properties) {
+        return new VaultCertificateIssuer(vaultTemplate, properties);
+    }
+
+    @Bean
+    public KeyStoreKeeper certificateKeyStoreKeeper(final VaultTemplate vaultTemplate,
+                                                    final KeyStoreTemplate keyStoreTemplate,
+                                                    final VaultDynamicJwksProperties properties) {
+        return new VaultKeyStoreKeeper(vaultTemplate, keyStoreTemplate, properties);
+    }
+
+    @Bean
+    public JWKSource<SecurityContext> jwkSource(final JwksCertificateRotator certificateRotator) {
         return new VaultDynamicJwkSet(certificateRotator);
     }
 
     @Bean
-    public VaultJwksCertificateRotator vaultJwksCertificateRotator(@NonNull final VaultTemplate vaultTemplate,
-                                                                   @NonNull final VaultDynamicJwksProperties properties) {
-        return new DefaultVaultJwksCertificateRotator(vaultTemplate, properties);
+    public JwksCertificateRotator vaultJwksCertificateRotator(final KeyStoreKeeper keyStoreKeeper,
+                                                              final JwkSetConverter jwkSetConverter,
+                                                              final CertificateIssuer certificateIssuer,
+                                                              final VaultDynamicJwksProperties properties) {
+        return new VaultJwksCertificateRotator(keyStoreKeeper, jwkSetConverter, certificateIssuer, properties);
     }
 
 }

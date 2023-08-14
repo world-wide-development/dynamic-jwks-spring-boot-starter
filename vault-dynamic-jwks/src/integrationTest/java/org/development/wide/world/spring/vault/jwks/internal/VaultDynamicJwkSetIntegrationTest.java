@@ -7,7 +7,7 @@ import com.nimbusds.jose.proc.JWKSecurityContext;
 import com.nimbusds.jose.proc.SecurityContext;
 import core.base.BaseIntegrationTest;
 import core.config.VaultJwkSetIntegrationTestConfiguration;
-import org.development.wide.world.spring.vault.jwks.spi.VaultJwksCertificateRotator;
+import org.development.wide.world.spring.vault.jwks.spi.JwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ import java.util.List;
         JWKSource.class,
         VaultAutoConfiguration.class,
         JacksonAutoConfiguration.class,
-        VaultJwksCertificateRotator.class
+        JwksCertificateRotator.class
 })
 @Import({VaultJwkSetIntegrationTestConfiguration.class})
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-class VaultDynamicJwkSetTest extends BaseIntegrationTest {
+class VaultDynamicJwkSetIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     JWKSource<SecurityContext> jwkSource;
