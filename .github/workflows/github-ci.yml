@@ -1,4 +1,4 @@
-name: Vault based dynamic JWKS CI
+name: Vault Based Dynamic JWKS CI
 on: push
 jobs:
 
