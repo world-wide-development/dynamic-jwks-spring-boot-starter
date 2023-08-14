@@ -17,8 +17,8 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.0.8"
-    group = "org.development.wide.world.spring"
+    version = "0.0.0"
+    group = "io.github.development.wide.world.spring"
 
     repositories {
         mavenCentral()
