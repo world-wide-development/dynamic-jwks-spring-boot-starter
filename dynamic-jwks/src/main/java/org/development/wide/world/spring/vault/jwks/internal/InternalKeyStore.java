@@ -35,10 +35,6 @@ public class InternalKeyStore {
         this.alias = properties.alias();
     }
 
-    public KeyStore getKeyStore() {
-        return this.keyStore;
-    }
-
     private Key getKey() {
         try {
             return this.keyStore.getKey(this.alias, this.password);

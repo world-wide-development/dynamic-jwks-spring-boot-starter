@@ -34,6 +34,7 @@ public final class CertificateUtils {
      * @return {@code  PrivateKey}
      * @throws UnsupportedOperationException in case of wrong algorithm or invalid key speck
      */
+    @SuppressWarnings("unused")
     public static PrivateKey generatePrivateKey(final KeySpec keySpec, final String algorithm) {
         try {
             final KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
