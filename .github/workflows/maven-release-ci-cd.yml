@@ -41,7 +41,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     needs: integration-test
-#    if: contains(github.ref, '/release/')
+    if: contains(github.ref, '/release/')
     name: "Build And Publish To Maven Central"
     steps:
       - uses: actions/checkout@v3
