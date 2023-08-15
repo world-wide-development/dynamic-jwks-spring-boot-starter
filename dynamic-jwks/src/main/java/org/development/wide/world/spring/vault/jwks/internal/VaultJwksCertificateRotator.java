@@ -60,7 +60,6 @@ public class VaultJwksCertificateRotator implements JwksCertificateRotator {
                 LOGGER.debug("Certificate from Versioned KV storage is invalid and will be immediately rotated");
             }
             final Version lastVersion = keyStoreData.version();
-//            final Version nextVersion = Version.from(1);
             return rotateVersionedKeyStoreData(lastVersion);
         }).orElseGet(() -> rotateVersionedKeyStoreData(Version.unversioned()));
     }
