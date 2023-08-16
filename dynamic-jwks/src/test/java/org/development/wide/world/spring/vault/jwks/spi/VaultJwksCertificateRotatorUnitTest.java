@@ -3,7 +3,7 @@ package org.development.wide.world.spring.vault.jwks.spi;
 import core.base.BaseUnitTest;
 import org.development.wide.world.spring.vault.jwks.internal.JwkSetConverter;
 import org.development.wide.world.spring.vault.jwks.internal.VaultJwksCertificateRotator;
-import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
+import org.development.wide.world.spring.vault.jwks.property.DynamicJwksProperties;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
     @Autowired
     JwkSetConverter jwkSetConverter;
     @Autowired
-    VaultDynamicJwksProperties vaultJwksProperties;
+    DynamicJwksProperties jwksProperties;
 
     @Mock
     KeyStoreKeeper keyStoreKeeper;
@@ -39,8 +39,8 @@ class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
         this.certificateRotator = new VaultJwksCertificateRotator(
                 keyStoreKeeper,
                 jwkSetConverter,
-                certificateIssuer,
-                vaultJwksProperties
+                jwksProperties,
+                certificateIssuer
         );
     }
 
@@ -65,7 +65,7 @@ class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties({VaultDynamicJwksProperties.class})
+    @EnableConfigurationProperties({DynamicJwksProperties.class})
     static class UnitTestConfiguration {
 
         @Bean

@@ -30,7 +30,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.0.1"
+    version = "0.0.2"
     group = "io.github.world-wide-development"
 
     repositories {

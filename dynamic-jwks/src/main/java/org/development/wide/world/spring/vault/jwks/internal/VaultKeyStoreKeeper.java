@@ -2,7 +2,7 @@ package org.development.wide.world.spring.vault.jwks.internal;
 
 import org.development.wide.world.spring.vault.jwks.data.KeyStoreData;
 import org.development.wide.world.spring.vault.jwks.data.KeyStoreSource;
-import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
+import org.development.wide.world.spring.vault.jwks.property.DynamicJwksProperties;
 import org.development.wide.world.spring.vault.jwks.spi.KeyStoreKeeper;
 import org.development.wide.world.spring.vault.jwks.template.KeyStoreTemplate;
 import org.slf4j.Logger;
@@ -23,13 +23,13 @@ public class VaultKeyStoreKeeper implements KeyStoreKeeper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VaultKeyStoreKeeper.class);
 
+    private final DynamicJwksProperties properties;
     private final KeyStoreTemplate keyStoreTemplate;
-    private final VaultDynamicJwksProperties properties;
     private final VaultVersionedKeyValueOperations keyValueOperations;
 
     public VaultKeyStoreKeeper(@NonNull final VaultTemplate vaultTemplate,
-                               @NonNull final KeyStoreTemplate keyStoreTemplate,
-                               @NonNull final VaultDynamicJwksProperties properties) {
+                               @NonNull final DynamicJwksProperties properties,
+                               @NonNull final KeyStoreTemplate keyStoreTemplate) {
         this.properties = properties;
         this.keyStoreTemplate = keyStoreTemplate;
         this.keyValueOperations = vaultTemplate.opsForVersionedKeyValue(properties.versionedKeyValuePath());

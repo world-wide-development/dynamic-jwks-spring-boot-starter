@@ -1,6 +1,6 @@
 package org.development.wide.world.spring.vault.jwks.internal;
 
-import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
+import org.development.wide.world.spring.vault.jwks.property.DynamicJwksProperties;
 import org.development.wide.world.spring.vault.jwks.spi.CertificateIssuer;
 import org.springframework.lang.NonNull;
 import org.springframework.vault.core.VaultPkiOperations;
@@ -14,10 +14,10 @@ import java.util.Optional;
 public class VaultCertificateIssuer implements CertificateIssuer {
 
     private final VaultPkiOperations pkiOperations;
-    private final VaultDynamicJwksProperties properties;
+    private final DynamicJwksProperties properties;
 
     public VaultCertificateIssuer(@NonNull final VaultTemplate vaultTemplate,
-                                  @NonNull final VaultDynamicJwksProperties properties) {
+                                  @NonNull final DynamicJwksProperties properties) {
         this.properties = properties;
         this.pkiOperations = vaultTemplate.opsForPki(properties.pkiPath());
     }

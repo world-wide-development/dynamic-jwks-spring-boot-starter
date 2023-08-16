@@ -21,11 +21,11 @@ import java.util.List;
 @SpringBootTest(classes = {
         JWKSource.class,
         VaultAutoConfiguration.class,
+        JwksCertificateRotator.class,
         JacksonAutoConfiguration.class,
-        JwksCertificateRotator.class
+        VaultDynamicJwkSetIntegrationTest.class
 })
 @Import({VaultJwkSetIntegrationTestConfiguration.class})
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 class VaultDynamicJwkSetIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
@@ -36,6 +36,15 @@ class VaultDynamicJwkSetIntegrationTest extends BaseIntegrationTest {
         final JWKMatcher jwkMatcher = new JWKMatcher.Builder().build();
         final JWKSelector jwkSelector = new JWKSelector(jwkMatcher);
         final JWKSecurityContext jwkSecurityContext = new JWKSecurityContext(List.of());
+        Assertions.assertDoesNotThrow(() -> jwkSource.get(jwkSelector, jwkSecurityContext));
+    }
+
+    @Test
+    void testDoubleGet() {
+        final JWKMatcher jwkMatcher = new JWKMatcher.Builder().build();
+        final JWKSelector jwkSelector = new JWKSelector(jwkMatcher);
+        final JWKSecurityContext jwkSecurityContext = new JWKSecurityContext(List.of());
+        Assertions.assertDoesNotThrow(() -> jwkSource.get(jwkSelector, jwkSecurityContext));
         Assertions.assertDoesNotThrow(() -> jwkSource.get(jwkSelector, jwkSecurityContext));
     }
 
