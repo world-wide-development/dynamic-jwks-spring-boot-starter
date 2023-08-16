@@ -15,7 +15,7 @@ public abstract class BaseIntegrationTest {
             .withInitCommand("secrets enable pki")
             .withInitCommand("write pki/root/generate/internal common_name='root.certificate' ttl=87600h")
             .withInitCommand("write pki/roles/jwks allow_any_name=true max_ttl=72h")
-            .withInitCommand("secrets enable -path=vault-dynamic-jwks-spring-boot-starter kv-v2")
+            .withInitCommand("secrets enable -path=dynamic-jwks kv-v2")
             .withVaultToken(VAULT_TOKEN)
             .withReuse(Boolean.TRUE);
 

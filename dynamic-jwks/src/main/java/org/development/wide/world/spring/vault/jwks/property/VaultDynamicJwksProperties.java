@@ -17,8 +17,8 @@ public record VaultDynamicJwksProperties(
         @NestedConfigurationProperty
         @DefaultValue KeyStoreProperties keyStore,
         @DefaultValue("1s") Duration pkiCertificateTtl,
+        @DefaultValue("dynamic-jwks") String versionedKeyValuePath,
         @DefaultValue("authorization.certificate") String certificatePath,
-        @DefaultValue("authorization.certificate") String pkiCertificateCommonName,
-        @DefaultValue("vault-dynamic-jwks-spring-boot-starter") String versionedKeyValuePath
+        @DefaultValue("authorization.certificate") String pkiCertificateCommonName
 ) {
 }
