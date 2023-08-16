@@ -35,7 +35,7 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.vault:spring-vault-core")
     implementation("org.springframework.boot:spring-boot-starter-logging")
-    implementation("org.springframework.boot:spring-boot-configuration-processor")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     /* Unit Test */
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     /* Integration Test */

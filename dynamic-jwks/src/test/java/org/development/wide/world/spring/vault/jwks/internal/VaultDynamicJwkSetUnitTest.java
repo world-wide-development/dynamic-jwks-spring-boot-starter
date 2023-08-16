@@ -6,7 +6,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.JWKSecurityContext;
 import com.nimbusds.jose.proc.SecurityContext;
 import core.base.BaseUnitTest;
-import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
+import org.development.wide.world.spring.vault.jwks.property.DynamicJwksProperties;
 import org.development.wide.world.spring.vault.jwks.spi.JwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +51,7 @@ class VaultDynamicJwkSetUnitTest extends BaseUnitTest {
     }
 
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties({VaultDynamicJwksProperties.class})
+    @EnableConfigurationProperties({DynamicJwksProperties.class})
     static class UnitTestConfiguration {
     }
 

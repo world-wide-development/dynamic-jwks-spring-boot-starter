@@ -1,8 +1,9 @@
-package org.development.wide.world.spring.vault.jwks.spi;
+package org.development.wide.world.spring.vault.jwks.internal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.base.BaseIntegrationTest;
 import core.config.VaultJwkSetIntegrationTestConfiguration;
+import org.development.wide.world.spring.vault.jwks.spi.JwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

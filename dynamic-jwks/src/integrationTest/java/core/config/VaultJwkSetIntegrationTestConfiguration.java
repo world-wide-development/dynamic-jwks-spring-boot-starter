@@ -3,8 +3,8 @@ package core.config;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.development.wide.world.spring.vault.jwks.internal.*;
+import org.development.wide.world.spring.vault.jwks.property.DynamicJwksProperties;
 import org.development.wide.world.spring.vault.jwks.property.KeyStoreProperties;
-import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
 import org.development.wide.world.spring.vault.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.vault.jwks.spi.JwksCertificateRotator;
 import org.development.wide.world.spring.vault.jwks.spi.KeyStoreKeeper;
@@ -17,9 +17,8 @@ import org.springframework.vault.core.VaultTemplate;
 @TestConfiguration
 @EnableConfigurationProperties({
         KeyStoreProperties.class,
-        VaultDynamicJwksProperties.class
+        DynamicJwksProperties.class
 })
-@SuppressWarnings({"SpringJavaInjectionPointsAutowiringInspection"})
 public class VaultJwkSetIntegrationTestConfiguration {
 
     @Bean
@@ -39,14 +38,14 @@ public class VaultJwkSetIntegrationTestConfiguration {
 
     @Bean
     public CertificateIssuer certificateIssuer(final VaultTemplate vaultTemplate,
-                                               final VaultDynamicJwksProperties properties) {
+                                               final DynamicJwksProperties properties) {
         return new VaultCertificateIssuer(vaultTemplate, properties);
     }
 
     @Bean
     public KeyStoreKeeper certificateKeyStoreKeeper(final VaultTemplate vaultTemplate,
                                                     final KeyStoreTemplate keyStoreTemplate,
-                                                    final VaultDynamicJwksProperties properties) {
+                                                    final DynamicJwksProperties properties) {
         return new VaultKeyStoreKeeper(vaultTemplate, keyStoreTemplate, properties);
     }
 
@@ -59,7 +58,7 @@ public class VaultJwkSetIntegrationTestConfiguration {
     public JwksCertificateRotator vaultJwksCertificateRotator(final KeyStoreKeeper keyStoreKeeper,
                                                               final JwkSetConverter jwkSetConverter,
                                                               final CertificateIssuer certificateIssuer,
-                                                              final VaultDynamicJwksProperties properties) {
+                                                              final DynamicJwksProperties properties) {
         return new VaultJwksCertificateRotator(keyStoreKeeper, jwkSetConverter, certificateIssuer, properties);
     }
 

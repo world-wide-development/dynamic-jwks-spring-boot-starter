@@ -3,8 +3,8 @@ package org.development.wide.world.spring.vault.jwks.autoconfigure;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.development.wide.world.spring.vault.jwks.internal.*;
+import org.development.wide.world.spring.vault.jwks.property.DynamicJwksProperties;
 import org.development.wide.world.spring.vault.jwks.property.KeyStoreProperties;
-import org.development.wide.world.spring.vault.jwks.property.VaultDynamicJwksProperties;
 import org.development.wide.world.spring.vault.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.vault.jwks.spi.JwksCertificateRotator;
 import org.development.wide.world.spring.vault.jwks.spi.KeyStoreKeeper;
@@ -21,7 +21,7 @@ import org.springframework.vault.core.VaultTemplate;
 @AutoConfiguration
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = "vault-dynamic-jwks", name = "enabled")
-@EnableConfigurationProperties({KeyStoreProperties.class, VaultDynamicJwksProperties.class})
+@EnableConfigurationProperties({KeyStoreProperties.class, DynamicJwksProperties.class})
 public class VaultDynamicJwksAutoConfiguration {
 
     @Bean
@@ -58,7 +58,7 @@ public class VaultDynamicJwksAutoConfiguration {
         @ConditionalOnBean({VaultTemplate.class, KeyStoreTemplate.class})
         public KeyStoreKeeper keyStoreKeeper(final VaultTemplate vaultTemplate,
                                              final KeyStoreTemplate keyStoreTemplate,
-                                             final VaultDynamicJwksProperties properties) {
+                                             final DynamicJwksProperties properties) {
             return new VaultKeyStoreKeeper(vaultTemplate, keyStoreTemplate, properties);
         }
 
@@ -66,7 +66,7 @@ public class VaultDynamicJwksAutoConfiguration {
         @ConditionalOnMissingBean
         @ConditionalOnBean({VaultTemplate.class})
         public CertificateIssuer certificateIssuer(final VaultTemplate vaultTemplate,
-                                                   final VaultDynamicJwksProperties properties) {
+                                                   final DynamicJwksProperties properties) {
             return new VaultCertificateIssuer(vaultTemplate, properties);
         }
 
@@ -76,7 +76,7 @@ public class VaultDynamicJwksAutoConfiguration {
         public JwksCertificateRotator vaultJwksCertificateRotator(final KeyStoreKeeper keyStoreKeeper,
                                                                   final JwkSetConverter jwkSetConverter,
                                                                   final CertificateIssuer certificateIssuer,
-                                                                  final VaultDynamicJwksProperties properties) {
+                                                                  final DynamicJwksProperties properties) {
             return new VaultJwksCertificateRotator(keyStoreKeeper, jwkSetConverter, certificateIssuer, properties);
         }
 
