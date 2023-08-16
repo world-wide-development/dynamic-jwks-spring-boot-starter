@@ -96,10 +96,13 @@ subprojects {
                         }
                     }
                     licenses {
-                        name = "The Apache License, Version 2.0"
-                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
                     }
                     url = "https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter"
+                    description = "Dynamic JWKS Spring Boot Starter developed by World Wide Development"
                     scm {
                         url = "https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter"
                         // @formatter:off
