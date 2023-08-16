@@ -30,7 +30,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.0.1"
+    version = "0.0.0"
     group = "io.github.world-wide-development"
 
     repositories {
@@ -91,15 +91,18 @@ subprojects {
                         developer {
                             id = "serhey"
                             name = "Serhey Doroshenko"
-                            organization = "WorldWideDevelopment"
+                            organization = "World Wide Development"
                             email = "serhey.doroshenko.work@gmail.com"
                         }
                     }
                     licenses {
-                        name = "The Apache License, Version 2.0"
-                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
                     }
                     url = "https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter"
+                    description = "Dynamic JWKS Spring Boot Starter developed by World Wide Development"
                     scm {
                         url = "https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter"
                         // @formatter:off
