@@ -23,13 +23,13 @@ public class VaultKeyStoreKeeper implements KeyStoreKeeper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VaultKeyStoreKeeper.class);
 
-    private final KeyStoreTemplate keyStoreTemplate;
     private final DynamicJwksProperties properties;
+    private final KeyStoreTemplate keyStoreTemplate;
     private final VaultVersionedKeyValueOperations keyValueOperations;
 
     public VaultKeyStoreKeeper(@NonNull final VaultTemplate vaultTemplate,
-                               @NonNull final KeyStoreTemplate keyStoreTemplate,
-                               @NonNull final DynamicJwksProperties properties) {
+                               @NonNull final DynamicJwksProperties properties,
+                               @NonNull final KeyStoreTemplate keyStoreTemplate) {
         this.properties = properties;
         this.keyStoreTemplate = keyStoreTemplate;
         this.keyValueOperations = vaultTemplate.opsForVersionedKeyValue(properties.versionedKeyValuePath());

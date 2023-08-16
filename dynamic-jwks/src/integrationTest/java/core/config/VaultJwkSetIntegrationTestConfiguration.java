@@ -44,9 +44,9 @@ public class VaultJwkSetIntegrationTestConfiguration {
 
     @Bean
     public KeyStoreKeeper certificateKeyStoreKeeper(final VaultTemplate vaultTemplate,
-                                                    final KeyStoreTemplate keyStoreTemplate,
-                                                    final DynamicJwksProperties properties) {
-        return new VaultKeyStoreKeeper(vaultTemplate, keyStoreTemplate, properties);
+                                                    final DynamicJwksProperties properties,
+                                                    final KeyStoreTemplate keyStoreTemplate) {
+        return new VaultKeyStoreKeeper(vaultTemplate, properties, keyStoreTemplate);
     }
 
     @Bean
@@ -57,9 +57,9 @@ public class VaultJwkSetIntegrationTestConfiguration {
     @Bean
     public JwksCertificateRotator vaultJwksCertificateRotator(final KeyStoreKeeper keyStoreKeeper,
                                                               final JwkSetConverter jwkSetConverter,
-                                                              final CertificateIssuer certificateIssuer,
-                                                              final DynamicJwksProperties properties) {
-        return new VaultJwksCertificateRotator(keyStoreKeeper, jwkSetConverter, certificateIssuer, properties);
+                                                              final DynamicJwksProperties properties,
+                                                              final CertificateIssuer certificateIssuer) {
+        return new VaultJwksCertificateRotator(keyStoreKeeper, jwkSetConverter, properties, certificateIssuer);
     }
 
 }

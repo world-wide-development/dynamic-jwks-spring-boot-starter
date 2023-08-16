@@ -21,14 +21,14 @@ public class VaultJwksCertificateRotator implements JwksCertificateRotator {
 
     private final KeyStoreKeeper keyStoreKeeper;
     private final JwkSetConverter jwkSetConverter;
-    private final CertificateIssuer certificateIssuer;
     private final DynamicJwksProperties properties;
+    private final CertificateIssuer certificateIssuer;
     private final RetryTemplate rotateKeyStoreRetryTemplate;
 
     public VaultJwksCertificateRotator(@NonNull final KeyStoreKeeper keyStoreKeeper,
                                        @NonNull final JwkSetConverter jwkSetConverter,
-                                       @NonNull final CertificateIssuer certificateIssuer,
-                                       @NonNull final DynamicJwksProperties properties) {
+                                       @NonNull final DynamicJwksProperties properties,
+                                       @NonNull final CertificateIssuer certificateIssuer) {
         this.properties = properties;
         this.keyStoreKeeper = keyStoreKeeper;
         this.jwkSetConverter = jwkSetConverter;

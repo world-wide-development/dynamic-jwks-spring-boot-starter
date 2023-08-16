@@ -25,7 +25,7 @@ class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
     @Autowired
     JwkSetConverter jwkSetConverter;
     @Autowired
-    DynamicJwksProperties vaultJwksProperties;
+    DynamicJwksProperties jwksProperties;
 
     @Mock
     KeyStoreKeeper keyStoreKeeper;
@@ -39,8 +39,8 @@ class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
         this.certificateRotator = new VaultJwksCertificateRotator(
                 keyStoreKeeper,
                 jwkSetConverter,
-                certificateIssuer,
-                vaultJwksProperties
+                jwksProperties,
+                certificateIssuer
         );
     }
 
