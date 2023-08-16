@@ -30,7 +30,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.0.1"
+    version = "0.0.0"
     group = "io.github.world-wide-development"
 
     repositories {
@@ -91,7 +91,7 @@ subprojects {
                         developer {
                             id = "serhey"
                             name = "Serhey Doroshenko"
-                            organization = "WorldWideDevelopment"
+                            organization = "World Wide Development"
                             email = "serhey.doroshenko.work@gmail.com"
                         }
                     }
