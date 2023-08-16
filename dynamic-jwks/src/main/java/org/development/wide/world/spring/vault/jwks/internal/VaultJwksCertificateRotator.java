@@ -23,7 +23,7 @@ public class VaultJwksCertificateRotator implements JwksCertificateRotator {
     private final JwkSetConverter jwkSetConverter;
     private final DynamicJwksProperties properties;
     private final CertificateIssuer certificateIssuer;
-    private final RetryTemplate rotateKeyStoreRetryTemplate;
+    private final RetryTemplate certificateRotationRetryTemplate;
 
     public VaultJwksCertificateRotator(@NonNull final KeyStoreKeeper keyStoreKeeper,
                                        @NonNull final JwkSetConverter jwkSetConverter,
@@ -33,7 +33,7 @@ public class VaultJwksCertificateRotator implements JwksCertificateRotator {
         this.keyStoreKeeper = keyStoreKeeper;
         this.jwkSetConverter = jwkSetConverter;
         this.certificateIssuer = certificateIssuer;
-        this.rotateKeyStoreRetryTemplate = RetryTemplate.builder()
+        this.certificateRotationRetryTemplate = RetryTemplate.builder()
                 .maxAttempts(properties.certificateRotationRetries())
                 .retryOn(VaultException.class)
                 .build();
@@ -41,7 +41,7 @@ public class VaultJwksCertificateRotator implements JwksCertificateRotator {
 
     @Override
     public JwkSetData rotate() {
-        final KeyStoreData keyStoreData = rotateKeyStoreRetryTemplate.execute(context -> {
+        final KeyStoreData keyStoreData = certificateRotationRetryTemplate.execute(context -> {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Tray to rotate certificate");
             }
