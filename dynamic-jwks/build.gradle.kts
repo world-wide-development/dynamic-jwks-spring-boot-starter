@@ -31,13 +31,12 @@ val integrationTestImplementation: Configuration by configurations.getting {
 
 dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt")
-    compileOnly("org.springframework.boot:spring-boot")
-    compileOnly("org.springframework.retry:spring-retry")
-    compileOnly("org.springframework.vault:spring-vault-core")
-    compileOnly("org.springframework.boot:spring-boot-starter-logging")
-    compileOnly("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.springframework.boot:spring-boot")
+    implementation("org.springframework.retry:spring-retry")
+    implementation("org.springframework.vault:spring-vault-core")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
     /* Unit Test */
-    testImplementation("org.springframework.vault:spring-vault-core")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     /* Integration Test */
     integrationTestImplementation(project)
