@@ -25,7 +25,7 @@ import org.springframework.vault.core.VaultTemplate;
  */
 @AutoConfiguration
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(matchIfMissing = true, value = {"dynamic-jwks.enabled"})
+@ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.enabled"})
 @EnableConfigurationProperties({KeyStoreProperties.class, DynamicJwksProperties.class})
 public class VaultDynamicJwksAutoConfiguration {
 
