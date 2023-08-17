@@ -28,8 +28,8 @@ class VaultDynamicJwksAutoConfigurationUnitTest extends BaseUnitTest {
     @Test
     void testTePresenceOfTheConfiguredBeans() {
         final ApplicationContextRunner applicationContextRunner = this.contextRunner
-                .withPropertyValues("vault-dynamic-jwks.enabled=on")
-                .withUserConfiguration(UnitTestUserConfiguration.class);
+                .withUserConfiguration(UnitTestUserConfiguration.class)
+                .withPropertyValues("dynamic-jwks.enabled=on");
         applicationContextRunner.run(context -> {
             assertThat(context).hasSingleBean(JwksCertificateRotator.class);
             assertThat(context).hasSingleBean(CertificateIssuer.class);
