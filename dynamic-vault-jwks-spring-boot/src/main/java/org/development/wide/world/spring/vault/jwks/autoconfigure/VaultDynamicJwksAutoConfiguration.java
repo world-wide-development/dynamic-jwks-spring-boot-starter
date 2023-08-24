@@ -13,6 +13,8 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerJwtAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +25,11 @@ import org.springframework.vault.core.VaultTemplate;
  *
  * @see VaultDynamicJwkSet
  */
-@AutoConfiguration
 @Configuration(proxyBeanMethods = false)
+@AutoConfiguration(
+        after = {UserDetailsServiceAutoConfiguration.class},
+        before = {OAuth2AuthorizationServerJwtAutoConfiguration.class}
+)
 @ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.enabled"})
 @EnableConfigurationProperties({KeyStoreProperties.class, DynamicJwksProperties.class})
 public class VaultDynamicJwksAutoConfiguration {
