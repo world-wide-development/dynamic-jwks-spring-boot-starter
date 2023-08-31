@@ -1,0 +1,22 @@
+server:
+  port: 8090
+### Spring ###
+spring:
+  security:
+    user:
+      name: "user"
+      password: "password"
+  application:
+    name: "authorization-service"
+  cloud:
+    vault:
+      enabled: on
+      token: "demo-token"
+      uri: "http://127.0.0.1:8200"
+  docker:
+    compose:
+      file: "samples/dynamic-vault-jwks-authorization-server/compose.yaml"
+### Logging ###
+logging:
+  level:
+    root: info
