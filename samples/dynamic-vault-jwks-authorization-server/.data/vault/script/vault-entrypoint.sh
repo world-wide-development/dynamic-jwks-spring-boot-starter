@@ -16,18 +16,12 @@ configurePkiSecretsEngine() {
   echo "Configure PKI secrets engine"
   vault secrets enable -path=pki pki
   vault write pki/root/generate/internal common_name="root.certificate" ttl=87600h
-  vault write pki/roles/jwks allow_any_name=true  max_ttl=72h
-}
-
-configureCustomKvSecretsEngine() {
-  echo "Enable and configure the custom KV secrets engine"
-  vault secrets enable -path=dynamic-jwks kv-v2
+  vault write pki/roles/jwks allow_any_name=true max_ttl=72h
 }
 
 customizeVaultServer() {
   waitForVaultServer
   configurePkiSecretsEngine
-  configureCustomKvSecretsEngine
 }
 
 customizeVaultServer &
