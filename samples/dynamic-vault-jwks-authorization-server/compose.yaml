@@ -1,0 +1,33 @@
+services:
+
+  hashicorp-vault:
+    cap_add:
+      - IPC_LOCK
+    image: hashicorp/vault
+    ports:
+      - "127.0.0.1:8200:8200"
+    container_name: hashicorp-vault-container
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
+      VAULT_DEV_ROOT_TOKEN_ID: "demo-token"
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    networks:
+      - dynamic-vault-jwks-authorization-server-network
+    entrypoint: [ "/vault/script/vault-entrypoint.sh" ]
+    volumes:
+      - "vault-logs-volume:/vault/logs"
+      - "vault-data-volume:/vault/data"
+      - "./.data/vault/config/config.hcl:/vault/config/config.hcl"
+      - "./.data/vault/script/vault-entrypoint.sh:/vault/script/vault-entrypoint.sh"
+
+volumes:
+  vault-logs-volume:
+    name: vault-logs-volume
+  vault-file-volume:
+    name: vault-file-volume
+  vault-data-volume:
+    name: vault-data-volume
+
+networks:
+  dynamic-vault-jwks-authorization-server-network:
+    name: dynamic-vault-jwks-authorization-server-network
