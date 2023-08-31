@@ -11,6 +11,7 @@ import org.development.wide.world.spring.vault.jwks.spi.KeyStoreKeeper;
 import org.development.wide.world.spring.vault.jwks.template.KeyStoreTemplate;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerJwtAutoConfiguration;
@@ -18,6 +19,7 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 import org.springframework.vault.core.VaultTemplate;
 
 /**
@@ -25,6 +27,9 @@ import org.springframework.vault.core.VaultTemplate;
  *
  * @see VaultDynamicJwkSet
  */
+@ConditionalOnClass({
+        VaultTemplate.class
+})
 @Configuration(proxyBeanMethods = false)
 @AutoConfiguration(
         after = {UserDetailsServiceAutoConfiguration.class},
@@ -102,10 +107,11 @@ public class VaultDynamicJwksAutoConfiguration {
          */
         @Bean
         @ConditionalOnMissingBean
-        @ConditionalOnBean({VaultTemplate.class, KeyStoreTemplate.class})
+        @ConditionalOnBean({KeyStoreTemplate.class})
         public KeyStoreKeeper keyStoreKeeper(final VaultTemplate vaultTemplate,
                                              final DynamicJwksProperties properties,
                                              final KeyStoreTemplate keyStoreTemplate) {
+            Assert.notNull(vaultTemplate, "vaultTemplate cannot be null");
             return new VaultKeyStoreKeeper(vaultTemplate, properties, keyStoreTemplate);
         }
 
@@ -118,9 +124,9 @@ public class VaultDynamicJwksAutoConfiguration {
          */
         @Bean
         @ConditionalOnMissingBean
-        @ConditionalOnBean({VaultTemplate.class})
         public CertificateIssuer certificateIssuer(final VaultTemplate vaultTemplate,
                                                    final DynamicJwksProperties properties) {
+            Assert.notNull(vaultTemplate, "vaultTemplate cannot be null");
             return new VaultCertificateIssuer(vaultTemplate, properties);
         }
 
