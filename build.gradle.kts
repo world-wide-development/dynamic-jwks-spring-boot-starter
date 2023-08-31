@@ -20,7 +20,7 @@ subprojects {
     apply(plugin = "org.owasp.dependencycheck")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.0.5"
+    version = "0.0.6"
     group = "io.github.world-wide-development"
 
     repositories {
