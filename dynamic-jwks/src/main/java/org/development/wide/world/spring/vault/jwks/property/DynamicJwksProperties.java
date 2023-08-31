@@ -25,7 +25,7 @@ public record DynamicJwksProperties(
         @DefaultValue KeyStoreProperties keyStore,
         @DefaultValue("1m") Duration pkiCertificateTtl,
         @DefaultValue("3") Integer certificateRotationRetries,
-        @DefaultValue("dynamic-jwks") String versionedKeyValuePath,
+        @DefaultValue("secret") String versionedKeyValuePath,
         @DefaultValue("authorization.certificate") String certificatePath,
         @DefaultValue("authorization.certificate") String pkiCertificateCommonName
 ) {
