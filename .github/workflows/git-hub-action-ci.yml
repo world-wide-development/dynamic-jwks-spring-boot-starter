@@ -1,8 +1,5 @@
 name: Dynamic JWKS CI
-on:
-  push:
-    branches-ignore:
-      - release/*
+on: [ push ]
 jobs:
   validation:
     name: "Validation"
