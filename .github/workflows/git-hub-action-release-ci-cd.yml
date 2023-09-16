@@ -1,8 +1,5 @@
 name: Dynamic JWKS Release CI/CD
-on:
-  push:
-    branches:
-      - release/*
+on: [ release ]
 jobs:
   validation:
     name: "Validation"
