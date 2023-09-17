@@ -15,18 +15,8 @@ services:
       - dynamic-vault-jwks-authorization-server-network
     entrypoint: [ "/vault/script/vault-entrypoint.sh" ]
     volumes:
-      - "vault-logs-volume:/vault/logs"
-      - "vault-data-volume:/vault/data"
-      - "./.data/vault/config/config.hcl:/vault/config/config.hcl"
-      - "./.data/vault/script/vault-entrypoint.sh:/vault/script/vault-entrypoint.sh"
-
-volumes:
-  vault-logs-volume:
-    name: vault-logs-volume
-  vault-file-volume:
-    name: vault-file-volume
-  vault-data-volume:
-    name: vault-data-volume
+      - "./.data/vault/config.hcl:/vault/config/config.hcl"
+      - "./.data/vault/vault-entrypoint.sh:/vault/script/vault-entrypoint.sh"
 
 networks:
   dynamic-vault-jwks-authorization-server-network:

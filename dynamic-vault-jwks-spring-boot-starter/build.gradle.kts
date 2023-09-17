@@ -23,7 +23,7 @@ signing {
 }
 
 dependencies {
-    api(project(":dynamic-jwks"))
+    api(project(":dynamic-vault-jwks"))
     api(project(":dynamic-vault-jwks-spring-boot"))
 }
 
@@ -52,7 +52,7 @@ publishing {
                 }
             }
             pom {
-                name = "Dynamic JWKS Spring Boot Starter"
+                name = "Dynamic Vault JWKS Spring Boot Starter"
                 developers {
                     developer {
                         id = "serhey"

@@ -1,4 +1,4 @@
-name: Dynamic JWKS Release CI/CD
+name: release
 on: [ release ]
 jobs:
   validation:

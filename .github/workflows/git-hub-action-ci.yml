@@ -1,4 +1,4 @@
-name: Dynamic JWKS CI
+name: ci
 on: [ push ]
 jobs:
   validation:

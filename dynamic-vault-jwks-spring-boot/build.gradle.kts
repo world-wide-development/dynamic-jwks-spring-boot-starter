@@ -23,6 +23,7 @@ signing {
 
 dependencies {
     implementation(project(":dynamic-jwks"))
+    implementation(project(":dynamic-vault-jwks"))
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework.vault:spring-vault-core")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
@@ -60,7 +61,7 @@ publishing {
                 }
             }
             pom {
-                name = "Dynamic JWKS Spring Boot"
+                name = "Dynamic Vault JWKS Spring Boot"
                 developers {
                     developer {
                         id = "serhey"

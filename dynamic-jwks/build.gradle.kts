@@ -46,23 +46,15 @@ val integrationTestImplementation: Configuration by configurations.getting {
 
 dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt")
-    implementation("org.springframework.boot:spring-boot")
-    implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.vault:spring-vault-core")
+    implementation("org.springframework:spring-core")
+    implementation("com.fasterxml.jackson.core:jackson-annotations")
     implementation("org.springframework.boot:spring-boot-starter-logging")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     /* Unit Test */
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     /* Integration Test */
     integrationTestImplementation(project)
-    integrationTestImplementation("org.testcontainers:vault")
-    integrationTestImplementation("org.testcontainers:junit-jupiter")
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
-    integrationTestImplementation("org.springframework.cloud:spring-cloud-starter-vault-config")
 }
-
-
 
 publishing {
     repositories {
