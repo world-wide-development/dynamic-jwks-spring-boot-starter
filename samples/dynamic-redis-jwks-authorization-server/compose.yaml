@@ -1,0 +1,16 @@
+services:
+
+  redis:
+    expose:
+      - "6379:6379"
+    ports:
+      - "6379:6379"
+    image: "redis:7-alpine"
+    container_name: "redis-container"
+#    command: redis-server --requirepass redis-password
+    networks:
+      - dynamic-redis-jwks-authorization-server-network
+
+networks:
+  dynamic-redis-jwks-authorization-server-network:
+    name: dynamic-redis-jwks-authorization-server-network
