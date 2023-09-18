@@ -7,11 +7,10 @@ import com.nimbusds.jose.proc.JWKSecurityContext;
 import com.nimbusds.jose.proc.SecurityContext;
 import core.base.BaseIntegrationTest;
 import core.config.VaultJwkSetIntegrationTestConfiguration;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.vault.config.VaultAutoConfiguration;
@@ -23,16 +22,14 @@ import java.util.concurrent.CountDownLatch;
 
 @SpringBootTest(
         classes = {
-                JWKSource.class,
                 VaultAutoConfiguration.class,
-                JwksCertificateRotator.class,
-                JacksonAutoConfiguration.class,
                 TaskExecutionAutoConfiguration.class,
-                DynamicJwkSetRetryIntegrationTest.class
+                RetryableJwksCertificateRotator.class,
+                VaultJwkSetIntegrationTestConfiguration.class
         }
 )
 @Import({VaultJwkSetIntegrationTestConfiguration.class})
-class DynamicJwkSetRetryIntegrationTest extends BaseIntegrationTest {
+class DynamicVaultJwkSetRetryIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     JWKSource<SecurityContext> jwkSource;

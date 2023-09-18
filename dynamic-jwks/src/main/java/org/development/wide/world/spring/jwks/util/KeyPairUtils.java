@@ -2,9 +2,7 @@ package org.development.wide.world.spring.jwks.util;
 
 import org.springframework.lang.NonNull;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -12,22 +10,14 @@ import java.security.spec.RSAPrivateKeySpec;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public final class KeyFactoryUtils {
+public final class KeyPairUtils {
 
     public static final String EC = "EC";
     public static final String RSA = "RSA";
+    public static final int KEY_SIZE_2048 = 2048;
 
-    private KeyFactoryUtils() {
+    private KeyPairUtils() {
         // Suppresses default constructor
-    }
-
-    @NonNull
-    public static KeyFactory getInstance(final String algorithm) {
-        try {
-            return KeyFactory.getInstance(algorithm);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("No %s algorithm available".formatted(algorithm), e);
-        }
     }
 
     public static PrivateKey extractPrivateKey(final KeySpec keySpec) {
@@ -39,10 +29,40 @@ public final class KeyFactoryUtils {
         }
     }
 
+    @NonNull
+    public static KeyFactory instantiateFactory(final String algorithm) {
+        try {
+            return KeyFactory.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("No %s algorithm available".formatted(algorithm), e);
+        }
+    }
+
+    public static KeyPair generate2048RsaKeyPair() {
+        final KeyPairGenerator rsaKeyPairGenerator = initializeGenerator(KEY_SIZE_2048, RSA);
+        return rsaKeyPairGenerator.generateKeyPair();
+    }
+
+    public static KeyPairGenerator instantiateGenerator(final String algorithm) {
+        try {
+            return KeyPairGenerator.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("No %s algorithm available".formatted(algorithm), e);
+        }
+    }
+
+    @NonNull
+    public static KeyPairGenerator initializeGenerator(final int keySize, final String algorithm) {
+        final KeyPairGenerator keyPairGenerator = instantiateGenerator(algorithm);
+        keyPairGenerator.initialize(keySize);
+        return keyPairGenerator;
+    }
+
+    /* Key factory manager */
     public enum KeyFactoryManager {
 
-        EC_KEY_FACTORY(KeyFactoryUtils.getInstance(EC), PKCS8EncodedKeySpec.class),
-        RSA_KEY_FACTORY(KeyFactoryUtils.getInstance(RSA), RSAPrivateKeySpec.class);
+        EC_KEY_FACTORY(KeyPairUtils.instantiateFactory(EC), PKCS8EncodedKeySpec.class),
+        RSA_KEY_FACTORY(KeyPairUtils.instantiateFactory(RSA), RSAPrivateKeySpec.class);
 
         private final KeyFactory keyFactory;
         private final Class<? extends KeySpec> keySpecClass;

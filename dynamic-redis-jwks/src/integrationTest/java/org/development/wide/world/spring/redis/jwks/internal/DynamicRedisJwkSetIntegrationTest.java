@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.vault.jwks.internal;
+package org.development.wide.world.spring.redis.jwks.internal;
 
 import com.nimbusds.jose.jwk.JWKMatcher;
 import com.nimbusds.jose.jwk.JWKSelector;
@@ -6,27 +6,31 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.JWKSecurityContext;
 import com.nimbusds.jose.proc.SecurityContext;
 import core.base.BaseIntegrationTest;
-import core.config.VaultJwkSetIntegrationTestConfiguration;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
+import core.config.RedisJwkSetIntegrationTestConfiguration;
+import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.vault.config.VaultAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
-@SpringBootTest(classes = {
-        JWKSource.class,
-        VaultAutoConfiguration.class,
-        JwksCertificateRotator.class,
-        JacksonAutoConfiguration.class,
-        DynamicJwkSetIntegrationTest.class
-})
-@Import({VaultJwkSetIntegrationTestConfiguration.class})
-class DynamicJwkSetIntegrationTest extends BaseIntegrationTest {
+@SpringBootTest(
+        classes = {
+                JWKSource.class,
+                RedisAutoConfiguration.class,
+                RetryableJwksCertificateRotator.class,
+                DynamicRedisJwkSetIntegrationTest.class
+        },
+        properties = {
+                "spring.data.redis.client-type=lettuce",
+                "logging.level.org.development.wide.world=debug"
+        }
+)
+@Import({RedisJwkSetIntegrationTestConfiguration.class})
+class DynamicRedisJwkSetIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     JWKSource<SecurityContext> jwkSource;

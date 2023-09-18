@@ -13,6 +13,8 @@ import org.springframework.vault.support.Versioned;
 import org.springframework.vault.support.Versioned.Metadata;
 import org.springframework.vault.support.Versioned.Version;
 
+import java.security.cert.X509Certificate;
+import java.util.Collections;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -46,11 +48,13 @@ public class VaultCertificateRepository implements CertificateRepository {
                 return Optional.empty();
             }
             final InternalKeyStore internalKeyStore = keyStoreTemplate.reloadFromSource(keyStoreSource);
+            final X509Certificate x509Certificate = internalKeyStore.getX509Certificate();
             final CertificateData certificateData = CertificateData.builder()
+                    .x509Certificates(Collections.singletonList(x509Certificate))
                     .version(versionedKeyStoreSource.getVersion().getVersion())
-                    .x509Certificate(internalKeyStore.getX509Certificate())
                     .privateKey(internalKeyStore.getPrivateKey())
                     .serialNumber(keyStoreSource.serialNumber())
+                    .x509Certificate(x509Certificate)
                     .build();
             return Optional.of(certificateData);
         });
@@ -78,7 +82,7 @@ public class VaultCertificateRepository implements CertificateRepository {
             LOGGER.debug("Put certificate to versioned KV storage {}", metadata);
         }
         return findOne(key)
-                .orElseThrow(() -> new IllegalArgumentException("Key store data cannot be null"));
+                .orElseThrow(() -> new IllegalStateException("Certificate data cannot be null"));
     }
 
 }

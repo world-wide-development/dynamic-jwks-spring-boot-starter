@@ -6,7 +6,9 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
@@ -20,19 +22,21 @@ import java.util.concurrent.atomic.AtomicReference;
  * Designed to provide the ability to automatically rotate certificates.
  *
  * @see JWKSource<SecurityContext>
- * @see JwksCertificateRotator
+ * @see RetryableJwksCertificateRotator
  * @see JwkSetData
  */
 public class DynamicJwkSet implements JWKSource<SecurityContext> {
 
-    private final JwksCertificateRotator certificateRotator;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DynamicJwkSet.class);
+
+    private final RetryableJwksCertificateRotator certificateRotator;
     private final AtomicReference<JwkSetData> jwkSetHolderAtomicReference;
 
-    public DynamicJwkSet(final JwksCertificateRotator certificateRotator) {
+    public DynamicJwkSet(final RetryableJwksCertificateRotator certificateRotator) {
         this(certificateRotator, new AtomicReference<>());
     }
 
-    public DynamicJwkSet(final JwksCertificateRotator certificateRotator,
+    public DynamicJwkSet(final RetryableJwksCertificateRotator certificateRotator,
                          final AtomicReference<JwkSetData> jwkSetHolderAtomicReference) {
         Assert.notNull(certificateRotator, "certificateRotator cannot be null");
         Assert.notNull(jwkSetHolderAtomicReference, "jwkSetHolderAtomicReference cannot be null");
@@ -42,7 +46,7 @@ public class DynamicJwkSet implements JWKSource<SecurityContext> {
 
     /**
      * Provides the list of the {@link JWK}s with valid certificates.
-     * Automatically issues new certificate in case of the current certificate expiration
+     * Automatically issuer new certificate in case of the current certificate expiration
      *
      * @see JWKSource#get(JWKSelector, SecurityContext)
      */
@@ -50,7 +54,13 @@ public class DynamicJwkSet implements JWKSource<SecurityContext> {
     public List<JWK> get(@NonNull final JWKSelector jwkSelector, final SecurityContext context) {
         final JwkSetData jwkSetData = jwkSetHolderAtomicReference.updateAndGet(jwkSetHolder -> {
             if (Objects.nonNull(jwkSetHolder) && jwkSetHolder.checkCertificateValidity()) {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("JWK Set still fresh, rotation is not necessary");
+                }
                 return jwkSetHolder;
+            }
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("JWK Set expired, rotating it out");
             }
             return certificateRotator.rotate();
         });

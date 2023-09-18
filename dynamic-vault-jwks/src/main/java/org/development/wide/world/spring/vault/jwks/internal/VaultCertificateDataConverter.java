@@ -2,7 +2,7 @@ package org.development.wide.world.spring.vault.jwks.internal;
 
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.spi.CertificateDataConverter;
-import org.development.wide.world.spring.jwks.util.KeyFactoryUtils;
+import org.development.wide.world.spring.jwks.util.KeyPairUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.vault.support.CertificateBundle;
 
@@ -24,7 +24,7 @@ public class VaultCertificateDataConverter implements CertificateDataConverter<C
     @Override
     public CertificateData convert(@NonNull final CertificateBundle source) {
         final KeySpec privateKeySpec = source.getPrivateKeySpec();
-        final PrivateKey privateKey = KeyFactoryUtils.extractPrivateKey(privateKeySpec);
+        final PrivateKey privateKey = KeyPairUtils.extractPrivateKey(privateKeySpec);
         return CertificateData.builder()
                 .x509Certificates(source.getX509IssuerCertificates())
                 .x509Certificate(source.getX509Certificate())

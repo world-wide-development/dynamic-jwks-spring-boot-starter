@@ -76,7 +76,7 @@ publishing {
         }
     }
     publications {
-        register<MavenPublication>("vault-dynamic-jwks") {
+        register<MavenPublication>("dynamic-vault-jwks") {
             from(components["java"])
             versionMapping {
                 usage("java-runtime") {

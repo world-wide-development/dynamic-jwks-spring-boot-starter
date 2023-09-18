@@ -47,7 +47,7 @@ public class KeyStoreTemplate {
         return Stream.concat(
                 Stream.of(certificateData.x509Certificate()),
                 streamIssuerCertificates(includeChain, certificateData)
-        ).toArray(X509Certificate[]::new);
+        ).distinct().toArray(X509Certificate[]::new);
     }
 
     private Stream<X509Certificate> streamIssuerCertificates(final boolean includeChain,
@@ -55,7 +55,7 @@ public class KeyStoreTemplate {
         if (includeChain) {
             return certificateData.x509Certificates().stream();
         }
-        return Stream.of(certificateData.x509Certificate());
+        return Stream.empty();
     }
 
 }

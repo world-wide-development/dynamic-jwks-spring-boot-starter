@@ -2,6 +2,7 @@ package org.development.wide.world.spring.jwks.util;
 
 import org.springframework.lang.NonNull;
 
+import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
@@ -9,6 +10,8 @@ import java.security.cert.X509Certificate;
 import java.security.spec.KeySpec;
 import java.time.Instant;
 import java.util.Date;
+import java.util.HexFormat;
+import java.util.UUID;
 
 /**
  * A set of utilities for certificate interaction
@@ -19,8 +22,25 @@ import java.util.Date;
  */
 public final class CertificateUtils {
 
+    public static final String DASH = "-";
+    public static final String EMPTY = "";
+    public static final int BIG_INTEGER_RADIX = 16;
+    public static final String HEX_FORMAT_DELIMITER = ":";
+
     private CertificateUtils() {
         // Suppresses default constructor
+    }
+
+    @NonNull
+    public static BigInteger generateSerialFromUuid() {
+        final String uuid = UUID.randomUUID().toString();
+        return new BigInteger(uuid.replace(DASH, EMPTY), BIG_INTEGER_RADIX);
+    }
+
+    @NonNull
+    public static String bigIntToHexDecimalString(@NonNull final BigInteger bigInteger) {
+        final HexFormat hexFormat = HexFormat.ofDelimiter(HEX_FORMAT_DELIMITER);
+        return hexFormat.formatHex(bigInteger.toByteArray());
     }
 
     /**

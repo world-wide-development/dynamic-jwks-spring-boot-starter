@@ -1,10 +1,12 @@
 package org.development.wide.world.spring.vault.jwks.internal;
 
 import core.base.BaseUnitTest;
+import org.development.wide.world.spring.jwks.internal.DefaultJwksCertificateRotator;
 import org.development.wide.world.spring.jwks.internal.JwkSetConverter;
 import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.development.wide.world.spring.vault.jwks.property.DynamicVaultJwksInternalProperties;
 import org.development.wide.world.spring.vault.jwks.property.VaultPkiInternalProperties;
 import org.development.wide.world.spring.vault.jwks.property.VaultVersionedKvInternalProperties;
@@ -22,9 +24,9 @@ import java.time.Duration;
 import java.util.Optional;
 
 @SpringJUnitConfig({
-        VaultJwksCertificateRotatorUnitTest.UnitTestConfiguration.class
+        RetryableVaultJwksCertificateRotatorUnitTest.UnitTestConfiguration.class
 })
-class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
+class RetryableVaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
 
     public static final VaultPkiInternalProperties PKI_INTERNAL_PROPERTIES = VaultPkiInternalProperties.builder()
             .certificateCommonName("authorization.certificate")
@@ -51,14 +53,17 @@ class VaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
     @Mock
     CertificateRepository certificateRepository;
 
-    JwksCertificateRotator certificateRotator;
+    RetryableJwksCertificateRotator certificateRotator;
 
     @BeforeEach
     void setUpEach() {
-        this.certificateRotator = new VaultJwksCertificateRotator(
+        final JwksCertificateRotator jwksCertificateRotator = new DefaultJwksCertificateRotator(
                 jwkSetConverter,
                 certificateIssuer,
-                certificateRepository,
+                certificateRepository
+        );
+        this.certificateRotator = new RetryableVaultJwksCertificateRotator(
+                jwksCertificateRotator,
                 JWKS_INTERNAL_PROPERTIES
         );
     }

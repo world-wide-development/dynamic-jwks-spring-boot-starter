@@ -1,4 +1,5 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "GradlePackageUpdate", "GradlePackageVersionRange")
+
 plugins {
     id("signing")
     id("maven-publish")
@@ -45,12 +46,11 @@ val integrationTestImplementation: Configuration by configurations.getting {
 }
 
 dependencies {
+    implementation(project(":dynamic-jwks"))
     implementation("com.nimbusds:nimbus-jose-jwt")
-    implementation("org.springframework.boot:spring-boot")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.boot:spring-boot-starter-logging")
-    implementation("com.fasterxml.jackson:jackson-base:2.14.2")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.1")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     /* Unit Test */
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     /* Integration Test */
@@ -74,7 +74,7 @@ publishing {
         }
     }
     publications {
-        register<MavenPublication>("vault-dynamic-jwks") {
+        register<MavenPublication>("dynamic-redis-jwks") {
             from(components["java"])
             versionMapping {
                 usage("java-runtime") {

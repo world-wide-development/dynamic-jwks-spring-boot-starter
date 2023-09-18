@@ -47,6 +47,7 @@ val integrationTestImplementation: Configuration by configurations.getting {
 dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework:spring-core")
+    implementation("org.bouncycastle:bcpkix-jdk18on")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     /* Unit Test */

@@ -7,6 +7,7 @@ import org.development.wide.world.spring.jwks.internal.JwkSetConverter;
 import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.vault.jwks.internal.VaultCertificateDataConverter;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ class VaultDynamicJwksAutoConfigurationUnitTest extends BaseUnitTest {
                 .withUserConfiguration(UnitTestUserConfiguration.class)
                 .withPropertyValues("dynamic-jwks.vault.enabled=on");
         applicationContextRunner.run(context -> {
+            assertThat(context).hasSingleBean(RetryableJwksCertificateRotator.class);
             assertThat(context).hasSingleBean(VaultCertificateDataConverter.class);
             assertThat(context).hasSingleBean(JwksCertificateRotator.class);
             assertThat(context).hasSingleBean(CertificateRepository.class);

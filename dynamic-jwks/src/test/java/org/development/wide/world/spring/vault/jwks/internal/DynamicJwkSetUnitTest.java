@@ -9,7 +9,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import core.base.BaseUnitTest;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.internal.DynamicJwkSet;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -28,7 +28,7 @@ class DynamicJwkSetUnitTest extends BaseUnitTest {
     @Mock
     JwkSetData jwkSetData;
     @MockBean
-    JwksCertificateRotator certificateRotator;
+    RetryableJwksCertificateRotator certificateRotator;
 
     JWKSource<SecurityContext> jwkSource;
 

@@ -11,6 +11,7 @@ tasks.jar {
 
 extra["nimbusJoseVersion"] = "9.31"
 extra["springVaultVersion"] = "3.0.4"
+extra["bouncyCastleVersion"] = "1.76"
 extra["springCloudVersion"] = "2022.0.4"
 
 subprojects {
@@ -36,6 +37,7 @@ subprojects {
     dependencyManagement {
         dependencies {
             dependency("com.nimbusds:nimbus-jose-jwt:${property("nimbusJoseVersion")}")
+            dependency("org.bouncycastle:bcpkix-jdk18on:${property("bouncyCastleVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")
         }
         imports {

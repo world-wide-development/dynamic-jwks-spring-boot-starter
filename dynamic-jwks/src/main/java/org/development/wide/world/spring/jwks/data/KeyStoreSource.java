@@ -3,13 +3,17 @@ package org.development.wide.world.spring.jwks.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.lang.NonNull;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
 public record KeyStoreSource(
         @JsonProperty("serialNumber") String serialNumber,
         @JsonProperty("keyStoreSources") byte[] keyStoreSources
-) {
+) implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 42L;
 
     /* Equals and Hash Code */
     @Override
