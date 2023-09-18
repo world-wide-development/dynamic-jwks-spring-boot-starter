@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.jwks.internal;
+package org.development.wide.world.spring.redis.internal;
 
 import core.base.BaseIntegrationTest;
 import core.config.RedisJwkSetIntegrationTestConfiguration;

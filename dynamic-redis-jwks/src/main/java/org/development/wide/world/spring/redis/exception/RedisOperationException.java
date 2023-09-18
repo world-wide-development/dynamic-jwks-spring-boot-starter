@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.jwks.exception;
+package org.development.wide.world.spring.redis.exception;
 
 public class RedisOperationException extends RuntimeException{
 

@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.jwks.property;
+package org.development.wide.world.spring.redis.property;
 
 import org.springframework.lang.NonNull;
 

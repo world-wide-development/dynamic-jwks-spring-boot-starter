@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.jwks.autoconfigure.properties;
+package org.development.wide.world.spring.redis.autoconfigure.properties;
 
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;

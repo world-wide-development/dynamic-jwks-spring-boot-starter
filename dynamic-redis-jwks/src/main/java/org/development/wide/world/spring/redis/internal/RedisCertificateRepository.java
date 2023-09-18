@@ -1,12 +1,12 @@
-package org.development.wide.world.spring.redis.jwks.internal;
+package org.development.wide.world.spring.redis.internal;
 
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.data.KeyStoreSource;
 import org.development.wide.world.spring.jwks.internal.InternalKeyStore;
 import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
-import org.development.wide.world.spring.redis.jwks.data.VersionedKeyStoreSource;
-import org.development.wide.world.spring.redis.jwks.exception.RedisOperationException;
+import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
+import org.development.wide.world.spring.redis.exception.RedisOperationException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.lang.NonNull;

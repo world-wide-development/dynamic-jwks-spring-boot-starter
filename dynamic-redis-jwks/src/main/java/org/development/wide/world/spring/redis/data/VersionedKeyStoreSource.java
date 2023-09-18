@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.jwks.data;
+package org.development.wide.world.spring.redis.data;
 
 import org.development.wide.world.spring.jwks.data.KeyStoreSource;
 import org.springframework.lang.NonNull;

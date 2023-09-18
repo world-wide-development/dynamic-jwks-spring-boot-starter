@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.development.wide.world.spring.redis.jwks.autoconfigure.DynamicRedisJwksAutoConfiguration
+  org.development.wide.world.spring.redis.autoconfigure.DynamicRedisJwksAutoConfiguration

@@ -1,10 +1,10 @@
-package org.development.wide.world.spring.redis.jwks.internal;
+package org.development.wide.world.spring.redis.internal;
 
 import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
 import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
-import org.development.wide.world.spring.redis.jwks.exception.RedisOperationException;
-import org.development.wide.world.spring.redis.jwks.property.DynamicRedisJwksInternalProperties;
+import org.development.wide.world.spring.redis.exception.RedisOperationException;
+import org.development.wide.world.spring.redis.property.DynamicRedisJwksInternalProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;

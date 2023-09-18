@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.jwks.internal;
+package org.development.wide.world.spring.redis.internal;
 
 import com.nimbusds.jose.jwk.JWKMatcher;
 import com.nimbusds.jose.jwk.JWKSelector;

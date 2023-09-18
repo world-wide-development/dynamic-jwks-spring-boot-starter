@@ -16,8 +16,6 @@ dependencies {
     implementation(project(":dynamic-vault-jwks-spring-boot-starter"))
     implementation("org.springframework.cloud:spring-cloud-starter-vault-config")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
-    implementation("com.fasterxml.jackson:jackson-base:2.14.2")
-    implementation("com.fasterxml.jackson.core:jackson-annotations:2.15.1")
     /* Tool */
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     /* Test */

@@ -1,9 +1,9 @@
-package org.development.wide.world.spring.redis.jwks.internal;
+package org.development.wide.world.spring.redis.internal;
 
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.data.KeyStoreSource;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
-import org.development.wide.world.spring.redis.jwks.data.VersionedKeyStoreSource;
+import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;

@@ -1,6 +1,6 @@
-package org.development.wide.world.spring.redis.jwks.autoconfigure.properties;
+package org.development.wide.world.spring.redis.autoconfigure.properties;
 
-import org.development.wide.world.spring.redis.jwks.property.DynamicRedisJwksInternalProperties;
+import org.development.wide.world.spring.redis.property.DynamicRedisJwksInternalProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;

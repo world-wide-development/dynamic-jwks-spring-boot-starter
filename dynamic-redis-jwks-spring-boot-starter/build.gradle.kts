@@ -23,8 +23,8 @@ signing {
 }
 
 dependencies {
-    api(project(":dynamic-vault-jwks"))
-    api(project(":dynamic-vault-jwks-spring-boot"))
+    api(project(":dynamic-redis-jwks"))
+    api(project(":dynamic-redis-jwks-spring-boot"))
 }
 
 publishing {
@@ -41,7 +41,7 @@ publishing {
         }
     }
     publications {
-        register<MavenPublication>("dynamic-vault-jwks-spring-boot-starter") {
+        register<MavenPublication>("dynamic-redis-jwks-spring-boot-starter") {
             from(components["java"])
             versionMapping {
                 usage("java-runtime") {
@@ -52,7 +52,7 @@ publishing {
                 }
             }
             pom {
-                name = "Dynamic Vault JWKS Spring Boot Starter"
+                name = "Dynamic Redis JWKS Spring Boot Starter"
                 developers {
                     developer {
                         id = "serhey"
