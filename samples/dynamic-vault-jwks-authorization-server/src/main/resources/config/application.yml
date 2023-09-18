@@ -15,6 +15,13 @@ spring:
       uri: "http://127.0.0.1:8200"
   docker:
     compose:
+      enabled: on
+      stop:
+        command: down
+      readiness:
+        tcp:
+          read-timeout: "2s"
+          connect-timeout: "2s"
       file: "samples/dynamic-vault-jwks-authorization-server/compose.yaml"
 ### Logging ###
 logging:

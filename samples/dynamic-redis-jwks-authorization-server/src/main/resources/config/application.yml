@@ -1,0 +1,39 @@
+server:
+  port: 8090
+### Spring ###
+spring:
+  application:
+    name: "authorization-service"
+  security:
+    user:
+      name: "user"
+      password: "password"
+    oauth2:
+      authorizationserver:
+        client:
+          postman-client:
+            token:
+              access-token-time-to-live: "1h"
+            registration:
+              scopes:
+                - "openid"
+              authorization-grant-types:
+                - "client_credentials"
+              client-id: "postman-client"
+              client-authentication-methods:
+                - "client_secret_basic"
+              client-secret: "{noop}postman-client-secret"
+  docker:
+    compose:
+      enabled: on
+      stop:
+        command: down
+      readiness:
+        tcp:
+          read-timeout: "2s"
+          connect-timeout: "2s"
+      file: "samples/dynamic-redis-jwks-authorization-server/compose.yaml"
+### Logging ###
+logging:
+  level:
+    org.springframework.security: trace

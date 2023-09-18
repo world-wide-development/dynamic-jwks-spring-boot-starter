@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.development.wide.world.spring.vault.jwks.autoconfigure.VaultDynamicJwksAutoConfiguration
+  org.development.wide.world.spring.vault.jwks.autoconfigure.DynamicVaultJwksAutoConfiguration
