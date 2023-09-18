@@ -76,7 +76,7 @@ public class RedisJwkSetIntegrationTestConfiguration {
 
     @Bean
     public CertificateRepository certificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
-                                                       @NonNull RedisTemplate<String, VersionedKeyStoreSource> redisTemplate) {
+                                                       @NonNull final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate) {
         return new RedisCertificateRepository(keyStoreTemplate, redisTemplate);
     }
 

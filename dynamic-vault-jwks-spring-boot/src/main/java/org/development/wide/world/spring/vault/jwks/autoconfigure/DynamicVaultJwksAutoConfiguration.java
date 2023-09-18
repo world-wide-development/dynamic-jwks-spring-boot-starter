@@ -57,7 +57,7 @@ import org.springframework.vault.core.VaultVersionedKeyValueOperations;
         before = {OAuth2AuthorizationServerJwtAutoConfiguration.class}
 )
 @ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.vault.enabled"})
-public class VaultDynamicJwksAutoConfiguration {
+public class DynamicVaultJwksAutoConfiguration {
 
     /**
      * Instantiates {@link DynamicJwkSet} bean
@@ -141,9 +141,9 @@ public class VaultDynamicJwksAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnBean({KeyStoreTemplate.class})
-        public CertificateRepository keyStoreKeeper(final VaultTemplate vaultTemplate,
-                                                    final KeyStoreTemplate keyStoreTemplate,
-                                                    final VaultVersionedKvProperties kvProperties) {
+        public CertificateRepository certificateRepository(final VaultTemplate vaultTemplate,
+                                                           final KeyStoreTemplate keyStoreTemplate,
+                                                           final VaultVersionedKvProperties kvProperties) {
             Assert.notNull(keyStoreTemplate, "keyStoreTemplate cannot be null");
             Assert.notNull(vaultTemplate, "vaultTemplate cannot be null");
             Assert.notNull(kvProperties, "kvProperties cannot be null");
