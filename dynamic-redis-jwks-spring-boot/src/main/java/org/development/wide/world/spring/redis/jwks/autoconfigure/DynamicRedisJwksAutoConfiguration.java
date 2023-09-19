@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.autoconfigure;
+package org.development.wide.world.spring.redis.jwks.autoconfigure;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -10,13 +10,13 @@ import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
 import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
-import org.development.wide.world.spring.redis.autoconfigure.properties.BCCertificateProperties;
-import org.development.wide.world.spring.redis.autoconfigure.properties.DynamicRedisJwksProperties;
-import org.development.wide.world.spring.redis.autoconfigure.properties.KeyStoreProperties;
-import org.development.wide.world.spring.redis.autoconfigure.properties.RedisKvProperties;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRepository;
 import org.development.wide.world.spring.redis.internal.RetryableRedisJwksCertificateRotator;
+import org.development.wide.world.spring.redis.jwks.autoconfigure.properties.BCCertificateProperties;
+import org.development.wide.world.spring.redis.jwks.autoconfigure.properties.DynamicRedisJwksProperties;
+import org.development.wide.world.spring.redis.jwks.autoconfigure.properties.KeyStoreProperties;
+import org.development.wide.world.spring.redis.jwks.autoconfigure.properties.RedisKvProperties;
 import org.development.wide.world.spring.redis.property.DynamicRedisJwksInternalProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

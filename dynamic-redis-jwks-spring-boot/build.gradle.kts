@@ -27,6 +27,7 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
     /* Test */
     testImplementation("org.springframework.boot:spring-boot-starter-test")

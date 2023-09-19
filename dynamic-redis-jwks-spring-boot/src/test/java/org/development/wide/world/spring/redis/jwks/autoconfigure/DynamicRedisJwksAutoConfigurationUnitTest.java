@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.autoconfigure;
+package org.development.wide.world.spring.redis.jwks.autoconfigure;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import core.base.BaseUnitTest;
