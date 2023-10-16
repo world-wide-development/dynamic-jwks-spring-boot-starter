@@ -75,6 +75,7 @@ public class DynamicRedisJwksAutoConfiguration {
      * @see RetryableJwksCertificateRotator
      */
     @Configuration(proxyBeanMethods = false)
+    @ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.redis.enabled"})
     public static class JwksCertificateRotatorConfiguration {
 
         /**

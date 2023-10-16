@@ -37,3 +37,16 @@ spring:
 logging:
   level:
     org.springframework.security: trace
+### Dynamic JWKS ###
+dynamic-jwks:
+  bc-certificate:
+    certificate-ttl: "1m"
+    issuer: "Sample Issuer"
+    subject: "Sample Subject"
+  redis:
+    enabled: off
+    kv:
+      certificate-key: "${random.uuid}"
+  key-store:
+    alias: "${random.uuid}"
+    password: "${random.uuid}-${random.long}"

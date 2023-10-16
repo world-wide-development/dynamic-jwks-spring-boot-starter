@@ -26,7 +26,7 @@ import static java.util.Optional.ofNullable;
  */
 public class VaultCertificateRepository implements CertificateRepository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VaultCertificateRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(VaultCertificateRepository.class);
 
     private final KeyStoreTemplate keyStoreTemplate;
     private final VaultVersionedKeyValueOperations keyValueOperations;
@@ -68,18 +68,18 @@ public class VaultCertificateRepository implements CertificateRepository {
         final Version keyVersion = Version.from(certificateData.version());
         final KeyStoreSource keyStoreSource = keyStoreTemplate.saveCertificate(certificateData);
         final Versioned<KeyStoreSource> versionedKeyStoreSource = Versioned.create(keyStoreSource, keyVersion);
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("The new certificate has been issued {}", versionedKeyStoreSource.getVersion());
+        if (logger.isDebugEnabled()) {
+            logger.debug("The new certificate has been issued {}", versionedKeyStoreSource.getVersion());
         }
         final Metadata metadata = keyValueOperations.put(key, versionedKeyStoreSource);
-        if (LOGGER.isDebugEnabled()) {
+        if (logger.isDebugEnabled()) {
             if (metadata.isDeleted()) {
-                LOGGER.debug("Certificate was deleted");
+                logger.debug("Certificate was deleted");
             }
             if (metadata.isDestroyed()) {
-                LOGGER.debug("Certificate was destroyed");
+                logger.debug("Certificate was destroyed");
             }
-            LOGGER.debug("Put certificate to versioned KV storage {}", metadata);
+            logger.debug("Put certificate to versioned KV storage {}", metadata);
         }
         return findOne(key)
                 .orElseThrow(() -> new IllegalStateException("Certificate data cannot be null"));

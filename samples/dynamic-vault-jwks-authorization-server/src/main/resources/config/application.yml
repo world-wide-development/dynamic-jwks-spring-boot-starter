@@ -27,3 +27,14 @@ spring:
 logging:
   level:
     root: info
+### Dynamic JWKS ###
+dynamic-jwks:
+  key-store:
+    alias: "${random.uuid}"
+    password: "${random.uuid}-${random.long}"
+  vault:
+    enabled: on
+    versioned-kv:
+      certificate-path: "${random.uuid}"
+    pki:
+      certificate-common-name: "${random.uuid}"

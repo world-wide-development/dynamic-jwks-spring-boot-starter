@@ -24,7 +24,7 @@ public class DefaultJwksCertificateRotator implements JwksCertificateRotator {
 
     public static final Integer INITIAL_VERSION = 0;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJwksCertificateRotator.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultJwksCertificateRotator.class);
 
     private final JwkSetConverter jwkSetConverter;
     private final CertificateIssuer certificateIssuer;
@@ -55,13 +55,13 @@ public class DefaultJwksCertificateRotator implements JwksCertificateRotator {
     private CertificateData rotateCertificateData(final String key) {
         return certificateRepository.findOne(key).map(certificateData -> {
             if (certificateData.checkCertificateValidity()) {
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Certificate is valid and will be used");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Certificate is valid and will be used");
                 }
                 return certificateData;
             }
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Certificate is invalid and will be immediately rotated");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Certificate is invalid and will be immediately rotated");
             }
             final Integer lastVersion = certificateData.version();
             return rotateVersionedCertificateData(key, lastVersion);
