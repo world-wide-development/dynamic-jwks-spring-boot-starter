@@ -52,9 +52,10 @@ public class CompareVersionedKeyStoreSourceAndSetCallback implements SessionCall
     @Override
     @SuppressWarnings({"unchecked"})
     public <K, V> Boolean execute(@NonNull final RedisOperations<K, V> operations) throws DataAccessException {
-        operations.watch((K) key);
-        final HashOperations<K, Object, Object> valueOperations = operations.opsForHash();
-        final Optional<Integer> optionalVersion = ofNullable(valueOperations.get((K) key, key))
+        final K typeSafeKey = (K) key;
+        operations.watch(typeSafeKey);
+        final HashOperations<K, K, V> valueOperations = operations.opsForHash();
+        final Optional<Integer> optionalVersion = ofNullable(valueOperations.get(typeSafeKey, key))
                 .map(VersionedKeyStoreSource.class::cast)
                 .map(VersionedKeyStoreSource::version);
         if (optionalVersion.map(version -> version.equals(certificateData.version())).orElse(Boolean.TRUE)) {
@@ -68,7 +69,7 @@ public class CompareVersionedKeyStoreSourceAndSetCallback implements SessionCall
                     .keyStoreSource(freshKeyStoreSource)
                     .version(freshVersion)
                     .build();
-            valueOperations.put((K) key, key, freshVersionedKeyStoreSource);
+            valueOperations.put(typeSafeKey, typeSafeKey, (V) freshVersionedKeyStoreSource);
             final List<Object> operationResults = operations.exec();
             if (!operationResults.isEmpty()) {
                 if (logger.isDebugEnabled()) {
