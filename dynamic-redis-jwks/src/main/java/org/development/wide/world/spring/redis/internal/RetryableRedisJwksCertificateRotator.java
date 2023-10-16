@@ -17,7 +17,7 @@ import org.springframework.retry.support.RetryTemplate;
  */
 public class RetryableRedisJwksCertificateRotator implements RetryableJwksCertificateRotator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RetryableRedisJwksCertificateRotator.class);
+    private static final Logger logger = LoggerFactory.getLogger(RetryableRedisJwksCertificateRotator.class);
 
     private final JwksCertificateRotator certificateRotator;
     private final DynamicRedisJwksInternalProperties properties;
@@ -41,8 +41,8 @@ public class RetryableRedisJwksCertificateRotator implements RetryableJwksCertif
     public JwkSetData rotate() {
         final String certificateKey = properties.kv().certificateKey();
         return certificateRotator.rotate(rotationFunction -> certificateRotationRetryTemplate.execute(context -> {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Tray to rotate certificate");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Tray to rotate certificate");
             }
             return rotationFunction.apply(certificateKey);
         }));
