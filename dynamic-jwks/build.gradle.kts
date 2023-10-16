@@ -45,11 +45,11 @@ val integrationTestImplementation: Configuration by configurations.getting {
 }
 
 dependencies {
+    implementation("org.slf4j:jul-to-slf4j")
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework:spring-core")
     implementation("org.bouncycastle:bcpkix-jdk18on")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
-    implementation("org.springframework.boot:spring-boot-starter-logging")
     /* Unit Test */
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     /* Integration Test */

@@ -47,10 +47,10 @@ val integrationTestImplementation: Configuration by configurations.getting {
 
 dependencies {
     implementation(project(":dynamic-jwks"))
+    implementation("org.slf4j:jul-to-slf4j")
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.boot:spring-boot-starter-logging")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.data:spring-data-redis")
     /* Unit Test */
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     /* Integration Test */
@@ -58,6 +58,7 @@ dependencies {
     integrationTestImplementation("org.testcontainers:junit-jupiter")
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
     integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
+    integrationTestImplementation("org.springframework.boot:spring-boot-starter-data-redis")
 }
 
 publishing {
