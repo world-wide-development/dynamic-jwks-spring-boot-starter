@@ -21,13 +21,13 @@ import java.util.concurrent.atomic.AtomicReference;
  * <br>
  * Designed to provide the ability to automatically rotate certificates.
  *
- * @see JWKSource<SecurityContext>
  * @see RetryableJwksCertificateRotator
+ * @see JWKSource<SecurityContext>
  * @see JwkSetData
  */
 public class DynamicJwkSet implements JWKSource<SecurityContext> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DynamicJwkSet.class);
+    private static final Logger logger = LoggerFactory.getLogger(DynamicJwkSet.class);
 
     private final RetryableJwksCertificateRotator certificateRotator;
     private final AtomicReference<JwkSetData> jwkSetHolderAtomicReference;
@@ -54,13 +54,13 @@ public class DynamicJwkSet implements JWKSource<SecurityContext> {
     public List<JWK> get(@NonNull final JWKSelector jwkSelector, final SecurityContext context) {
         final JwkSetData jwkSetData = jwkSetHolderAtomicReference.updateAndGet(jwkSetHolder -> {
             if (Objects.nonNull(jwkSetHolder) && jwkSetHolder.checkCertificateValidity()) {
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("JWK Set still fresh, rotation is not necessary");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("JWK Set still fresh, rotation is not necessary");
                 }
                 return jwkSetHolder;
             }
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("JWK Set expired, rotating it out");
+            if (logger.isDebugEnabled()) {
+                logger.debug("JWK Set expired, rotating it out");
             }
             return certificateRotator.rotate();
         });

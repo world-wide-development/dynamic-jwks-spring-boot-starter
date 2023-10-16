@@ -18,7 +18,7 @@ import org.springframework.vault.VaultException;
  */
 public class RetryableVaultJwksCertificateRotator implements RetryableJwksCertificateRotator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RetryableVaultJwksCertificateRotator.class);
+    private static final Logger logger = LoggerFactory.getLogger(RetryableVaultJwksCertificateRotator.class);
 
     private final JwksCertificateRotator certificateRotator;
     private final DynamicVaultJwksInternalProperties properties;
@@ -41,8 +41,8 @@ public class RetryableVaultJwksCertificateRotator implements RetryableJwksCertif
     public JwkSetData rotate() {
         final String certificatePath = properties.versionedKv().certificatePath();
         return certificateRotator.rotate(rotationFunction -> certificateRotationRetryTemplate.execute(context -> {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Tray to rotate certificate");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Tray to rotate certificate");
             }
             return rotationFunction.apply(certificatePath);
         }));

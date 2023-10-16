@@ -7,9 +7,9 @@ import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import static java.util.Optional.ofNullable;
  */
 public class CompareVersionedKeyStoreSourceAndSetCallback implements SessionCallback<Boolean> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CompareVersionedKeyStoreSourceAndSetCallback.class);
+    private static final Logger logger = LoggerFactory.getLogger(CompareVersionedKeyStoreSourceAndSetCallback.class);
 
     private final String key;
     private final CertificateData certificateData;
@@ -52,9 +52,10 @@ public class CompareVersionedKeyStoreSourceAndSetCallback implements SessionCall
     @Override
     @SuppressWarnings({"unchecked"})
     public <K, V> Boolean execute(@NonNull final RedisOperations<K, V> operations) throws DataAccessException {
-        operations.watch((K) key);
-        final ValueOperations<K, V> valueOperations = operations.opsForValue();
-        final Optional<Integer> optionalVersion = ofNullable(valueOperations.get(key))
+        final K typeSafeKey = (K) key;
+        operations.watch(typeSafeKey);
+        final HashOperations<K, K, V> valueOperations = operations.opsForHash();
+        final Optional<Integer> optionalVersion = ofNullable(valueOperations.get(typeSafeKey, key))
                 .map(VersionedKeyStoreSource.class::cast)
                 .map(VersionedKeyStoreSource::version);
         if (optionalVersion.map(version -> version.equals(certificateData.version())).orElse(Boolean.TRUE)) {
@@ -68,11 +69,11 @@ public class CompareVersionedKeyStoreSourceAndSetCallback implements SessionCall
                     .keyStoreSource(freshKeyStoreSource)
                     .version(freshVersion)
                     .build();
-            valueOperations.set((K) key, (V) freshVersionedKeyStoreSource);
+            valueOperations.put(typeSafeKey, typeSafeKey, (V) freshVersionedKeyStoreSource);
             final List<Object> operationResults = operations.exec();
             if (!operationResults.isEmpty()) {
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Save certificate, version {}", freshVersion);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Save certificate, version {}", freshVersion);
                 }
                 return Boolean.TRUE;
             }

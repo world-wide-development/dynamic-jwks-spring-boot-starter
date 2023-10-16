@@ -79,6 +79,7 @@ public class DynamicVaultJwksAutoConfiguration {
      * @see RetryableJwksCertificateRotator
      */
     @Configuration(proxyBeanMethods = false)
+    @ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.vault.enabled"})
     public static class JwksCertificateRotatorConfiguration {
 
         /**
