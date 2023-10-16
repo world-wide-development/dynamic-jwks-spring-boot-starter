@@ -55,7 +55,6 @@ dependencies {
     /* Integration Test */
     integrationTestImplementation(project)
     integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-logging")
 }
 
 publishing {
