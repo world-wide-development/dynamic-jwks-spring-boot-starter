@@ -1,4 +1,5 @@
 @file:Suppress("UnstableApiUsage")
+
 plugins {
     id("signing")
     id("maven-publish")
@@ -46,11 +47,10 @@ val integrationTestImplementation: Configuration by configurations.getting {
 
 dependencies {
     implementation(project(":dynamic-jwks"))
+    implementation("org.slf4j:jul-to-slf4j")
     implementation("com.nimbusds:nimbus-jose-jwt")
-    implementation("org.springframework.boot:spring-boot")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.vault:spring-vault-core")
-    implementation("org.springframework.boot:spring-boot-starter-logging")
     /* Unit Test */
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     /* Integration Test */
