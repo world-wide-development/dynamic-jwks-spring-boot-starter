@@ -1,4 +1,4 @@
-package org.development.wide.world.spring.redis.autoconfigure.properties;
+package org.development.wide.world.spring.redis.jwks.autoconfigure.properties;
 
 import org.development.wide.world.spring.redis.property.RedisKvInternalProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
