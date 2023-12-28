@@ -29,7 +29,7 @@ dependencyCheck {
         }
     }
     nvd.apply {
-        apiKey = "${property("nvd.api.key")}"
+        apiKey = "${property("nvdApiKey")}"
     }
 }
 
