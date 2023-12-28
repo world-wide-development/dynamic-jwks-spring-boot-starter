@@ -2,10 +2,10 @@ tasks.jar {
     enabled = false
 }
 
-tasks.bootJar {
+tasks.getByName("dependencyCheckAnalyze") {
     enabled = false
 }
 
-tasks.resolveMainClassName {
+tasks.getByName("dependencyCheckAggregate") {
     enabled = false
 }

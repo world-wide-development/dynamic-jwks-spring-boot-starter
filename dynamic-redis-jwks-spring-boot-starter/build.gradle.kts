@@ -4,10 +4,6 @@ plugins {
     id("maven-publish")
 }
 
-tasks.bootJar {
-    enabled = false
-}
-
 java {
     withJavadocJar()
     withSourcesJar()

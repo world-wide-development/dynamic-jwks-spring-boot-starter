@@ -10,7 +10,31 @@ the [Spring Authorization Server Project](https://github.com/spring-projects/spr
 The goal of the project is to add automatic certificate rotation without losing the ability to horizontally scale the
 authorization server.
 
-## Quick Start
+## Quick Start for Dynamic Redis JWKS
+
+In order to use this starter, it is necessary to add it to the project dependencies.
+
+Gradle:
+
+```groovy
+implementation "io.github.world-wide-development:dynamic-redis-jwks-spring-boot-starter:${latestVersion}"
+```
+
+Maven:
+
+```xml
+
+<dependency>
+    <groupId>io.github.world-wide-development</groupId>
+    <artifactId>dynamic-redis-jwks-spring-boot-starter</artifactId>
+    <version>${latest-version}</version>
+</dependency>
+```
+
+Maven repository group
+page [https://mvnrepository.com/artifact/io.github.world-wide-development](https://mvnrepository.com/artifact/io.github.world-wide-development)
+
+## Quick Start for Dynamic Vaoult JWKS
 
 In order to use this starter, it is necessary to add it to the project dependencies.
 
