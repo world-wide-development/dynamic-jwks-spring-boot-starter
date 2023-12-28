@@ -19,6 +19,7 @@ extra["springVaultVersion"] = "3.1.0"
 extra["bouncyCastleVersion"] = "1.76"
 extra["testcontainersVersion"] = "1.18.3"
 extra["springVaultStarterVersion"] = "4.1.0"
+extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
 
 dependencyCheck {
     analyzers.apply {
@@ -28,7 +29,7 @@ dependencyCheck {
         }
     }
     nvd.apply {
-        apiKey = "7424caab-ddf7-4984-a900-81c73c8acf82"
+        apiKey = "${property("nvd.api.key")}"
     }
 }
 
