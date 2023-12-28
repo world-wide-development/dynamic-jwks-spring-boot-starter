@@ -16,7 +16,7 @@ jobs:
     name: "Run Unit Tests"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: corretto
@@ -30,7 +30,7 @@ jobs:
     name: "Run Integration Tests"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: corretto
@@ -43,7 +43,7 @@ jobs:
     name: "Publish To Maven Central"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: corretto
