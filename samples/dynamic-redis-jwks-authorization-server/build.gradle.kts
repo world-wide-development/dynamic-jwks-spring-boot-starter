@@ -1,4 +1,16 @@
+plugins {
+    id("org.springframework.boot") version "3.1.7"
+}
+
 val springCloudVersion = "2022.0.4"
+
+tasks.getByName("dependencyCheckAnalyze") {
+    enabled = false
+}
+
+tasks.getByName("dependencyCheckAggregate") {
+    enabled = false
+}
 
 configurations {
     compileOnly {

@@ -6,10 +6,6 @@ plugins {
     id("jvm-test-suite")
 }
 
-tasks.bootJar {
-    enabled = false
-}
-
 java {
     withJavadocJar()
     withSourcesJar()
