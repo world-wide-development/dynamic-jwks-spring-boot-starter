@@ -20,16 +20,10 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean test
-      - name: "Directories list"
-        run: ls
+          arguments: clean test testCodeCoverageReport
       - uses: codecov/codecov-action@v3
         with:
-          verbose: true
-          directory: "./"
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
-                  ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
   integration-test:
     needs: unit-test
     runs-on: ubuntu-latest
@@ -42,13 +36,7 @@ jobs:
           distribution: corretto
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean integrationTest
-      - name: "Directories list"
-        run: ls
+          arguments: clean integrationTest testCodeCoverageReport
       - uses: codecov/codecov-action@v3
         with:
-          verbose: true
-          directory: "./"
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
-                  ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
