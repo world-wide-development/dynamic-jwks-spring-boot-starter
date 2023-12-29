@@ -21,8 +21,9 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: clean test
-      - uses: codecov/codecov-action@v3
+      - name: "Directories list"
         run: ls
+      - uses: codecov/codecov-action@v3
         with:
           verbose: true
           directory: "./"
@@ -42,8 +43,9 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: clean integrationTest
-      - uses: codecov/codecov-action@v3
+      - name: "Directories list"
         run: ls
+      - uses: codecov/codecov-action@v3
         with:
           verbose: true
           directory: "./"
