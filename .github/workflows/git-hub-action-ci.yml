@@ -22,7 +22,10 @@ jobs:
         with:
           arguments: clean test
       - uses: codecov/codecov-action@v3
+        run: ls
         with:
+          verbose: true
+          directory: "./"
           token: ${{ secrets.CODECOV_TOKEN }}
           files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
                   ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
@@ -40,7 +43,10 @@ jobs:
         with:
           arguments: clean integrationTest
       - uses: codecov/codecov-action@v3
+        run: ls
         with:
+          verbose: true
+          directory: "./"
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: "dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
-                  dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
+          files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
+                  ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
