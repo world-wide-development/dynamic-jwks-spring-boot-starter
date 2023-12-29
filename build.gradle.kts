@@ -1,11 +1,8 @@
 plugins {
     id("java")
+    id("jacoco-report-aggregation")
     id("org.owasp.dependencycheck") version "9.0.7"
     id("io.spring.dependency-management") version "1.1.4"
-}
-
-tasks.jar {
-    enabled = false
 }
 
 extra["slf4jVersion"] = "2.0.9"
@@ -20,6 +17,10 @@ extra["bouncyCastleVersion"] = "1.76"
 extra["testcontainersVersion"] = "1.18.3"
 extra["springVaultStarterVersion"] = "4.1.0"
 extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
+
+tasks.jar {
+    enabled = false
+}
 
 dependencyCheck {
     analyzers.apply {
@@ -36,6 +37,7 @@ dependencyCheck {
 subprojects {
 
     apply(plugin = "java")
+    apply(plugin = "jacoco-report-aggregation")
     apply(plugin = "org.owasp.dependencycheck")
     apply(plugin = "io.spring.dependency-management")
 

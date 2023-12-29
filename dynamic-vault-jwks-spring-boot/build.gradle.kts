@@ -1,6 +1,8 @@
+@file:Suppress("UnstableApiUsage")
 plugins {
     id("signing")
     id("maven-publish")
+    id("jvm-test-suite")
 }
 
 java {
@@ -29,8 +31,18 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.test {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.UNIT_TEST)
+        }
+        register<JvmTestSuite>("integrationTest") {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.INTEGRATION_TEST)
+            targets { all { testTask.configure { shouldRunAfter(test) } } }
+        }
+    }
 }
 
 publishing {

@@ -18,26 +18,9 @@ tasks.check {
     dependsOn(testing.suites.named("integrationTest"))
 }
 
-testing {
-    suites {
-        val test by getting(JvmTestSuite::class) {
-            useJUnitJupiter()
-        }
-        register<JvmTestSuite>("integrationTest") {
-            useJUnitJupiter()
-            testType.set(TestSuiteType.INTEGRATION_TEST)
-            targets { all { testTask.configure { shouldRunAfter(test) } } }
-        }
-    }
-}
-
 signing {
     sign(publishing.publications)
     useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
-}
-
-val integrationTestImplementation: Configuration by configurations.getting {
-    extendsFrom(configurations.testImplementation.get())
 }
 
 dependencies {
@@ -46,11 +29,27 @@ dependencies {
     implementation("org.springframework:spring-core")
     implementation("org.bouncycastle:bcpkix-jdk18on")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
-    /* Unit Test */
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    /* Integration Test */
-    integrationTestImplementation(project)
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.UNIT_TEST)
+            dependencies {
+                implementation("org.springframework.boot:spring-boot-starter-test")
+            }
+        }
+        register<JvmTestSuite>("integrationTest") {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.INTEGRATION_TEST)
+            targets { all { testTask.configure { shouldRunAfter(test) } } }
+            dependencies {
+                implementation(project())
+                implementation("org.springframework.boot:spring-boot-starter-test")
+            }
+        }
+    }
 }
 
 publishing {

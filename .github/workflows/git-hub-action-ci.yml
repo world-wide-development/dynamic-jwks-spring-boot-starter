@@ -21,6 +21,9 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: clean test
+      - uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   integration-test:
     needs: unit-test
     runs-on: ubuntu-latest
@@ -34,3 +37,6 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           arguments: clean integrationTest
+      - uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

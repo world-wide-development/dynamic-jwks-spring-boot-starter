@@ -23,6 +23,7 @@ testing {
     suites {
         val test by getting(JvmTestSuite::class) {
             useJUnitJupiter()
+            testType.set(TestSuiteType.UNIT_TEST)
         }
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()

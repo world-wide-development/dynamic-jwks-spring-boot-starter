@@ -12,7 +12,7 @@ authorization server.
 
 ## Quick Start for Dynamic Redis JWKS
 
-In order to use this starter, it is necessary to add it to the project dependencies.
+To use this starter, it is necessary to add it to the project dependencies.
 
 Gradle:
 
@@ -34,9 +34,9 @@ Maven:
 Maven repository group
 page [https://mvnrepository.com/artifact/io.github.world-wide-development](https://mvnrepository.com/artifact/io.github.world-wide-development)
 
-## Quick Start for Dynamic Vaoult JWKS
+## Quick Start for Dynamic Vault JWKS
 
-In order to use this starter, it is necessary to add it to the project dependencies.
+To use this starter, it is necessary to add it to the project dependencies.
 
 Gradle:
 
