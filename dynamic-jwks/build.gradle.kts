@@ -37,6 +37,7 @@ testing {
             useJUnitJupiter()
             testType.set(TestSuiteType.UNIT_TEST)
             dependencies {
+                implementation("nl.jqno.equalsverifier:equalsverifier")
                 implementation("org.springframework.boot:spring-boot-starter-test")
             }
         }
@@ -46,6 +47,7 @@ testing {
             targets { all { testTask.configure { shouldRunAfter(test) } } }
             dependencies {
                 implementation(project())
+                implementation("com.nimbusds:nimbus-jose-jwt")
                 implementation("org.springframework.boot:spring-boot-starter-test")
             }
         }

@@ -3,7 +3,6 @@ package org.development.wide.world.spring.jwks.util;
 import org.springframework.lang.NonNull;
 
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
@@ -14,6 +13,7 @@ public final class KeyPairUtils {
 
     public static final String EC = "EC";
     public static final String RSA = "RSA";
+    public static final int KEY_SIZE_256 = 256;
     public static final int KEY_SIZE_2048 = 2048;
 
     private KeyPairUtils() {
@@ -24,7 +24,7 @@ public final class KeyPairUtils {
         final KeyFactory keyFactory = KeyFactoryManager.instantiateByKeySpec(keySpec);
         try {
             return keyFactory.generatePrivate(keySpec);
-        } catch (InvalidKeySpecException e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Cannot extract private key from key spec", e);
         }
     }
@@ -38,8 +38,16 @@ public final class KeyPairUtils {
         }
     }
 
+    public static KeyPair generate256EcKeyPair() {
+        return generateKeyPair(KEY_SIZE_256, EC);
+    }
+
     public static KeyPair generate2048RsaKeyPair() {
-        final KeyPairGenerator rsaKeyPairGenerator = initializeGenerator(KEY_SIZE_2048, RSA);
+        return generateKeyPair(KEY_SIZE_2048, RSA);
+    }
+
+    public static KeyPair generateKeyPair(final int keySize, final String algorithm) {
+        final KeyPairGenerator rsaKeyPairGenerator = initializeGenerator(keySize, algorithm);
         return rsaKeyPairGenerator.generateKeyPair();
     }
 
@@ -62,7 +70,8 @@ public final class KeyPairUtils {
     public enum KeyFactoryManager {
 
         EC_KEY_FACTORY(KeyPairUtils.instantiateFactory(EC), PKCS8EncodedKeySpec.class),
-        RSA_KEY_FACTORY(KeyPairUtils.instantiateFactory(RSA), RSAPrivateKeySpec.class);
+        RSA_KEY_FACTORY(KeyPairUtils.instantiateFactory(RSA), RSAPrivateKeySpec.class),
+        ;
 
         private final KeyFactory keyFactory;
         private final Class<? extends KeySpec> keySpecClass;
@@ -71,6 +80,15 @@ public final class KeyPairUtils {
                           final Class<? extends KeySpec> keySpecClass) {
             this.keyFactory = keyFactory;
             this.keySpecClass = keySpecClass;
+        }
+
+        /* Utilities */
+        public KeySpec extractKeySpec(@NonNull final Key key) {
+            try {
+                return this.keyFactory.getKeySpec(key, this.keySpecClass);
+            } catch (Exception e) {
+                throw new IllegalStateException("Cannot extract key spec", e);
+            }
         }
 
         public static KeyFactory instantiateByKeySpec(@NonNull final KeySpec keySpec) {
@@ -85,6 +103,7 @@ public final class KeyPairUtils {
                     .orElseThrow(() -> new NoSuchElementException("KeyFactory by %s not found".formatted(keySpecClass)));
         }
 
+        /* Getters */
         public KeyFactory keyFactory() {
             return this.keyFactory;
         }

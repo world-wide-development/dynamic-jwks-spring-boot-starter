@@ -22,10 +22,7 @@ jobs:
         with:
           arguments: clean test testCodeCoverageReport
       - uses: codecov/codecov-action@v3
-#        env:
-#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
           files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
                   ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
   integration-test:
@@ -42,9 +39,6 @@ jobs:
         with:
           arguments: clean integrationTest testCodeCoverageReport
       - uses: codecov/codecov-action@v3
-#        env:
-#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
           files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
                   ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"

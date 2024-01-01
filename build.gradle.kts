@@ -14,6 +14,7 @@ extra["springCoreVersion"] = "6.1.2"
 extra["springRetryVersion"] = "2.0.5"
 extra["springVaultVersion"] = "3.1.0"
 extra["bouncyCastleVersion"] = "1.76"
+extra["equalsVerifierVersion"] = "3.15.4"
 extra["testcontainersVersion"] = "1.18.3"
 extra["springVaultStarterVersion"] = "4.1.0"
 extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
@@ -65,6 +66,7 @@ subprojects {
             dependency("org.testcontainers:junit-jupiter:${property("testcontainersVersion")}")
             dependency("org.springframework.retry:spring-retry:${property("springRetryVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-databind:${property("jacksonVersion")}")
+            dependency("nl.jqno.equalsverifier:equalsverifier:${property("equalsVerifierVersion")}")
             dependency("org.springframework.data:spring-data-redis:${property("springBootVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-annotations:${property("jacksonVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")

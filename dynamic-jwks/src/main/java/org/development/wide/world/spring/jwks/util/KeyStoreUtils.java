@@ -26,8 +26,13 @@ public final class KeyStoreUtils {
 
     @NonNull
     public static KeyStore getDefaultInstance() {
+        return getInstance(DEFAULT_KEY_STORE_TYPE);
+    }
+
+    @NonNull
+    public static KeyStore getInstance(final String type) {
         try {
-            return KeyStore.getInstance(DEFAULT_KEY_STORE_TYPE);
+            return KeyStore.getInstance(type);
         } catch (KeyStoreException e) {
             throw new IllegalStateException("Unable instantiate key store with default type", e);
         }

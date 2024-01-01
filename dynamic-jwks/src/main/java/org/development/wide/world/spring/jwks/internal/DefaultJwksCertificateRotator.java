@@ -46,7 +46,7 @@ public class DefaultJwksCertificateRotator implements JwksCertificateRotator {
         final CertificateData certificateData = rotationFn.apply(this::rotateCertificateData);
         final JWKSet jwkSet = jwkSetConverter.convert(certificateData);
         return JwkSetData.builder()
-                .keyStoreData(certificateData)
+                .certificateData(certificateData)
                 .jwkSet(jwkSet)
                 .build();
     }

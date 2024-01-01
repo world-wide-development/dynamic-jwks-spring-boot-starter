@@ -1,19 +1,22 @@
-package org.development.wide.world.spring.vault.jwks.internal;
+package org.development.wide.world.spring.jwks.internal;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import com.nimbusds.jose.jwk.JWKMatcher;
 import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.JWKSecurityContext;
 import com.nimbusds.jose.proc.SecurityContext;
-import core.base.BaseUnitTest;
+import core.base.BaseIntegrationTest;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
-import org.development.wide.world.spring.jwks.internal.DynamicJwkSet;
 import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -21,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @SpringJUnitConfig
-class DynamicJwkSetUnitTest extends BaseUnitTest {
+class DynamicJwkSetIntegrationTest extends BaseIntegrationTest {
 
     @Mock
     JWKSet jwkSet;
@@ -31,6 +34,13 @@ class DynamicJwkSetUnitTest extends BaseUnitTest {
     RetryableJwksCertificateRotator certificateRotator;
 
     JWKSource<SecurityContext> jwkSource;
+
+    @BeforeAll
+    static void setUpAll() {
+        if (LoggerFactory.getLogger(DynamicJwkSet.class) instanceof Logger logbackLogger) {
+            logbackLogger.setLevel(Level.DEBUG);
+        }
+    }
 
     @Test
     void testGet() {

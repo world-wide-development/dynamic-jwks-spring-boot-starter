@@ -32,7 +32,7 @@ public record JwkSetData(
             return this;
         }
 
-        public Builder keyStoreData(CertificateData certificateData) {
+        public Builder certificateData(CertificateData certificateData) {
             this.certificateData = certificateData;
             return this;
         }
