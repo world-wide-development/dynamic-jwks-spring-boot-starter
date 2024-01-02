@@ -23,7 +23,8 @@ jobs:
           arguments: clean test testCodeCoverageReport
       - uses: codecov/codecov-action@v3
         with:
-          files: "./build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
+          files: "./testCodeCoverageReport.xml"
+          directory: "./build/reports/jacoco/testCodeCoverageReport"
   integration-test:
     needs: unit-test
     runs-on: ubuntu-latest
@@ -39,4 +40,5 @@ jobs:
           arguments: clean integrationTest integrationTestCodeCoverageReport
       - uses: codecov/codecov-action@v3
         with:
-          files: "./build/reports/jacoco/integrationTestCodeCoverageReport/integrationTestCodeCoverageReport.xml"
+          files: "./integrationTestCodeCoverageReport.xml"
+          directory: "./build/reports/jacoco/integrationTestCodeCoverageReport"
