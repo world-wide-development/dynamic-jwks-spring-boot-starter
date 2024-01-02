@@ -1,5 +1,8 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("java")
+    id("jvm-test-suite")
     id("jacoco-report-aggregation")
     id("org.owasp.dependencycheck") version "9.0.7"
     id("io.spring.dependency-management") version "1.1.4"
@@ -35,15 +38,41 @@ dependencyCheck {
     }
 }
 
+dependencies {
+    jacocoAggregation(project(":dynamic-jwks"))
+    jacocoAggregation(project(":dynamic-vault-jwks"))
+    jacocoAggregation(project(":dynamic-redis-jwks"))
+    jacocoAggregation(project(":dynamic-vault-jwks-spring-boot"))
+    jacocoAggregation(project(":dynamic-redis-jwks-spring-boot"))
+}
+
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.UNIT_TEST)
+        }
+        register<JvmTestSuite>("integrationTest") {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.INTEGRATION_TEST)
+        }
+    }
+}
+
 subprojects {
 
     apply(plugin = "java")
+    apply(plugin = "jvm-test-suite")
     apply(plugin = "jacoco-report-aggregation")
     apply(plugin = "org.owasp.dependencycheck")
     apply(plugin = "io.spring.dependency-management")
 
     version = "0.0.8"
     group = "io.github.world-wide-development"
+
+}
+
+allprojects {
 
     repositories {
         mavenCentral()
@@ -78,6 +107,7 @@ subprojects {
             dependency("org.springframework.boot:spring-boot-configuration-processor:${property("springBootVersion")}")
             dependency("org.springframework.cloud:spring-cloud-starter-vault-config:${property("springVaultStarterVersion")}")
         }
+
     }
 
 }

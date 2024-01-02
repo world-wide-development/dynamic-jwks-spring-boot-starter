@@ -13,14 +13,14 @@ tasks.javadoc {
     options.encoding("UTF-8")
 }
 
-signing {
-    sign(publishing.publications)
-    useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
-}
-
 dependencies {
     api(project(":dynamic-redis-jwks"))
     api(project(":dynamic-redis-jwks-spring-boot"))
+}
+
+signing {
+    sign(publishing.publications)
+    useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
 }
 
 publishing {

@@ -23,8 +23,7 @@ jobs:
           arguments: clean test testCodeCoverageReport
       - uses: codecov/codecov-action@v3
         with:
-          files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
-                  ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
+          files: "./build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
   integration-test:
     needs: unit-test
     runs-on: ubuntu-latest
@@ -37,8 +36,7 @@ jobs:
           distribution: corretto
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean integrationTest testCodeCoverageReport
+          arguments: clean integrationTest integrationTestCodeCoverageReport
       - uses: codecov/codecov-action@v3
         with:
-          files: "./dynamic-redis-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml,
-                  ./dynamic-vault-jwks-spring-boot-starter/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
+          files: "./build/reports/jacoco/integrationTestCodeCoverageReport/integrationTestCodeCoverageReport.xml"

@@ -3,7 +3,6 @@
 plugins {
     id("signing")
     id("maven-publish")
-    id("jvm-test-suite")
 }
 
 java {
@@ -15,8 +14,12 @@ tasks.javadoc {
     options.encoding("UTF-8")
 }
 
-tasks.check {
-    dependsOn(testing.suites.named("integrationTest"))
+dependencies {
+    implementation(project(":dynamic-jwks"))
+    implementation("org.slf4j:jul-to-slf4j")
+    implementation("com.nimbusds:nimbus-jose-jwt")
+    implementation("org.springframework.retry:spring-retry")
+    implementation("org.springframework.vault:spring-vault-core")
 }
 
 testing {
@@ -24,11 +27,23 @@ testing {
         val test by getting(JvmTestSuite::class) {
             useJUnitJupiter()
             testType.set(TestSuiteType.UNIT_TEST)
+            dependencies {
+                implementation("org.springframework.boot:spring-boot-starter-test")
+            }
         }
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()
             testType.set(TestSuiteType.INTEGRATION_TEST)
-            targets { all { testTask.configure { shouldRunAfter(test) } } }
+            dependencies {
+                implementation(project())
+                implementation("org.testcontainers:vault")
+                implementation("com.nimbusds:nimbus-jose-jwt")
+                implementation(project(":dynamic-jwks"))
+                implementation("org.testcontainers:junit-jupiter")
+                implementation("org.springframework.boot:spring-boot-starter-test")
+                implementation("org.springframework.boot:spring-boot-testcontainers")
+                implementation("org.springframework.cloud:spring-cloud-starter-vault-config")
+            }
         }
     }
 }
@@ -36,27 +51,6 @@ testing {
 signing {
     sign(publishing.publications)
     useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
-}
-
-val integrationTestImplementation: Configuration by configurations.getting {
-    extendsFrom(configurations.testImplementation.get())
-}
-
-dependencies {
-    implementation(project(":dynamic-jwks"))
-    implementation("org.slf4j:jul-to-slf4j")
-    implementation("com.nimbusds:nimbus-jose-jwt")
-    implementation("org.springframework.retry:spring-retry")
-    implementation("org.springframework.vault:spring-vault-core")
-    /* Unit Test */
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    /* Integration Test */
-    integrationTestImplementation(project)
-    integrationTestImplementation("org.testcontainers:vault")
-    integrationTestImplementation("org.testcontainers:junit-jupiter")
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
-    integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
-    integrationTestImplementation("org.springframework.cloud:spring-cloud-starter-vault-config")
 }
 
 publishing {

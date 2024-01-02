@@ -1,8 +1,8 @@
 @file:Suppress("UnstableApiUsage")
+
 plugins {
     id("signing")
     id("maven-publish")
-    id("jvm-test-suite")
 }
 
 java {
@@ -12,15 +12,6 @@ java {
 
 tasks.javadoc {
     options.encoding("UTF-8")
-}
-
-tasks.check {
-    dependsOn(testing.suites.named("integrationTest"))
-}
-
-signing {
-    sign(publishing.publications)
-    useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
 }
 
 dependencies {
@@ -44,7 +35,6 @@ testing {
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()
             testType.set(TestSuiteType.INTEGRATION_TEST)
-            targets { all { testTask.configure { shouldRunAfter(test) } } }
             dependencies {
                 implementation(project())
                 implementation("com.nimbusds:nimbus-jose-jwt")
@@ -52,6 +42,11 @@ testing {
             }
         }
     }
+}
+
+signing {
+    sign(publishing.publications)
+    useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
 }
 
 publishing {
