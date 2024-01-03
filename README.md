@@ -2,6 +2,7 @@
 ![Actions Badge](https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter/actions/workflows/git-hub-action-ci.yml/badge.svg)
 ![Actions Badge](https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter/actions/workflows/git-hub-action-release-ci-cd.yml/badge.svg)
 [![Maven Central Badge](https://img.shields.io/maven-central/v/io.github.world-wide-development/dynamic-jwks)](https://mvnrepository.com/artifact/io.github.world-wide-development)
+[![Codecov](https://codecov.io/gh/world-wide-development/dynamic-jwks-spring-boot-starter/graph/badge.svg?token=SZH5HVN1DS)](https://codecov.io/gh/world-wide-development/dynamic-jwks-spring-boot-starter)
 
 # Dynamic JWKS Spring Boot Starter
 
