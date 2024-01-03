@@ -1,8 +1,8 @@
 @file:Suppress("UnstableApiUsage")
+
 plugins {
     id("signing")
     id("maven-publish")
-    id("jvm-test-suite")
 }
 
 java {
@@ -14,19 +14,32 @@ tasks.javadoc {
     options.encoding("UTF-8")
 }
 
-tasks.check {
-    dependsOn(testing.suites.named("integrationTest"))
+dependencies {
+    implementation("org.slf4j:jul-to-slf4j")
+    implementation("com.nimbusds:nimbus-jose-jwt")
+    implementation("org.springframework:spring-core")
+    implementation("org.bouncycastle:bcpkix-jdk18on")
+    implementation("com.fasterxml.jackson.core:jackson-annotations")
 }
 
 testing {
     suites {
         val test by getting(JvmTestSuite::class) {
             useJUnitJupiter()
+            testType.set(TestSuiteType.UNIT_TEST)
+            dependencies {
+                implementation("nl.jqno.equalsverifier:equalsverifier")
+                implementation("org.springframework.boot:spring-boot-starter-test")
+            }
         }
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()
             testType.set(TestSuiteType.INTEGRATION_TEST)
-            targets { all { testTask.configure { shouldRunAfter(test) } } }
+            dependencies {
+                implementation(project())
+                implementation("com.nimbusds:nimbus-jose-jwt")
+                implementation("org.springframework.boot:spring-boot-starter-test")
+            }
         }
     }
 }
@@ -34,23 +47,6 @@ testing {
 signing {
     sign(publishing.publications)
     useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
-}
-
-val integrationTestImplementation: Configuration by configurations.getting {
-    extendsFrom(configurations.testImplementation.get())
-}
-
-dependencies {
-    implementation("org.slf4j:jul-to-slf4j")
-    implementation("com.nimbusds:nimbus-jose-jwt")
-    implementation("org.springframework:spring-core")
-    implementation("org.bouncycastle:bcpkix-jdk18on")
-    implementation("com.fasterxml.jackson.core:jackson-annotations")
-    /* Unit Test */
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    /* Integration Test */
-    integrationTestImplementation(project)
-    integrationTestImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 publishing {

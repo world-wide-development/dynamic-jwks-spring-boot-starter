@@ -5,10 +5,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.development.wide.world.spring.jwks.internal.*;
 import org.development.wide.world.spring.jwks.property.BCCertificateInternalProperties;
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
-import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
-import org.development.wide.world.spring.jwks.spi.CertificateRepository;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
-import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.*;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRepository;
@@ -43,6 +40,11 @@ public class RedisJwkSetIntegrationTestConfiguration {
             .build();
 
     @Bean
+    public CertificateService certificateService() {
+        return new DefaultCertificateService();
+    }
+
+    @Bean
     public JwkSetConverter jwkSetConverter() {
         return new JwkSetConverter();
     }
@@ -53,8 +55,8 @@ public class RedisJwkSetIntegrationTestConfiguration {
     }
 
     @Bean
-    public CertificateIssuer certificateIssuer() {
-        return new BouncyCastleCertificateIssuer(CERTIFICATE_PROPERTIES);
+    public CertificateIssuer certificateIssuer(final CertificateService certificateService) {
+        return new BouncyCastleCertificateIssuer(certificateService, CERTIFICATE_PROPERTIES);
     }
 
     @Bean

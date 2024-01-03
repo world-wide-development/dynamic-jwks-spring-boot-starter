@@ -5,10 +5,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.development.wide.world.spring.jwks.internal.*;
 import org.development.wide.world.spring.jwks.property.BCCertificateInternalProperties;
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
-import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
-import org.development.wide.world.spring.jwks.spi.CertificateRepository;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
-import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.*;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRepository;
@@ -79,6 +76,17 @@ public class DynamicRedisJwksAutoConfiguration {
     public static class JwksCertificateRotatorConfiguration {
 
         /**
+         * Instantiates {@link CertificateService} bean
+         *
+         * @return {@code CertificateService}
+         */
+        @Bean
+        @ConditionalOnMissingBean
+        public CertificateService certificateService() {
+            return new DefaultCertificateService();
+        }
+
+        /**
          * Instantiates {@link JwkSetConverter} bean
          *
          * @return {@code JwkSetConverter}
@@ -124,10 +132,12 @@ public class DynamicRedisJwksAutoConfiguration {
          */
         @Bean
         @ConditionalOnMissingBean
-        public CertificateIssuer certificateIssuer(final BCCertificateProperties bcProperties) {
+        public CertificateIssuer certificateIssuer(final BCCertificateProperties bcProperties,
+                                                   final CertificateService certificateService) {
             Assert.notNull(bcProperties, "bcProperties cannot be null");
+            Assert.notNull(certificateService, "certificateService cannot be null");
             final BCCertificateInternalProperties internalBcProperties = bcProperties.convertToInternal();
-            return new BouncyCastleCertificateIssuer(internalBcProperties);
+            return new BouncyCastleCertificateIssuer(certificateService, internalBcProperties);
         }
 
         /**

@@ -20,7 +20,11 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean test
+          arguments: clean test testCodeCoverageReport
+      - uses: codecov/codecov-action@v3
+        with:
+          files: "testCodeCoverageReport.xml"
+          directory: "./build/reports/jacoco/testCodeCoverageReport"
   integration-test:
     needs: unit-test
     runs-on: ubuntu-latest
@@ -33,4 +37,8 @@ jobs:
           distribution: corretto
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean integrationTest
+          arguments: clean integrationTest integrationTestCodeCoverageReport
+      - uses: codecov/codecov-action@v3
+        with:
+          files: "integrationTestCodeCoverageReport.xml"
+          directory: "./build/reports/jacoco/integrationTestCodeCoverageReport"

@@ -1,11 +1,11 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("java")
+    id("jvm-test-suite")
+    id("jacoco-report-aggregation")
     id("org.owasp.dependencycheck") version "9.0.7"
     id("io.spring.dependency-management") version "1.1.4"
-}
-
-tasks.jar {
-    enabled = false
 }
 
 extra["slf4jVersion"] = "2.0.9"
@@ -17,9 +17,14 @@ extra["springCoreVersion"] = "6.1.2"
 extra["springRetryVersion"] = "2.0.5"
 extra["springVaultVersion"] = "3.1.0"
 extra["bouncyCastleVersion"] = "1.76"
+extra["equalsVerifierVersion"] = "3.15.4"
 extra["testcontainersVersion"] = "1.18.3"
 extra["springVaultStarterVersion"] = "4.1.0"
 extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
+
+tasks.jar {
+    enabled = false
+}
 
 dependencyCheck {
     analyzers.apply {
@@ -33,14 +38,41 @@ dependencyCheck {
     }
 }
 
+dependencies {
+    jacocoAggregation(project(":dynamic-jwks"))
+    jacocoAggregation(project(":dynamic-vault-jwks"))
+    jacocoAggregation(project(":dynamic-redis-jwks"))
+    jacocoAggregation(project(":dynamic-vault-jwks-spring-boot"))
+    jacocoAggregation(project(":dynamic-redis-jwks-spring-boot"))
+}
+
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.UNIT_TEST)
+        }
+        register<JvmTestSuite>("integrationTest") {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.INTEGRATION_TEST)
+        }
+    }
+}
+
 subprojects {
 
     apply(plugin = "java")
+    apply(plugin = "jvm-test-suite")
+    apply(plugin = "jacoco-report-aggregation")
     apply(plugin = "org.owasp.dependencycheck")
     apply(plugin = "io.spring.dependency-management")
 
     version = "0.0.8"
     group = "io.github.world-wide-development"
+
+}
+
+allprojects {
 
     repositories {
         mavenCentral()
@@ -63,6 +95,7 @@ subprojects {
             dependency("org.testcontainers:junit-jupiter:${property("testcontainersVersion")}")
             dependency("org.springframework.retry:spring-retry:${property("springRetryVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-databind:${property("jacksonVersion")}")
+            dependency("nl.jqno.equalsverifier:equalsverifier:${property("equalsVerifierVersion")}")
             dependency("org.springframework.data:spring-data-redis:${property("springBootVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-annotations:${property("jacksonVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")
@@ -74,6 +107,7 @@ subprojects {
             dependency("org.springframework.boot:spring-boot-configuration-processor:${property("springBootVersion")}")
             dependency("org.springframework.cloud:spring-cloud-starter-vault-config:${property("springVaultStarterVersion")}")
         }
+
     }
 
 }

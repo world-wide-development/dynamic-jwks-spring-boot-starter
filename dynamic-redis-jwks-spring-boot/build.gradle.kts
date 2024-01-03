@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("signing")
     id("maven-publish")
@@ -12,11 +14,6 @@ tasks.javadoc {
     options.encoding("UTF-8")
 }
 
-signing {
-    sign(publishing.publications)
-    useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
-}
-
 dependencies {
     implementation(project(":dynamic-jwks"))
     implementation(project(":dynamic-redis-jwks"))
@@ -25,12 +22,30 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-autoconfigure-processor")
-    /* Test */
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-tasks.test {
-    useJUnitPlatform()
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.UNIT_TEST)
+            dependencies {
+                implementation("org.springframework.boot:spring-boot-starter-test")
+            }
+        }
+        register<JvmTestSuite>("integrationTest") {
+            useJUnitJupiter()
+            testType.set(TestSuiteType.INTEGRATION_TEST)
+            dependencies {
+                implementation("org.springframework.boot:spring-boot-starter-test")
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications)
+    useInMemoryPgpKeys(System.getenv("MAVEN_GPG_PRIVATE_KEY"), System.getenv("MAVEN_GPG_PASSPHRASE"))
 }
 
 publishing {

@@ -43,7 +43,7 @@ public class InternalKeyStore {
         try {
             return this.keyStore.getCertificate(this.alias);
         } catch (KeyStoreException e) {
-            throw new IllegalStateException("Unable to get certificate fro key store", e);
+            throw new IllegalStateException("Unable to get certificate from key store", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class InternalKeyStore {
         try (outputStream) {
             this.keyStore.store(outputStream, this.password);
             return outputStream;
-        } catch (KeyStoreException | CertificateException | IOException | NoSuchAlgorithmException e) {
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
             throw new IllegalStateException("Unable to serialize key store to output stream", e);
         }
     }
