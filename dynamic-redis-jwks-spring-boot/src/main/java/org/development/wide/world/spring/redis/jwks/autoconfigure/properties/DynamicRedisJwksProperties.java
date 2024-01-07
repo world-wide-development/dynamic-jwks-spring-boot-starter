@@ -7,23 +7,23 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.lang.NonNull;
 
-import java.time.Duration;
-
-@ConfigurationProperties("dynamic-jwks.redis")
-@EnableConfigurationProperties({RedisKvProperties.class})
+@EnableConfigurationProperties({
+        RedisKvProperties.class,
+        CertificateRotationProperties.class
+})
+@ConfigurationProperties("dynamic-jwks.redis-storage")
 public record DynamicRedisJwksProperties(
         @NestedConfigurationProperty
         @DefaultValue RedisKvProperties kv,
         @DefaultValue("false") Boolean enabled,
-        @DefaultValue("3") Integer certificateRotationRetries,
-        @DefaultValue("1s") Duration certificateRotationRetryFixedBackoff
+        @NestedConfigurationProperty
+        @DefaultValue CertificateRotationProperties certificateRotation
 ) {
 
     @NonNull
     public DynamicRedisJwksInternalProperties convertToInternal() {
         return DynamicRedisJwksInternalProperties.builder()
-                .certificateRotationRetryFixedBackoff(this.certificateRotationRetryFixedBackoff())
-                .certificateRotationRetries(this.certificateRotationRetries())
+                .certificateRotation(this.certificateRotation().convertToInternal())
                 .kv(this.kv().convertToInternal())
                 .enabled(this.enabled())
                 .build();

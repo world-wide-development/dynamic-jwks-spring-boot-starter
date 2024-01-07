@@ -7,7 +7,7 @@ import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 
-@ConfigurationProperties("dynamic-jwks.vault.pki")
+@ConfigurationProperties("dynamic-jwks.vault-storage.pki")
 public record VaultPkiProperties(
         @DefaultValue("pki") String rootPath,
         @DefaultValue("jwks") String roleName,

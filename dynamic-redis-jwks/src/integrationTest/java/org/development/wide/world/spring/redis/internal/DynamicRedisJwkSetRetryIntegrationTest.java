@@ -10,8 +10,6 @@ import core.config.RedisJwkSetIntegrationTestConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
-import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -19,18 +17,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+@SpringBootTest
 @Import({RedisJwkSetIntegrationTestConfiguration.class})
-@SpringBootTest(
-        classes = {
-                RedisAutoConfiguration.class,
-                TaskExecutionAutoConfiguration.class,
-                RedisJwkSetIntegrationTestConfiguration.class
-        },
-        properties = {
-                "spring.data.redis.client-type=lettuce",
-                "logging.level.org.development.wide.world=debug"
-        }
-)
 class DynamicRedisJwkSetRetryIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
@@ -40,12 +28,14 @@ class DynamicRedisJwkSetRetryIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void testGetInParallel() throws InterruptedException {
+        // Given
         final int threadsAmount = 10;
         final CountDownLatch countDownLatch = new CountDownLatch(threadsAmount);
         final JWKMatcher jwkMatcher = new JWKMatcher.Builder()
                 .build();
         final JWKSelector jwkSelector = new JWKSelector(jwkMatcher);
         final JWKSecurityContext jwkSecurityContext = new JWKSecurityContext(List.of());
+        // Expect
         for (int i = 0; i < threadsAmount; i++) {
             applicationTaskExecutor.execute(() -> {
                 Assertions.assertDoesNotThrow(() -> jwkSource.get(jwkSelector, jwkSecurityContext));

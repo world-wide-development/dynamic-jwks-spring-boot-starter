@@ -50,7 +50,7 @@ public final class CertificateUtils {
      *
      * @param certificate X509 Certificate to validate
      * @return {@code boolean ture} if certificate is valid
-     * @see #checkValidity(Instant, X509Certificate)
+     * @see #checkValidity(X509Certificate)
      */
     public static boolean checkValidity(@NonNull final X509Certificate certificate) {
         final Instant now = Instant.now();
@@ -64,7 +64,7 @@ public final class CertificateUtils {
      * @param instant     the Instant to check against
      * @param certificate X509 Certificate to validate
      * @return {@code boolean ture} if certificate is valid
-     * @see #checkValidity(X509Certificate)
+     * @see #checkValidity(Instant, X509Certificate)
      */
     public static boolean checkValidity(@NonNull final Instant instant, @NonNull final X509Certificate certificate) {
         try {

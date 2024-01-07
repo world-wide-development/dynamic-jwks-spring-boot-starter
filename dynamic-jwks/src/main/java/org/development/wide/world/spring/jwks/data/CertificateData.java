@@ -5,7 +5,10 @@ import org.springframework.lang.NonNull;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Optional.ofNullable;
 
@@ -17,10 +20,30 @@ public record CertificateData(
         List<X509Certificate> x509Certificates
 ) {
 
+    /**
+     * Verifies certificate validity
+     *
+     * @return {@code boolean true} if certificate is valid and {@code false} if not
+     */
     public boolean checkCertificateValidity() {
-        return ofNullable(x509Certificate())
-                .map(CertificateUtils::checkValidity)
-                .orElse(Boolean.FALSE);
+        return checkCertificateValidity(Duration.ZERO);
+    }
+
+    /**
+     * Verifies certificate validity
+     *
+     * @param validBefore the period for which the expiry threshold will be changed
+     * @return {@code boolean true} if certificate is valid and {@code false} if not
+     */
+    public boolean checkCertificateValidity(final Duration validBefore) {
+        return ofNullable(x509Certificate()).map(certificate -> {
+            if (Objects.isNull(validBefore) || Duration.ZERO.equals(validBefore)) {
+                return CertificateUtils.checkValidity(certificate);
+            }
+            final Instant expiryThreshold = Instant.now()
+                    .plusMillis(validBefore.toMillis());
+            return CertificateUtils.checkValidity(expiryThreshold, certificate);
+        }).orElse(Boolean.FALSE);
     }
 
     /* Builder */

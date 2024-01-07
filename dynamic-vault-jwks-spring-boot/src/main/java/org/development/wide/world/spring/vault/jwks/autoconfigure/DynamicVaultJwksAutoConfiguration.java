@@ -2,15 +2,9 @@ package org.development.wide.world.spring.vault.jwks.autoconfigure;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.development.wide.world.spring.jwks.internal.DefaultJwksCertificateRotator;
-import org.development.wide.world.spring.jwks.internal.DynamicJwkSet;
-import org.development.wide.world.spring.jwks.internal.InternalKeyStore;
-import org.development.wide.world.spring.jwks.internal.JwkSetConverter;
+import org.development.wide.world.spring.jwks.internal.*;
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
-import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
-import org.development.wide.world.spring.jwks.spi.CertificateRepository;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
-import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.*;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.vault.jwks.autoconfigure.properties.DynamicVaultJwksProperties;
 import org.development.wide.world.spring.vault.jwks.autoconfigure.properties.KeyStoreProperties;
@@ -56,20 +50,20 @@ import org.springframework.vault.core.VaultVersionedKeyValueOperations;
         after = {UserDetailsServiceAutoConfiguration.class},
         before = {OAuth2AuthorizationServerJwtAutoConfiguration.class}
 )
-@ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.vault.enabled"})
+@ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.vault-storage.enabled"})
 public class DynamicVaultJwksAutoConfiguration {
 
     /**
      * Instantiates {@link DynamicJwkSet} bean
      *
-     * @param certificateRotator required dependency of {@link RetryableJwksCertificateRotator} type
+     * @param jwkSetDataHolder required dependency of {@link JwkSetDataHolder} type
      * @return {@code JWKSource<SecurityContext>}
      */
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean({RetryableJwksCertificateRotator.class})
-    public JWKSource<SecurityContext> jwkSource(final RetryableJwksCertificateRotator certificateRotator) {
-        return new DynamicJwkSet(certificateRotator);
+    public JWKSource<SecurityContext> jwkSource(final JwkSetDataHolder jwkSetDataHolder) {
+        return new DynamicJwkSet(jwkSetDataHolder);
     }
 
     /**
@@ -79,7 +73,7 @@ public class DynamicVaultJwksAutoConfiguration {
      * @see RetryableJwksCertificateRotator
      */
     @Configuration(proxyBeanMethods = false)
-    @ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.vault.enabled"})
+    @ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.vault-storage.enabled"})
     public static class JwksCertificateRotatorConfiguration {
 
         /**
@@ -206,6 +200,19 @@ public class DynamicVaultJwksAutoConfiguration {
             Assert.notNull(jwksCertificateRotator, "jwksCertificateRotator cannot be null");
             final DynamicVaultJwksInternalProperties internalProperties = properties.convertToInternal();
             return new RetryableVaultJwksCertificateRotator(jwksCertificateRotator, internalProperties);
+        }
+
+        /**
+         * Conditionally instantiates {@link JwkSetDataHolder} bean
+         *
+         * @param retryableJwksCertificateRotator required dependency of {@link RetryableJwksCertificateRotator} type
+         * @return {@code JwkSetDataHolder}
+         */
+        @Bean
+        @ConditionalOnMissingBean
+        @ConditionalOnBean({RetryableJwksCertificateRotator.class})
+        public JwkSetDataHolder jwkSetDataHolder(@NonNull final RetryableJwksCertificateRotator retryableJwksCertificateRotator) {
+            return new AtomicJwkSetDataHolder(retryableJwksCertificateRotator);
         }
 
     }

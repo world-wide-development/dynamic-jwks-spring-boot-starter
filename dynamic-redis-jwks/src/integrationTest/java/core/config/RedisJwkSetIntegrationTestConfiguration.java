@@ -9,13 +9,15 @@ import org.development.wide.world.spring.jwks.spi.*;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRepository;
+import org.development.wide.world.spring.redis.internal.RedisCertificateRotationTask;
 import org.development.wide.world.spring.redis.internal.RetryableRedisJwksCertificateRotator;
-import org.development.wide.world.spring.redis.property.DynamicRedisJwksInternalProperties;
-import org.development.wide.world.spring.redis.property.RedisKvInternalProperties;
+import org.development.wide.world.spring.redis.property.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.integration.redis.util.RedisLockRegistry;
+import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.lang.NonNull;
 
 import java.time.Duration;
@@ -23,10 +25,22 @@ import java.time.Duration;
 @TestConfiguration(proxyBeanMethods = false)
 public class RedisJwkSetIntegrationTestConfiguration {
 
+    static final RotationScheduleInternalProperties ROTATION_SCHEDULE_PROPERTIES = RotationScheduleInternalProperties.builder()
+            .enabled(Boolean.FALSE)
+            .build();
+    static final RotationRetryInternalProperties ROTATION_RETRY_PROPERTIES = RotationRetryInternalProperties.builder()
+            .fixedBackoff(Duration.ofMillis(500))
+            .maxAttempts(10)
+            .build();
+    static final CertificateRotationInternalProperties CERTIFICATE_ROTATION_PROPERTIES = CertificateRotationInternalProperties.builder()
+            .rotationLockKey("given-rotation-lock-key")
+            .schedule(ROTATION_SCHEDULE_PROPERTIES)
+            .rotateBefore(Duration.ofSeconds(1))
+            .retry(ROTATION_RETRY_PROPERTIES)
+            .build();
     static final DynamicRedisJwksInternalProperties REDIS_JWKS_PROPERTIES = DynamicRedisJwksInternalProperties.builder()
             .kv(RedisKvInternalProperties.builder().certificateKey("authorization.certificate").build())
-            .certificateRotationRetryFixedBackoff(Duration.ofMillis(500))
-            .certificateRotationRetries(10)
+            .certificateRotation(CERTIFICATE_ROTATION_PROPERTIES)
             .enabled(Boolean.TRUE)
             .build();
     static final BCCertificateInternalProperties CERTIFICATE_PROPERTIES = BCCertificateInternalProperties.builder()
@@ -40,11 +54,6 @@ public class RedisJwkSetIntegrationTestConfiguration {
             .build();
 
     @Bean
-    public CertificateService certificateService() {
-        return new DefaultCertificateService();
-    }
-
-    @Bean
     public JwkSetConverter jwkSetConverter() {
         return new JwkSetConverter();
     }
@@ -52,6 +61,17 @@ public class RedisJwkSetIntegrationTestConfiguration {
     @Bean
     public InternalKeyStore internalKeyStore() {
         return new InternalKeyStore(KEY_STORE_PROPERTIES);
+    }
+
+    @Bean
+    public CertificateService certificateService() {
+        return new DefaultCertificateService();
+    }
+
+    @Bean
+    public LockRegistry lockRegistry(final RedisConnectionFactory redisConnectionFactory) {
+        final String lockKey = CERTIFICATE_ROTATION_PROPERTIES.rotationLockKey();
+        return new RedisLockRegistry(redisConnectionFactory, lockKey);
     }
 
     @Bean
@@ -65,8 +85,14 @@ public class RedisJwkSetIntegrationTestConfiguration {
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(@NonNull final RetryableJwksCertificateRotator certificateRotator) {
-        return new DynamicJwkSet(certificateRotator);
+    public JWKSource<SecurityContext> jwkSource(@NonNull final JwkSetDataHolder jwkSetDataHolder) {
+        return new DynamicJwkSet(jwkSetDataHolder);
+    }
+
+    @Bean
+    public RedisCertificateRotationTask redisCertificateRotationTask(final LockRegistry lockRegistry,
+                                                                     final JwkSetDataHolder jwkSetDataHolder) {
+        return new RedisCertificateRotationTask(lockRegistry, jwkSetDataHolder, CERTIFICATE_ROTATION_PROPERTIES);
     }
 
     @Bean
@@ -85,6 +111,11 @@ public class RedisJwkSetIntegrationTestConfiguration {
     @Bean
     public RetryableJwksCertificateRotator retryableJwksCertificateRotator(@NonNull final JwksCertificateRotator certificateRotator) {
         return new RetryableRedisJwksCertificateRotator(certificateRotator, REDIS_JWKS_PROPERTIES);
+    }
+
+    @Bean
+    public JwkSetDataHolder jwkSetDataHolder(@NonNull final RetryableJwksCertificateRotator retryableJwksCertificateRotator) {
+        return new AtomicJwkSetDataHolder(retryableJwksCertificateRotator);
     }
 
     @Bean

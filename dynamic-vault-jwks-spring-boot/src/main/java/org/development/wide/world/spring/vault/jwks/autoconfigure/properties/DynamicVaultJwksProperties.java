@@ -19,7 +19,7 @@ import org.springframework.lang.NonNull;
         VaultPkiProperties.class,
         VaultVersionedKvProperties.class
 })
-@ConfigurationProperties("dynamic-jwks.vault")
+@ConfigurationProperties("dynamic-jwks.vault-storage")
 public record DynamicVaultJwksProperties(
         @NestedConfigurationProperty
         @DefaultValue VaultPkiProperties pki,

@@ -1,9 +1,6 @@
 package org.development.wide.world.spring.jwks.spi;
 
-import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
-
-import java.util.function.Function;
 
 /**
  * The main contract defining certificate rotation mechanisms for dynamic JWKS
@@ -17,6 +14,6 @@ public interface JwksCertificateRotator {
      *
      * @return {@code JwkSetData} with fresh certificate
      */
-    JwkSetData rotate(Function<Function<String, CertificateData>, CertificateData> rotationFn);
+    JwkSetData rotate(JwkSetRotationFunction rotationFn);
 
 }

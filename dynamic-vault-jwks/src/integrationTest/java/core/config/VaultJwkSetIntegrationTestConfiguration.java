@@ -2,15 +2,9 @@ package core.config;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.development.wide.world.spring.jwks.internal.DefaultJwksCertificateRotator;
-import org.development.wide.world.spring.jwks.internal.DynamicJwkSet;
-import org.development.wide.world.spring.jwks.internal.InternalKeyStore;
-import org.development.wide.world.spring.jwks.internal.JwkSetConverter;
+import org.development.wide.world.spring.jwks.internal.*;
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
-import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
-import org.development.wide.world.spring.jwks.spi.CertificateRepository;
-import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
-import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.development.wide.world.spring.jwks.spi.*;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.vault.jwks.internal.RetryableVaultJwksCertificateRotator;
 import org.development.wide.world.spring.vault.jwks.internal.VaultCertificateDataConverter;
@@ -86,8 +80,13 @@ public class VaultJwkSetIntegrationTestConfiguration {
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(@NonNull final RetryableJwksCertificateRotator certificateRotator) {
-        return new DynamicJwkSet(certificateRotator);
+    public JwkSetDataHolder jwkSetDataHolder(@NonNull final RetryableJwksCertificateRotator retryableJwksCertificateRotator) {
+        return new AtomicJwkSetDataHolder(retryableJwksCertificateRotator);
+    }
+
+    @Bean
+    public JWKSource<SecurityContext> jwkSource(@NonNull final JwkSetDataHolder jwkSetDataHolder) {
+        return new DynamicJwkSet(jwkSetDataHolder);
     }
 
     @Bean
