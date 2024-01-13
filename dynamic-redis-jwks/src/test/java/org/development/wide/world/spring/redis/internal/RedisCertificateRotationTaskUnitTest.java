@@ -35,7 +35,7 @@ class RedisCertificateRotationTaskUnitTest extends BaseUnitTest {
     @Test
     void testRunSuccess() throws Exception {
         // Before
-        LogbackUtils.changeLoggingLevel(Level.DEBUG, RedisCertificateRotationTask.class);
+        LogbackUtils.changeLoggingLevel(Level.TRACE, RedisCertificateRotationTask.class);
         // Given
         final String givenLockKey = "given-lock-key";
         final Duration givenRotateBefore = Duration.ofMinutes(2);
@@ -60,7 +60,7 @@ class RedisCertificateRotationTaskUnitTest extends BaseUnitTest {
     @Test
     void testRunThrowsInterruptedException() throws Exception {
         // Before
-        LogbackUtils.changeLoggingLevel(Level.INFO, RedisCertificateRotationTask.class);
+        LogbackUtils.changeLoggingLevel(Level.TRACE, RedisCertificateRotationTask.class);
         // Given
         final String givenLockKey = "given-lock-key";
         final Duration givenRotateBefore = Duration.ofMinutes(2);

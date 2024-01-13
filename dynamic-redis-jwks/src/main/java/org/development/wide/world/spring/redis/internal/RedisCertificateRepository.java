@@ -30,9 +30,15 @@ public class RedisCertificateRepository implements CertificateRepository {
 
     public RedisCertificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
                                       @NonNull final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate) {
+        this(keyStoreTemplate, redisTemplate, redisTemplate.opsForHash());
+    }
+
+    public RedisCertificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
+                                      @NonNull final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate,
+                                      @NonNull final HashOperations<String, String, VersionedKeyStoreSource> valueOperations) {
         this.redisTemplate = redisTemplate;
+        this.valueOperations = valueOperations;
         this.keyStoreTemplate = keyStoreTemplate;
-        this.valueOperations = redisTemplate.opsForHash();
     }
 
     /**

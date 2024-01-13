@@ -29,8 +29,8 @@ public class RedisCertificateRotationTask implements CertificateRotationTask {
     public void run() {
         final String lockKey = rotationProperties.rotationLockKey();
         final Duration rotateBefore = rotationProperties.rotateBefore();
-        if (logger.isDebugEnabled()) {
-            logger.debug("Run JWKS certificate rotation task {} {}", lockKey, rotateBefore);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Run JWKS certificate rotation task {} {}", lockKey, rotateBefore);
         }
         try {
             lockRegistry.executeLocked(lockKey, () -> jwkSetDataHolder.rotateInAdvanceIfAny(rotateBefore));

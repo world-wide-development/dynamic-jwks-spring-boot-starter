@@ -26,6 +26,7 @@ import java.time.Duration;
 public class RedisJwkSetIntegrationTestConfiguration {
 
     static final RotationScheduleInternalProperties ROTATION_SCHEDULE_PROPERTIES = RotationScheduleInternalProperties.builder()
+            .interval(Duration.ofMillis(900))
             .enabled(Boolean.FALSE)
             .build();
     static final RotationRetryInternalProperties ROTATION_RETRY_PROPERTIES = RotationRetryInternalProperties.builder()

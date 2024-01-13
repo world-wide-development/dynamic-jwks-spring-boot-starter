@@ -44,7 +44,7 @@ class DefaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
 
     @BeforeAll
     static void setUpAll() {
-        LogbackUtils.changeLoggingLevel(Level.DEBUG, DefaultJwksCertificateRotator.class);
+        LogbackUtils.changeLoggingLevel(Level.TRACE, DefaultJwksCertificateRotator.class);
     }
 
     @Test

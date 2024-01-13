@@ -43,7 +43,7 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
     @Test
     void testGetActualValidCertificate() {
         // Init
-        LogbackUtils.changeLoggingLevel(Level.DEBUG, AtomicJwkSetDataHolder.class);
+        LogbackUtils.changeLoggingLevel(Level.TRACE, AtomicJwkSetDataHolder.class);
         // Given
         final Duration givenRotateBefore = Duration.ZERO;
         final JwkSetData givenJwkSetData = JwkSetData.builder()
@@ -66,7 +66,7 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
     @Test
     void testGetActualInvalidCertificate() {
         // Init
-        LogbackUtils.changeLoggingLevel(Level.DEBUG, AtomicJwkSetDataHolder.class);
+        LogbackUtils.changeLoggingLevel(Level.TRACE, AtomicJwkSetDataHolder.class);
         // Given
         final Duration givenRotateBefore = Duration.ZERO;
         final JwkSetData givenJwkSetData = JwkSetData.builder()

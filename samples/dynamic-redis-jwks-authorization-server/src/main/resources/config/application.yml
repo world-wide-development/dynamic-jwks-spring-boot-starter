@@ -37,8 +37,7 @@ spring:
 logging:
   level:
     org.springframework.security: trace
-    org.development.wide.world.spring.jwks: debug
-    org.development.wide.world.spring.redis: debug
+    org.development.wide.world.spring: trace
 ### Dynamic JWKS ###
 dynamic-jwks:
   bc-certificate:

@@ -39,13 +39,13 @@ public class AtomicJwkSetDataHolder implements JwkSetDataHolder {
     public JwkSetData rotateInAdvanceIfAny(final Duration rotateBefore) {
         return jwkSetHolderAtomicReference.updateAndGet(jwkSetData -> {
             if (Objects.nonNull(jwkSetData) && jwkSetData.checkCertificateValidity(rotateBefore)) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("JWK Set still fresh, rotation is not necessary");
+                if (logger.isTraceEnabled()) {
+                    logger.trace("JWK Set still fresh, rotation is not necessary");
                 }
                 return jwkSetData;
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug("JWK Set expired, rotating it out");
+            if (logger.isTraceEnabled()) {
+                logger.trace("JWK Set expired, rotating it out");
             }
             return certificateRotator.rotate();
         });
