@@ -1,0 +1,5 @@
+### Logging ###
+logging:
+  level:
+    org.development.wide.world: debug
+### Dynamic JWKS ###

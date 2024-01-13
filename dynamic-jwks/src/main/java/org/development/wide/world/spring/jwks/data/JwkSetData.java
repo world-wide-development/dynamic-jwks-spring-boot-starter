@@ -3,6 +3,8 @@ package org.development.wide.world.spring.jwks.data;
 import com.nimbusds.jose.jwk.JWKSet;
 import org.springframework.lang.NonNull;
 
+import java.time.Duration;
+
 import static java.util.Optional.ofNullable;
 
 public record JwkSetData(
@@ -11,8 +13,14 @@ public record JwkSetData(
 ) {
 
     public boolean checkCertificateValidity() {
-        return ofNullable(certificateData())
+        return ofNullable(this.certificateData())
                 .map(CertificateData::checkCertificateValidity)
+                .orElse(Boolean.FALSE);
+    }
+
+    public boolean checkCertificateValidity(final Duration validBefore) {
+        return ofNullable(this.certificateData())
+                .map(certificateData -> certificateData.checkCertificateValidity(validBefore))
                 .orElse(Boolean.FALSE);
     }
 

@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.lang.NonNull;
 
-@ConfigurationProperties("dynamic-jwks.redis.kv")
+@ConfigurationProperties("dynamic-jwks.redis-storage.kv")
 public record RedisKvProperties(
         @DefaultValue("authorization.certificate") String certificateKey
 ) {

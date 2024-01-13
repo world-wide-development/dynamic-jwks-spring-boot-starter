@@ -2,16 +2,19 @@ package org.development.wide.world.spring.jwks.internal;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import org.development.wide.world.spring.jwks.data.CertificateData;
+import org.development.wide.world.spring.jwks.data.CertificateRotationData;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.jwks.spi.CertificateRepository;
+import org.development.wide.world.spring.jwks.spi.JwkSetRotationFunction;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
-import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
-import java.util.function.Function;
+import java.time.Duration;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * Default implementation of the {@link JwksCertificateRotator}
@@ -39,10 +42,10 @@ public class DefaultJwksCertificateRotator implements JwksCertificateRotator {
     }
 
     /**
-     * @see RetryableJwksCertificateRotator#rotate()
+     * @see JwksCertificateRotator#rotate(JwkSetRotationFunction)
      */
     @Override
-    public JwkSetData rotate(@NonNull final Function<Function<String, CertificateData>, CertificateData> rotationFn) {
+    public JwkSetData rotate(@NonNull final JwkSetRotationFunction rotationFn) {
         final CertificateData certificateData = rotationFn.apply(this::rotateCertificateData);
         final JWKSet jwkSet = jwkSetConverter.convert(certificateData);
         return JwkSetData.builder()
@@ -52,9 +55,12 @@ public class DefaultJwksCertificateRotator implements JwksCertificateRotator {
     }
 
     /* Private methods */
-    private CertificateData rotateCertificateData(final String key) {
+    private CertificateData rotateCertificateData(@NonNull final CertificateRotationData rotationData) {
+        final String key = rotationData.key();
+        final Duration rotateBefore = ofNullable(rotationData.rotateBefore())
+                .orElse(Duration.ZERO);
         return certificateRepository.findOne(key).map(certificateData -> {
-            if (certificateData.checkCertificateValidity()) {
+            if (certificateData.checkCertificateValidity(rotateBefore)) {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Certificate is valid and will be used");
                 }

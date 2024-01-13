@@ -6,21 +6,11 @@ import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotato
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
+@SpringBootTest
 @Import({RedisJwkSetIntegrationTestConfiguration.class})
-@SpringBootTest(
-        classes = {
-                RedisAutoConfiguration.class,
-                RedisJwkSetIntegrationTestConfiguration.class
-        },
-        properties = {
-                "spring.data.redis.client-type=lettuce",
-                "logging.level.org.development.wide.world=debug"
-        }
-)
 class RetryableRedisJwksCertificateRotatorIntegrationTest extends BaseIntegrationTest {
 
     @Autowired

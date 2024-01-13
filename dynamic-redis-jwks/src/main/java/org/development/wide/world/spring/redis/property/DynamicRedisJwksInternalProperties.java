@@ -2,13 +2,10 @@ package org.development.wide.world.spring.redis.property;
 
 import org.springframework.lang.NonNull;
 
-import java.time.Duration;
-
 public record DynamicRedisJwksInternalProperties(
         Boolean enabled,
         RedisKvInternalProperties kv,
-        Integer certificateRotationRetries,
-        Duration certificateRotationRetryFixedBackoff
+        CertificateRotationInternalProperties certificateRotation
 ) {
 
     /* Builder */
@@ -21,8 +18,7 @@ public record DynamicRedisJwksInternalProperties(
 
         private Boolean enabled;
         private RedisKvInternalProperties kv;
-        private Integer certificateRotationRetries;
-        private Duration certificateRotationRetryFixedBackoff;
+        private CertificateRotationInternalProperties certificateRotation;
 
         public Builder enabled(Boolean enabled) {
             this.enabled = enabled;
@@ -34,19 +30,14 @@ public record DynamicRedisJwksInternalProperties(
             return this;
         }
 
-        public Builder certificateRotationRetries(Integer certificateRotationRetries) {
-            this.certificateRotationRetries = certificateRotationRetries;
-            return this;
-        }
-
-        public Builder certificateRotationRetryFixedBackoff(Duration certificateRotationRetryFixedBackoff) {
-            this.certificateRotationRetryFixedBackoff = certificateRotationRetryFixedBackoff;
+        public Builder certificateRotation(CertificateRotationInternalProperties certificateRotation) {
+            this.certificateRotation = certificateRotation;
             return this;
         }
 
         @NonNull
         public DynamicRedisJwksInternalProperties build() {
-            return new DynamicRedisJwksInternalProperties(enabled, kv, certificateRotationRetries, certificateRotationRetryFixedBackoff);
+            return new DynamicRedisJwksInternalProperties(enabled, kv, certificateRotation);
         }
 
     }

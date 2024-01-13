@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("jvm-test-suite")
     id("jacoco-report-aggregation")
-    id("org.owasp.dependencycheck") version "9.0.7"
+    id("org.owasp.dependencycheck") version "9.0.8"
     id("io.spring.dependency-management") version "1.1.4"
 }
 
@@ -13,12 +13,13 @@ extra["snakeYamlVersion"] = "2.2"
 extra["jacksonVersion"] = "2.16.1"
 extra["nimbusJoseVersion"] = "9.36"
 extra["springBootVersion"] = "3.1.7"
-extra["springCoreVersion"] = "6.1.2"
 extra["springRetryVersion"] = "2.0.5"
 extra["springVaultVersion"] = "3.1.0"
-extra["bouncyCastleVersion"] = "1.76"
+extra["bouncyCastleVersion"] = "1.77"
 extra["equalsVerifierVersion"] = "3.15.4"
 extra["testcontainersVersion"] = "1.18.3"
+extra["springFrameworkVersion"] = "6.1.2"
+extra["springIntegrationVersion"] = "6.2.1"
 extra["springVaultStarterVersion"] = "4.1.0"
 extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
 
@@ -90,8 +91,8 @@ allprojects {
             dependency("org.slf4j:jul-to-slf4j:${property("slf4jVersion")}")
             dependency("com.nimbusds:nimbus-jose-jwt:${property("nimbusJoseVersion")}")
             dependency("org.testcontainers:vault:${property("testcontainersVersion")}")
-            dependency("org.springframework:spring-core:${property("springCoreVersion")}")
             dependency("org.bouncycastle:bcpkix-jdk18on:${property("bouncyCastleVersion")}")
+            dependency("org.springframework:spring-core:${property("springFrameworkVersion")}")
             dependency("org.testcontainers:junit-jupiter:${property("testcontainersVersion")}")
             dependency("org.springframework.retry:spring-retry:${property("springRetryVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-databind:${property("jacksonVersion")}")
@@ -103,8 +104,11 @@ allprojects {
             dependency("org.springframework.boot:spring-boot-autoconfigure:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-testcontainers:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-starter-data-redis:${property("springBootVersion")}")
+            dependency("org.springframework.boot:spring-boot-starter-validation:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-autoconfigure-processor:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-configuration-processor:${property("springBootVersion")}")
+            dependency("org.springframework.integration:spring-integration-core:${property("springIntegrationVersion")}")
+            dependency("org.springframework.integration:spring-integration-redis:${property("springIntegrationVersion")}")
             dependency("org.springframework.cloud:spring-cloud-starter-vault-config:${property("springVaultStarterVersion")}")
         }
 

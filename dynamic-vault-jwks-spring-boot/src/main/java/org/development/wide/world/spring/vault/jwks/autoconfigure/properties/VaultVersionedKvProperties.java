@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.lang.NonNull;
 
-@ConfigurationProperties("dynamic-jwks.vault.versioned-kv")
+@ConfigurationProperties("dynamic-jwks.vault-storage.versioned-kv")
 public record VaultVersionedKvProperties(
         @DefaultValue("secret") String rootPath,
         @DefaultValue("authorization.certificate") String certificatePath

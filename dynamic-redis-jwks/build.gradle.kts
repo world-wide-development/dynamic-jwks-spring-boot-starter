@@ -2,6 +2,7 @@
 
 plugins {
     id("signing")
+    id("java-library")
     id("maven-publish")
 }
 
@@ -20,6 +21,8 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.data:spring-data-redis")
+    implementation("org.springframework.integration:spring-integration-core")
+    implementation("org.springframework.integration:spring-integration-redis")
 }
 
 testing {
@@ -42,6 +45,8 @@ testing {
                 implementation("org.springframework.boot:spring-boot-starter-test")
                 implementation("org.springframework.boot:spring-boot-testcontainers")
                 implementation("org.springframework.boot:spring-boot-starter-data-redis")
+                implementation("org.springframework.integration:spring-integration-core")
+                implementation("org.springframework.integration:spring-integration-redis")
             }
         }
     }

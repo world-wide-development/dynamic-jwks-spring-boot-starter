@@ -1,9 +1,10 @@
 package org.development.wide.world.spring.jwks.internal;
 
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 import core.base.BaseUnitTest;
+import core.utils.LogbackUtils;
 import org.development.wide.world.spring.jwks.data.CertificateData;
+import org.development.wide.world.spring.jwks.data.CertificateRotationData;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.property.BCCertificateInternalProperties;
 import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 import java.time.Duration;
@@ -44,9 +44,7 @@ class DefaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
 
     @BeforeAll
     static void setUpAll() {
-        if (LoggerFactory.getLogger(DefaultJwksCertificateRotator.class) instanceof Logger logbackLogger) {
-            logbackLogger.setLevel(Level.DEBUG);
-        }
+        LogbackUtils.changeLoggingLevel(Level.TRACE, DefaultJwksCertificateRotator.class);
     }
 
     @Test
@@ -54,13 +52,16 @@ class DefaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
         // Given
         final int givenVersion = 3;
         final String givenKey = "given-key";
+        final CertificateRotationData givenRotationData = CertificateRotationData.builder()
+                .key(givenKey)
+                .build();
         final CertificateData givenCertificateData = CertificateIssuerTestWrapper.of(Duration.ofDays(30)).issueOne()
                 .toBuilder()
                 .version(givenVersion)
                 .build();
         BDDMockito.given(certificateRepository.findOne(givenKey)).willReturn(Optional.of(givenCertificateData));
         // When
-        final JwkSetData result = certificateRotator.rotate(function -> function.apply(givenKey));
+        final JwkSetData result = certificateRotator.rotate(function -> function.apply(givenRotationData));
         // Then
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.jwkSet());
@@ -78,6 +79,9 @@ class DefaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
         // Given
         final int givenVersion = 3;
         final String givenKey = "given-key";
+        final CertificateRotationData givenRotationData = CertificateRotationData.builder()
+                .key(givenKey)
+                .build();
         final CertificateData givenCertificateData = CertificateIssuerTestWrapper.of(Duration.ZERO).issueOne()
                 .toBuilder()
                 .version(givenVersion)
@@ -88,7 +92,7 @@ class DefaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
         BDDMockito.given(certificateRepository.saveOne(BDDMockito.eq(givenKey), rotatedCertificateData.capture()))
                 .willAnswer(invocation -> rotatedCertificateData.getValue());
         // When
-        final JwkSetData result = certificateRotator.rotate(function -> function.apply(givenKey));
+        final JwkSetData result = certificateRotator.rotate(function -> function.apply(givenRotationData));
         // Then
         Assertions.assertNotNull(result);
         Assertions.assertNotNull(result.jwkSet());

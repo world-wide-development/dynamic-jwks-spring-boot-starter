@@ -30,11 +30,11 @@ logging:
 ### Dynamic JWKS ###
 dynamic-jwks:
   key-store:
-    alias: "${random.uuid}"
-    password: "${random.uuid}-${random.long}"
-  vault:
+    alias: "sample-key-store-alias"
+    password: "sample-key-store-password"
+  vault-storage:
     enabled: on
     versioned-kv:
-      certificate-path: "${random.uuid}"
+      certificate-path: "sample-certificate-path"
     pki:
-      certificate-common-name: "${random.uuid}"
+      certificate-common-name: "sample-certificate-common-name"
