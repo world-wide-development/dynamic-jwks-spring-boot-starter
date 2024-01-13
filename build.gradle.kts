@@ -104,6 +104,7 @@ allprojects {
             dependency("org.springframework.boot:spring-boot-autoconfigure:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-testcontainers:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-starter-data-redis:${property("springBootVersion")}")
+            dependency("org.springframework.boot:spring-boot-starter-validation:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-autoconfigure-processor:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-configuration-processor:${property("springBootVersion")}")
             dependency("org.springframework.integration:spring-integration-core:${property("springIntegrationVersion")}")

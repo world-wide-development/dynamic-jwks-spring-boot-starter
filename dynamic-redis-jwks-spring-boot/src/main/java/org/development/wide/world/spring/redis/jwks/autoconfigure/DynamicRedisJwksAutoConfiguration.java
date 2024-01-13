@@ -44,6 +44,7 @@ import org.springframework.util.Assert;
 @EnableConfigurationProperties({
         RedisKvProperties.class,
         KeyStoreProperties.class,
+        DynamicJwksProperties.class,
         BCCertificateProperties.class,
         DynamicRedisJwksProperties.class,
         RotationScheduleProperties.class,

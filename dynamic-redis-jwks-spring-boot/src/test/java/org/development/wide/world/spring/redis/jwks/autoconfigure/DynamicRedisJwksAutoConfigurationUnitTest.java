@@ -35,6 +35,7 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
     void testThePresenceOfTheConfiguredBeansFirst() {
         // Given
         final ApplicationContextRunner applicationContextRunner = this.contextRunner
+                .withPropertyValues("dynamic-jwks.key-store.password=password")
                 .withPropertyValues("dynamic-jwks.redis-storage.enabled=true")
                 .withUserConfiguration(UnitTestFirstConfiguration.class);
         // Expect
@@ -61,6 +62,7 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
     void testThePresenceOfTheConfiguredBeansSecond() {
         // Given
         final ApplicationContextRunner applicationContextRunner = this.contextRunner
+                .withPropertyValues("dynamic-jwks.key-store.password=password")
                 .withPropertyValues("dynamic-jwks.redis-storage.enabled=true")
                 .withUserConfiguration(UnitTestSecondConfiguration.class);
         // Expect
@@ -114,6 +116,7 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
         // Given
         final ApplicationContextRunner applicationContextRunner = this.contextRunner
                 .withPropertyValues("dynamic-jwks.redis-storage.certificate-rotation.schedule.enabled=false")
+                .withPropertyValues("dynamic-jwks.key-store.password=password")
                 .withPropertyValues("dynamic-jwks.redis-storage.enabled=true")
                 .withUserConfiguration(UnitTestFirstConfiguration.class);
         // Expect

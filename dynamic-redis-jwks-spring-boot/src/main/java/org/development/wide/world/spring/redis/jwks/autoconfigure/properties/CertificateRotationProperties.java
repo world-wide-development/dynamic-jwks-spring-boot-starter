@@ -23,6 +23,12 @@ public record CertificateRotationProperties(
         @DefaultValue("auth-cert-rotation-lock-key") String rotationLockKey
 ) {
 
+    public static final int SCHEDULE_INTERVAL_RESERVE_SECONDS = 10;
+
+    public CertificateRotationProperties {
+        this.validateRotateBeforeProperty(rotateBefore, schedule);
+    }
+
     @NonNull
     public CertificateRotationInternalProperties convertToInternal() {
         return CertificateRotationInternalProperties.builder()
@@ -31,6 +37,16 @@ public record CertificateRotationProperties(
                 .rotationLockKey(this.rotationLockKey())
                 .rotateBefore(this.rotateBefore())
                 .build();
+    }
+
+    /* Private methods */
+    private void validateRotateBeforeProperty(@NonNull final Duration rotateBefore,
+                                              @NonNull final RotationScheduleProperties schedule) {
+        final Duration fallbackInterval = schedule.interval()
+                .plusSeconds(SCHEDULE_INTERVAL_RESERVE_SECONDS);
+        if (rotateBefore.compareTo(fallbackInterval) < 0) {
+            throw new IllegalStateException("rotateBefore must be greater then schedule interval");
+        }
     }
 
 }

@@ -10,7 +10,7 @@ import java.time.Duration;
 @ConfigurationProperties("dynamic-jwks.redis-storage.certificate-rotation.schedule")
 public record RotationScheduleProperties(
         @DefaultValue("true") Boolean enabled,
-        @DefaultValue("20m") Duration interval
+        @DefaultValue("5m") Duration interval
 ) {
 
     @NonNull
