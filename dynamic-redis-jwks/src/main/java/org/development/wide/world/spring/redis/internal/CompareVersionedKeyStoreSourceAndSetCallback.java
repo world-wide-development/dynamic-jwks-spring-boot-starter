@@ -7,9 +7,9 @@ import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -52,28 +52,29 @@ public class CompareVersionedKeyStoreSourceAndSetCallback implements SessionCall
     @Override
     @SuppressWarnings({"unchecked"})
     public <K, V> Boolean execute(@NonNull final RedisOperations<K, V> operations) throws DataAccessException {
-        final K typeSafeKey = (K) key;
-        operations.watch(typeSafeKey);
-        final HashOperations<K, K, V> valueOperations = operations.opsForHash();
-        final Optional<Integer> optionalVersion = ofNullable(valueOperations.get(typeSafeKey, key))
+        final K concreteKey = (K) key;
+        operations.watch(concreteKey);
+        final ValueOperations<K, V> valueOperations = operations.opsForValue();
+        final Optional<Integer> optionalVersion = ofNullable(valueOperations.get(concreteKey))
                 .map(VersionedKeyStoreSource.class::cast)
                 .map(VersionedKeyStoreSource::version);
-        if (optionalVersion.map(version -> version.equals(certificateData.version())).orElse(Boolean.TRUE)) {
+        final Integer lastVersion = certificateData.version();
+        if (optionalVersion.map(version -> version.equals(lastVersion)).orElse(Boolean.TRUE)) {
             operations.multi();
-            final Integer freshVersion = certificateData.version() + 1;
-            final CertificateData freshCertificateData = certificateData.toBuilder()
-                    .version(freshVersion)
+            final Integer nextVersion = lastVersion + 1;
+            final CertificateData nextCertificateData = certificateData.toBuilder()
+                    .version(nextVersion)
                     .build();
-            final KeyStoreSource freshKeyStoreSource = keyStoreTemplate.saveCertificate(freshCertificateData);
-            final VersionedKeyStoreSource freshVersionedKeyStoreSource = VersionedKeyStoreSource.builder()
-                    .keyStoreSource(freshKeyStoreSource)
-                    .version(freshVersion)
+            final KeyStoreSource nextKeyStoreSource = keyStoreTemplate.saveCertificate(nextCertificateData);
+            final V freshVersionedKeyStoreSource = (V) VersionedKeyStoreSource.builder()
+                    .keyStoreSource(nextKeyStoreSource)
+                    .version(nextVersion)
                     .build();
-            valueOperations.put(typeSafeKey, typeSafeKey, (V) freshVersionedKeyStoreSource);
+            valueOperations.set(concreteKey, freshVersionedKeyStoreSource);
             final List<Object> operationResults = operations.exec();
             if (!operationResults.isEmpty()) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Save certificate, version {}", freshVersion);
+                    logger.debug("Save certificate, version {}", nextVersion);
                 }
                 return Boolean.TRUE;
             }

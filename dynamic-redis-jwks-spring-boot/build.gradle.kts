@@ -1,4 +1,4 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "GradlePackageUpdate", "GradlePackageVersionRange")
 
 plugins {
     id("signing")

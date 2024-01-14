@@ -101,6 +101,7 @@ allprojects {
             dependency("com.fasterxml.jackson.core:jackson-annotations:${property("jacksonVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")
             dependency("org.springframework.boot:spring-boot-starter-test:${property("springBootVersion")}")
+            dependency("org.springframework.boot:spring-boot-starter-json:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-autoconfigure:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-testcontainers:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-starter-data-redis:${property("springBootVersion")}")

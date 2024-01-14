@@ -11,7 +11,7 @@ import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.spi.CertificateService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -42,8 +42,8 @@ class DefaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
     @InjectMocks
     DefaultJwksCertificateRotator certificateRotator;
 
-    @BeforeAll
-    static void setUpAll() {
+    @BeforeEach
+    void setUpEach() {
         LogbackUtils.changeLoggingLevel(Level.TRACE, DefaultJwksCertificateRotator.class);
     }
 

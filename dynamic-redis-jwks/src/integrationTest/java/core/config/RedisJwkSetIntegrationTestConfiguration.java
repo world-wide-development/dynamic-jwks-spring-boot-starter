@@ -7,15 +7,14 @@ import org.development.wide.world.spring.jwks.property.BCCertificateInternalProp
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
 import org.development.wide.world.spring.jwks.spi.*;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
-import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRepository;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRotationTask;
 import org.development.wide.world.spring.redis.internal.RetryableRedisJwksCertificateRotator;
 import org.development.wide.world.spring.redis.property.*;
+import org.development.wide.world.spring.redis.template.KeyStoreRedisTemplate;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.integration.redis.util.RedisLockRegistry;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.lang.NonNull;
@@ -91,9 +90,20 @@ public class RedisJwkSetIntegrationTestConfiguration {
     }
 
     @Bean
+    public CertificateRepository certificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
+                                                       @NonNull final KeyStoreRedisTemplate redisTemplate) {
+        return new RedisCertificateRepository(keyStoreTemplate, redisTemplate);
+    }
+
+    @Bean
     public RedisCertificateRotationTask redisCertificateRotationTask(final LockRegistry lockRegistry,
                                                                      final JwkSetDataHolder jwkSetDataHolder) {
         return new RedisCertificateRotationTask(lockRegistry, jwkSetDataHolder, CERTIFICATE_ROTATION_PROPERTIES);
+    }
+
+    @Bean
+    public KeyStoreRedisTemplate keyStoreRedisTemplate(@NonNull final RedisConnectionFactory connectionFactory) {
+        return KeyStoreRedisTemplate.of(connectionFactory);
     }
 
     @Bean
@@ -104,26 +114,13 @@ public class RedisJwkSetIntegrationTestConfiguration {
     }
 
     @Bean
-    public CertificateRepository certificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
-                                                       @NonNull final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate) {
-        return new RedisCertificateRepository(keyStoreTemplate, redisTemplate);
-    }
-
-    @Bean
-    public RetryableJwksCertificateRotator retryableJwksCertificateRotator(@NonNull final JwksCertificateRotator certificateRotator) {
-        return new RetryableRedisJwksCertificateRotator(certificateRotator, REDIS_JWKS_PROPERTIES);
-    }
-
-    @Bean
     public JwkSetDataHolder jwkSetDataHolder(@NonNull final RetryableJwksCertificateRotator retryableJwksCertificateRotator) {
         return new AtomicJwkSetDataHolder(retryableJwksCertificateRotator);
     }
 
     @Bean
-    public RedisTemplate<String, VersionedKeyStoreSource> versionedKeyStoreSourceRedisTemplate(@NonNull final RedisConnectionFactory connectionFactory) {
-        final RedisTemplate<String, VersionedKeyStoreSource> versionedKeyStoreSourceRedisTemplate = new RedisTemplate<>();
-        versionedKeyStoreSourceRedisTemplate.setConnectionFactory(connectionFactory);
-        return versionedKeyStoreSourceRedisTemplate;
+    public RetryableJwksCertificateRotator retryableJwksCertificateRotator(@NonNull final JwksCertificateRotator certificateRotator) {
+        return new RetryableRedisJwksCertificateRotator(certificateRotator, REDIS_JWKS_PROPERTIES);
     }
 
 }
