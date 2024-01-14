@@ -7,13 +7,13 @@ import org.development.wide.world.spring.jwks.property.BCCertificateInternalProp
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
 import org.development.wide.world.spring.jwks.spi.*;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
-import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRepository;
 import org.development.wide.world.spring.redis.internal.RedisCertificateRotationTask;
 import org.development.wide.world.spring.redis.internal.RetryableRedisJwksCertificateRotator;
 import org.development.wide.world.spring.redis.jwks.autoconfigure.properties.*;
 import org.development.wide.world.spring.redis.property.CertificateRotationInternalProperties;
 import org.development.wide.world.spring.redis.property.DynamicRedisJwksInternalProperties;
+import org.development.wide.world.spring.redis.template.KeyStoreRedisTemplate;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -227,10 +227,22 @@ public class DynamicRedisJwksAutoConfiguration {
         @ConditionalOnMissingBean
         @ConditionalOnBean({KeyStoreTemplate.class})
         public CertificateRepository certificateRepository(final KeyStoreTemplate keyStoreTemplate,
-                                                           final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate) {
+                                                           final KeyStoreRedisTemplate redisTemplate) {
             Assert.notNull(keyStoreTemplate, "keyStoreTemplate cannot be null");
             Assert.notNull(redisTemplate, "redisTemplate cannot be null");
             return new RedisCertificateRepository(keyStoreTemplate, redisTemplate);
+        }
+
+        /**
+         * Conditionally instantiates {@link KeyStoreRedisTemplate} bean
+         *
+         * @param connectionFactory required dependency of {@link RedisConnectionFactory} type
+         * @return {@code KeyStoreRedisTemplate}
+         */
+        @Bean
+        @ConditionalOnMissingBean
+        public KeyStoreRedisTemplate keyStoreRedisTemplate(@NonNull final RedisConnectionFactory connectionFactory) {
+            return KeyStoreRedisTemplate.of(connectionFactory);
         }
 
         /**
@@ -254,18 +266,18 @@ public class DynamicRedisJwksAutoConfiguration {
          * Instantiates {@link RetryableJwksCertificateRotator} bean
          *
          * @param properties             required dependency of {@link DynamicRedisJwksProperties} type
-         * @param jwksCertificateRotator required dependency of {@link JwksCertificateRotator} type
+         * @param certificateRotator required dependency of {@link JwksCertificateRotator} type
          * @return {@code RetryableJwksCertificateRotator}
          */
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnBean({JwksCertificateRotator.class})
         public RetryableJwksCertificateRotator retryableJwksCertificateRotator(final DynamicRedisJwksProperties properties,
-                                                                               final JwksCertificateRotator jwksCertificateRotator) {
+                                                                               final JwksCertificateRotator certificateRotator) {
             Assert.notNull(properties, "Dynamic redis JWKS properties cannot be null");
-            Assert.notNull(jwksCertificateRotator, "JWKS certificate rotator cannot be null");
+            Assert.notNull(certificateRotator, "JWKS certificate rotator cannot be null");
             final DynamicRedisJwksInternalProperties internalProperties = properties.convertToInternal();
-            return new RetryableRedisJwksCertificateRotator(jwksCertificateRotator, internalProperties);
+            return new RetryableRedisJwksCertificateRotator(certificateRotator, internalProperties);
         }
 
         /**
@@ -279,20 +291,6 @@ public class DynamicRedisJwksAutoConfiguration {
         @ConditionalOnBean({RetryableJwksCertificateRotator.class})
         public JwkSetDataHolder jwkSetDataHolder(@NonNull final RetryableJwksCertificateRotator retryableJwksCertificateRotator) {
             return new AtomicJwkSetDataHolder(retryableJwksCertificateRotator);
-        }
-
-        /**
-         * Conditionally instantiates {@link RedisTemplate} bean
-         *
-         * @param connectionFactory required dependency of {@link RedisConnectionFactory} type
-         * @return {@code RedisTemplate<String, VersionedKeyStoreSource>}
-         */
-        @Bean
-        @ConditionalOnMissingBean
-        public RedisTemplate<String, VersionedKeyStoreSource> versionedKeyStoreSourceRedisTemplate(@NonNull final RedisConnectionFactory connectionFactory) {
-            final RedisTemplate<String, VersionedKeyStoreSource> versionedKeyStoreSourceRedisTemplate = new RedisTemplate<>();
-            versionedKeyStoreSourceRedisTemplate.setConnectionFactory(connectionFactory);
-            return versionedKeyStoreSourceRedisTemplate;
         }
 
     }

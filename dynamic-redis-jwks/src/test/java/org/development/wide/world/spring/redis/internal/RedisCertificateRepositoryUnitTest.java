@@ -5,6 +5,7 @@ import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.exception.RedisOperationException;
+import org.development.wide.world.spring.redis.template.KeyStoreRedisTemplate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +13,7 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 @SuppressWarnings({"unused"})
 @ExtendWith({MockitoExtension.class})
@@ -22,9 +22,9 @@ class RedisCertificateRepositoryUnitTest extends BaseUnitTest {
     @Mock
     KeyStoreTemplate keyStoreTemplate;
     @Mock
-    RedisTemplate<String, VersionedKeyStoreSource> redisTemplate;
+    KeyStoreRedisTemplate redisTemplate;
     @Mock
-    HashOperations<String, String, VersionedKeyStoreSource> valueOperations;
+    ValueOperations<String, VersionedKeyStoreSource> valueOperations;
 
     @InjectMocks
     RedisCertificateRepository repository;
@@ -52,7 +52,7 @@ class RedisCertificateRepositoryUnitTest extends BaseUnitTest {
         final CertificateData givenCertificateData = CertificateData.builder().build();
         BDDMockito.given(redisTemplate.execute(BDDMockito.any(CompareVersionedKeyStoreSourceAndSetCallback.class)))
                 .willReturn(Boolean.TRUE);
-        BDDMockito.given(valueOperations.get(givenKey, givenKey)).willReturn(null);
+        BDDMockito.given(valueOperations.get(givenKey)).willReturn(null);
         // Expect
         final IllegalStateException exception = Assertions
                 .assertThrows(IllegalStateException.class, () -> repository.saveOne(givenKey, givenCertificateData));
@@ -60,7 +60,7 @@ class RedisCertificateRepositoryUnitTest extends BaseUnitTest {
         // And
         BDDMockito.then(redisTemplate).should()
                 .execute(BDDMockito.any(CompareVersionedKeyStoreSourceAndSetCallback.class));
-        BDDMockito.then(valueOperations).should().get(givenKey, givenKey);
+        BDDMockito.then(valueOperations).should().get(givenKey);
     }
 
 }

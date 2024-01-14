@@ -21,6 +21,7 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt")
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.data:spring-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-json")
     implementation("org.springframework.integration:spring-integration-core")
     implementation("org.springframework.integration:spring-integration-redis")
 }

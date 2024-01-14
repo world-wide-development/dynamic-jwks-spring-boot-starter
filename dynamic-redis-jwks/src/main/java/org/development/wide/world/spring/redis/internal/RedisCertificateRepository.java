@@ -7,8 +7,8 @@ import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.exception.RedisOperationException;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.development.wide.world.spring.redis.template.KeyStoreRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.lang.NonNull;
 
 import java.security.cert.X509Certificate;
@@ -25,17 +25,17 @@ import static java.util.Optional.ofNullable;
 public class RedisCertificateRepository implements CertificateRepository {
 
     private final KeyStoreTemplate keyStoreTemplate;
-    private final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate;
-    private final HashOperations<String, String, VersionedKeyStoreSource> valueOperations;
+    private final KeyStoreRedisTemplate redisTemplate;
+    private final ValueOperations<String, VersionedKeyStoreSource> valueOperations;
 
     public RedisCertificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
-                                      @NonNull final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate) {
-        this(keyStoreTemplate, redisTemplate, redisTemplate.opsForHash());
+                                      @NonNull final KeyStoreRedisTemplate redisTemplate) {
+        this(keyStoreTemplate, redisTemplate, redisTemplate.opsForValue());
     }
 
     public RedisCertificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
-                                      @NonNull final RedisTemplate<String, VersionedKeyStoreSource> redisTemplate,
-                                      @NonNull final HashOperations<String, String, VersionedKeyStoreSource> valueOperations) {
+                                      @NonNull final KeyStoreRedisTemplate redisTemplate,
+                                      @NonNull final ValueOperations<String, VersionedKeyStoreSource> valueOperations) {
         this.redisTemplate = redisTemplate;
         this.valueOperations = valueOperations;
         this.keyStoreTemplate = keyStoreTemplate;
@@ -46,7 +46,7 @@ public class RedisCertificateRepository implements CertificateRepository {
      */
     @Override
     public Optional<CertificateData> findOne(@NonNull final String key) {
-        return ofNullable(valueOperations.get(key, key)).map(versionedKeyStoreSource -> {
+        return ofNullable(valueOperations.get(key)).map(versionedKeyStoreSource -> {
             final KeyStoreSource keyStoreSource = versionedKeyStoreSource.keyStoreSource();
             final InternalKeyStore internalKeyStore = keyStoreTemplate.reloadFromSource(keyStoreSource);
             final X509Certificate x509Certificate = internalKeyStore.getX509Certificate();
