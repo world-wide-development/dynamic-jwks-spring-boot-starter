@@ -1,6 +1,8 @@
 package org.development.wide.world.spring.redis.internal;
 
+import ch.qos.logback.classic.Level;
 import core.base.BaseUnitTest;
+import core.utils.LogbackUtils;
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.data.KeyStoreSource;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
@@ -43,6 +45,7 @@ class CompareVersionedKeyStoreSourceAndSetCallbackUnitTest extends BaseUnitTest 
 
     @BeforeEach
     void setUpEach() {
+        LogbackUtils.changeLoggingLevel(Level.INFO, CompareVersionedKeyStoreSourceAndSetCallback.class);
         final CertificateData certificateData = CertificateData.builder()
                 .privateKey(BDDMockito.mock(PrivateKey.class))
                 .x509Certificates(List.of(x509Certificate))
@@ -55,6 +58,35 @@ class CompareVersionedKeyStoreSourceAndSetCallbackUnitTest extends BaseUnitTest 
 
     @Test
     void testExecuteReturnsTrue() {
+        // Given
+        final KeyStoreSource givenKeyStoreSource = KeyStoreSource.builder()
+                .keyStoreSources("given-store-sources".getBytes(StandardCharsets.UTF_8))
+                .serialNumber("given-serial-number")
+                .build();
+        BDDMockito.given(redisOperations.opsForValue()).willReturn(valueOperations);
+        BDDMockito.given(valueOperations.get(key)).willReturn(versionedKeyStoreSource);
+        BDDMockito.given(versionedKeyStoreSource.version()).willReturn(version);
+        BDDMockito.given(keyStoreTemplate.saveCertificate(BDDMockito.any())).willReturn(givenKeyStoreSource);
+        BDDMockito.given(redisOperations.exec()).willReturn(List.of(Boolean.TRUE));
+        // When
+        final Boolean result = callback.execute(redisOperations);
+        // Then
+        Assertions.assertEquals(Boolean.TRUE, result);
+        // And
+        BDDMockito.then(redisOperations).should().watch(key);
+        BDDMockito.then(redisOperations).should().opsForValue();
+        BDDMockito.then(valueOperations).should().get(key);
+        BDDMockito.then(versionedKeyStoreSource).should().version();
+        BDDMockito.then(redisOperations).should().multi();
+        BDDMockito.then(keyStoreTemplate).should().saveCertificate(BDDMockito.any());
+        BDDMockito.then(redisOperations).should().exec();
+        BDDMockito.then(redisOperations).should(BDDMockito.never()).unwatch();
+    }
+
+    @Test
+    void testExecuteReturnsTrueWithDebug() {
+        // Set up
+        LogbackUtils.changeLoggingLevel(Level.DEBUG, CompareVersionedKeyStoreSourceAndSetCallback.class);
         // Given
         final KeyStoreSource givenKeyStoreSource = KeyStoreSource.builder()
                 .keyStoreSources("given-store-sources".getBytes(StandardCharsets.UTF_8))

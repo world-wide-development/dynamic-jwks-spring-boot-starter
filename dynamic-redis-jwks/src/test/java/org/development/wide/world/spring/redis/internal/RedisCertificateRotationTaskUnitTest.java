@@ -7,6 +7,7 @@ import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.spi.JwkSetDataHolder;
 import org.development.wide.world.spring.redis.property.CertificateRotationInternalProperties;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -32,9 +33,14 @@ class RedisCertificateRotationTaskUnitTest extends BaseUnitTest {
     @InjectMocks
     RedisCertificateRotationTask rotationTask;
 
+    @BeforeEach
+    void setUpEach() {
+        LogbackUtils.changeLoggingLevel(Level.INFO, RedisCertificateRotationTask.class);
+    }
+
     @Test
     void testRunSuccess() throws Exception {
-        // Before
+        // Set up
         LogbackUtils.changeLoggingLevel(Level.TRACE, RedisCertificateRotationTask.class);
         // Given
         final String givenLockKey = "given-lock-key";
@@ -59,7 +65,7 @@ class RedisCertificateRotationTaskUnitTest extends BaseUnitTest {
 
     @Test
     void testRunThrowsInterruptedException() throws Exception {
-        // Before
+        // Set up
         LogbackUtils.changeLoggingLevel(Level.TRACE, RedisCertificateRotationTask.class);
         // Given
         final String givenLockKey = "given-lock-key";
