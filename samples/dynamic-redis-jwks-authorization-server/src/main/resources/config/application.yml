@@ -2,6 +2,9 @@ server:
   port: 8090
 ### Spring ###
 spring:
+  threads:
+    virtual:
+      enabled: on
   application:
     name: "authorization-service"
   security:

@@ -1,8 +1,8 @@
 plugins {
-    id("org.springframework.boot") version "3.1.7"
+    id("org.springframework.boot") version "3.2.1"
 }
 
-val springCloudVersion = "2022.0.4"
+val springCloudVersion = "2023.0.0"
 
 tasks.getByName("dependencyCheckAnalyze") {
     enabled = false
@@ -20,7 +20,7 @@ configurations {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 

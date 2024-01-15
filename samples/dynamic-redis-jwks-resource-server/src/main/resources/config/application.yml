@@ -1,0 +1,13 @@
+server:
+  port: 8080
+spring:
+  threads:
+    virtual:
+      enabled: on
+  application:
+    name: "redis-resource-server"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://127.0.0.1:8090/oauth2/jwks"
