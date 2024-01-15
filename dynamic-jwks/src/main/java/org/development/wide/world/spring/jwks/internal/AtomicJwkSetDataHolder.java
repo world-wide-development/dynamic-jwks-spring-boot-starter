@@ -1,13 +1,17 @@
 package org.development.wide.world.spring.jwks.internal;
 
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.spi.JwkSetDataHolder;
 import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -37,18 +41,37 @@ public class AtomicJwkSetDataHolder implements JwkSetDataHolder {
 
     @Override
     public JwkSetData rotateInAdvanceIfAny(final Duration rotateBefore) {
-        return jwkSetHolderAtomicReference.updateAndGet(jwkSetData -> {
-            if (Objects.nonNull(jwkSetData) && jwkSetData.checkCertificateValidity(rotateBefore)) {
+        return jwkSetHolderAtomicReference.updateAndGet(lastJwkSetData -> {
+            if (Objects.isNull(lastJwkSetData)) {
+                return certificateRotator.rotate();
+            }
+            if (lastJwkSetData.checkCertificateValidity(rotateBefore)) {
                 if (logger.isTraceEnabled()) {
                     logger.trace("JWK Set still fresh, rotation is not necessary");
                 }
-                return jwkSetData;
+                return lastJwkSetData;
             }
             if (logger.isTraceEnabled()) {
                 logger.trace("JWK Set expired, rotating it out");
             }
-            return certificateRotator.rotate();
+            final JwkSetData newJwkSetData = certificateRotator.rotate();
+            final JWKSet nextJwkSet = this.composeJwkSets(newJwkSetData, lastJwkSetData);
+            return JwkSetData.builder()
+                    .certificateData(newJwkSetData.certificateData())
+                    .jwkSet(nextJwkSet)
+                    .build();
         });
+    }
+
+    /* Private methods */
+    @NonNull
+    private JWKSet composeJwkSets(@NonNull final JwkSetData newJwkSetData, @NonNull final JwkSetData lastJwkSetData) {
+        final JWK newJwkKey = newJwkSetData.jwkSet().getKeys().stream().findFirst()
+                .orElseThrow(() -> new IllegalStateException("New JWK Set keys must have at lest one key"));
+        final JWK lastJwkKey = lastJwkSetData.jwkSet().getKeys().stream().findFirst()
+                .orElseThrow(() -> new IllegalStateException("Last JWK Set keys must have at lest one key"));
+        final List<JWK> nextJwkKeys = List.of(newJwkKey, lastJwkKey);
+        return new JWKSet(nextJwkKeys);
     }
 
 }

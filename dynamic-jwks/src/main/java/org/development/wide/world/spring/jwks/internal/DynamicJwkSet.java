@@ -1,6 +1,7 @@
 package org.development.wide.world.spring.jwks.internal;
 
 import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKMatcher;
 import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -11,6 +12,7 @@ import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotato
 import org.springframework.lang.NonNull;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation of the {@link JWKSource}.
@@ -39,7 +41,21 @@ public class DynamicJwkSet implements JWKSource<SecurityContext> {
     public List<JWK> get(@NonNull final JWKSelector jwkSelector, final SecurityContext context) {
         final JwkSetData jwkSetData = jwkSetDataHolder.getActual();
         final JWKSet jwkSet = jwkSetData.jwkSet();
+        final JWKMatcher jwkSelectorMatcher = jwkSelector.getMatcher();
+        if (this.isSelectionForJetEncoder(jwkSelectorMatcher)) {
+            return jwkSelector.select(jwkSet).stream()
+                    .findFirst()
+                    .stream()
+                    .toList();
+        }
         return jwkSelector.select(jwkSet);
+    }
+
+    /* Private methods */
+    private boolean isSelectionForJetEncoder(@NonNull final JWKMatcher jwkSelectorMatcher) {
+        return Objects.nonNull(jwkSelectorMatcher.getAlgorithms())
+               && Objects.nonNull(jwkSelectorMatcher.getKeyTypes())
+               && Objects.nonNull(jwkSelectorMatcher.getKeyUses());
     }
 
 }

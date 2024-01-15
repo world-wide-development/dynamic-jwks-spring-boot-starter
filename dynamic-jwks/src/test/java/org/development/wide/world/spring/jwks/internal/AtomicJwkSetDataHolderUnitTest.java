@@ -1,8 +1,10 @@
 package org.development.wide.world.spring.jwks.internal;
 
 import ch.qos.logback.classic.Level;
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import core.base.BaseUnitTest;
+import core.utils.JwkSetTestDataUtils;
 import core.utils.LogbackUtils;
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
@@ -15,6 +17,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.UnaryOperator;
 
@@ -97,21 +100,40 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
         // Set up
         LogbackUtils.changeLoggingLevel(Level.TRACE, AtomicJwkSetDataHolder.class);
         // Given
+        final List<JWK> givenNewJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final List<JWK> givenLastJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk(),
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final List<JWK> givenNextJwkKeys = List.of(
+                givenNewJwkKeys.get(0),
+                givenLastJwkKeys.get(0)
+        );
         final Duration givenRotateBefore = Duration.ZERO;
-        final JwkSetData givenJwkSetData = JwkSetData.builder()
+        final JwkSetData givenNewJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenNewJwkKeys))
                 .certificateData(certificateData)
-                .jwkSet(jwkSet)
+                .build();
+        final JwkSetData givenLastJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenLastJwkKeys))
+                .certificateData(certificateData)
+                .build();
+        final JwkSetData givenNextJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenNextJwkKeys))
+                .certificateData(certificateData)
                 .build();
         BDDMockito.given(jwkSetHolderAtomicReference.updateAndGet(jwkSetDataOperatorCaptor.capture()))
-                .willReturn(givenJwkSetData);
+                .willReturn(givenNextJwkSetData);
         BDDMockito.given(certificateData.checkCertificateValidity(givenRotateBefore)).willReturn(Boolean.FALSE);
-        BDDMockito.given(certificateRotator.rotate()).willReturn(givenJwkSetData);
+        BDDMockito.given(certificateRotator.rotate()).willReturn(givenNewJwkSetData);
         // When
         final JwkSetData result = jwkSetDataHolder.getActual();
         // Then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(givenJwkSetData, result);
-        Assertions.assertEquals(givenJwkSetData, jwkSetDataOperatorCaptor.getValue().apply(givenJwkSetData));
+        Assertions.assertEquals(givenNextJwkSetData, result);
+        Assertions.assertEquals(givenNextJwkSetData, jwkSetDataOperatorCaptor.getValue().apply(givenLastJwkSetData));
         // And
         BDDMockito.then(jwkSetHolderAtomicReference).should().updateAndGet(jwkSetDataOperatorCaptor.capture());
         BDDMockito.then(certificateData).should().checkCertificateValidity(givenRotateBefore);
@@ -166,21 +188,40 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
     @Test
     void testRotateInAdvanceIfAnyInvalidCertificate() {
         // Given
+        final List<JWK> givenNewJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final List<JWK> givenLastJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk(),
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final List<JWK> givenNextJwkKeys = List.of(
+                givenNewJwkKeys.get(0),
+                givenLastJwkKeys.get(0)
+        );
         final Duration givenRotateBefore = Duration.ofDays(3);
-        final JwkSetData givenJwkSetData = JwkSetData.builder()
+        final JwkSetData givenNewJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenNewJwkKeys))
                 .certificateData(certificateData)
-                .jwkSet(jwkSet)
+                .build();
+        final JwkSetData givenLastJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenLastJwkKeys))
+                .certificateData(certificateData)
+                .build();
+        final JwkSetData givenNextJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenNextJwkKeys))
+                .certificateData(certificateData)
                 .build();
         BDDMockito.given(jwkSetHolderAtomicReference.updateAndGet(jwkSetDataOperatorCaptor.capture()))
-                .willReturn(givenJwkSetData);
+                .willReturn(givenNextJwkSetData);
         BDDMockito.given(certificateData.checkCertificateValidity(givenRotateBefore)).willReturn(Boolean.FALSE);
-        BDDMockito.given(certificateRotator.rotate()).willReturn(givenJwkSetData);
+        BDDMockito.given(certificateRotator.rotate()).willReturn(givenNewJwkSetData);
         // When
         final JwkSetData result = jwkSetDataHolder.rotateInAdvanceIfAny(givenRotateBefore);
         // Then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(givenJwkSetData, result);
-        Assertions.assertEquals(givenJwkSetData, jwkSetDataOperatorCaptor.getValue().apply(givenJwkSetData));
+        Assertions.assertEquals(givenNextJwkSetData, result);
+        Assertions.assertEquals(givenNextJwkSetData, jwkSetDataOperatorCaptor.getValue().apply(givenLastJwkSetData));
         // And
         BDDMockito.then(jwkSetHolderAtomicReference).should().updateAndGet(jwkSetDataOperatorCaptor.capture());
         BDDMockito.then(certificateData).should().checkCertificateValidity(givenRotateBefore);
@@ -192,21 +233,40 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
         // Set up
         LogbackUtils.changeLoggingLevel(Level.TRACE, AtomicJwkSetDataHolder.class);
         // Given
+        final List<JWK> givenNewJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final List<JWK> givenLastJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk(),
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final List<JWK> givenNextJwkKeys = List.of(
+                givenNewJwkKeys.get(0),
+                givenLastJwkKeys.get(0)
+        );
         final Duration givenRotateBefore = Duration.ofDays(3);
-        final JwkSetData givenJwkSetData = JwkSetData.builder()
+        final JwkSetData givenNewJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenNewJwkKeys))
                 .certificateData(certificateData)
-                .jwkSet(jwkSet)
+                .build();
+        final JwkSetData givenLastJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenLastJwkKeys))
+                .certificateData(certificateData)
+                .build();
+        final JwkSetData givenNextJwkSetData = JwkSetData.builder()
+                .jwkSet(new JWKSet(givenNextJwkKeys))
+                .certificateData(certificateData)
                 .build();
         BDDMockito.given(jwkSetHolderAtomicReference.updateAndGet(jwkSetDataOperatorCaptor.capture()))
-                .willReturn(givenJwkSetData);
+                .willReturn(givenNextJwkSetData);
         BDDMockito.given(certificateData.checkCertificateValidity(givenRotateBefore)).willReturn(Boolean.FALSE);
-        BDDMockito.given(certificateRotator.rotate()).willReturn(givenJwkSetData);
+        BDDMockito.given(certificateRotator.rotate()).willReturn(givenNewJwkSetData);
         // When
         final JwkSetData result = jwkSetDataHolder.rotateInAdvanceIfAny(givenRotateBefore);
         // Then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(givenJwkSetData, result);
-        Assertions.assertEquals(givenJwkSetData, jwkSetDataOperatorCaptor.getValue().apply(givenJwkSetData));
+        Assertions.assertEquals(givenNextJwkSetData, result);
+        Assertions.assertEquals(givenNextJwkSetData, jwkSetDataOperatorCaptor.getValue().apply(givenLastJwkSetData));
         // And
         BDDMockito.then(jwkSetHolderAtomicReference).should().updateAndGet(jwkSetDataOperatorCaptor.capture());
         BDDMockito.then(certificateData).should().checkCertificateValidity(givenRotateBefore);

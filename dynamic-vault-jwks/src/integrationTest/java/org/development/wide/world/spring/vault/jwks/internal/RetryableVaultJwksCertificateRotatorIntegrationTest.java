@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Import;
         RetryableJwksCertificateRotator.class
 })
 @Import({VaultJwkSetIntegrationTestConfiguration.class})
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 class RetryableVaultJwksCertificateRotatorIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
