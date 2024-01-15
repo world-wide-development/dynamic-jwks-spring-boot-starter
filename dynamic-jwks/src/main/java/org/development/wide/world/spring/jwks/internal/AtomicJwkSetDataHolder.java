@@ -15,6 +15,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Atomic Reference-based implementation of {@link JwkSetDataHolder}
+ *
+ * @see RetryableJwksCertificateRotator
+ * @see JwkSetDataHolder
+ */
 public class AtomicJwkSetDataHolder implements JwkSetDataHolder {
 
     private static final Logger logger = LoggerFactory.getLogger(AtomicJwkSetDataHolder.class);

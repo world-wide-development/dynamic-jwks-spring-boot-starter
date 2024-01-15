@@ -8,7 +8,6 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.spi.JwkSetDataHolder;
-import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -19,8 +18,8 @@ import java.util.Objects;
  * <br>
  * Designed to provide the ability to automatically rotate certificates.
  *
- * @see RetryableJwksCertificateRotator
  * @see JWKSource<SecurityContext>
+ * @see JwkSetDataHolder
  * @see JwkSetData
  */
 public class DynamicJwkSet implements JWKSource<SecurityContext> {
