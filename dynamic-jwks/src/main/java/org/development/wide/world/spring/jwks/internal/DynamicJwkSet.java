@@ -33,7 +33,10 @@ public class DynamicJwkSet implements JWKSource<SecurityContext> {
 
     /**
      * Provides the list of the {@link JWK}s with valid certificates.
-     * Automatically issue a new certificate in case of the current certificate expiration
+     * Automatically issue a new certificate in case of the current certificate expiration.
+     * <p>
+     * After certificate rotation, attempts to retain at least two keys,
+     * the last one and the previous one, to cover the rotation period for all clients.
      *
      * @see JWKSource#get(JWKSelector, SecurityContext)
      */
@@ -42,7 +45,7 @@ public class DynamicJwkSet implements JWKSource<SecurityContext> {
         final JwkSetData jwkSetData = jwkSetDataHolder.getActual();
         final JWKSet jwkSet = jwkSetData.jwkSet();
         final JWKMatcher jwkSelectorMatcher = jwkSelector.getMatcher();
-        if (this.isSelectionForJetEncoder(jwkSelectorMatcher)) {
+        if (this.isSelectionForJwtEncoder(jwkSelectorMatcher)) {
             return jwkSelector.select(jwkSet).stream()
                     .findFirst()
                     .stream()
@@ -52,7 +55,27 @@ public class DynamicJwkSet implements JWKSource<SecurityContext> {
     }
 
     /* Private methods */
-    private boolean isSelectionForJetEncoder(@NonNull final JWKMatcher jwkSelectorMatcher) {
+
+    /**
+     * Signing/Encoding a JWT: get is invoked provided a JWKSelector that contains a JWK Matcher that
+     * has the algorithm defined (recommended: RS256) and key use of sig (meaning that this key will be
+     * used to for signature purposes).
+     * When get is invoked in this context, it expects a list of JWKs, but the list has to be of unique JWKs based on
+     * algorithm (only one RSA, only one EC, etc.).
+     * So in your implementation, if you have multiple active signing keys of the same algorithm, pick one at
+     * [random|round-robin|etc.] -- when the library asks for a key for signing, it only really cares about getting a
+     * key, which one you provide doesn't matter, and it is up to your implementation.
+     * After a key has been provided, its keyId (i.e., kid JOSE header) is appended to the JWT for later identification
+     * in the verification stage, this is done under the hood.
+     * <p>
+     * <a href="https://github.com/spring-projects/spring-authorization-server/issues/447#issuecomment-934625999">
+     * Link to Git Hub
+     * </a>
+     *
+     * @param jwkSelectorMatcher given JWK matcher
+     * @return {@code true} if selector contains attributes for JWK selection
+     */
+    private boolean isSelectionForJwtEncoder(@NonNull final JWKMatcher jwkSelectorMatcher) {
         return Objects.nonNull(jwkSelectorMatcher.getAlgorithms())
                && Objects.nonNull(jwkSelectorMatcher.getKeyTypes())
                && Objects.nonNull(jwkSelectorMatcher.getKeyUses());
