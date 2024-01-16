@@ -17,12 +17,18 @@ public class VaultCertificateIssuer implements CertificateIssuer {
     private final VaultPkiInternalProperties properties;
     private final VaultCertificateDataConverter converter;
 
-    public VaultCertificateIssuer(@NonNull final VaultTemplate vaultTemplate,
+    public VaultCertificateIssuer(@NonNull final VaultPkiOperations pkiOperations,
                                   @NonNull final VaultPkiInternalProperties properties,
                                   @NonNull final VaultCertificateDataConverter converter) {
         this.converter = converter;
         this.properties = properties;
-        this.pkiOperations = vaultTemplate.opsForPki(properties.rootPath());
+        this.pkiOperations = pkiOperations;
+    }
+
+    public VaultCertificateIssuer(@NonNull final VaultTemplate vaultTemplate,
+                                  @NonNull final VaultPkiInternalProperties properties,
+                                  @NonNull final VaultCertificateDataConverter converter) {
+        this(vaultTemplate.opsForPki(properties.rootPath()), properties, converter);
     }
 
     @Override

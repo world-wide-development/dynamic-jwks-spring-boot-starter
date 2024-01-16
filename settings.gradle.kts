@@ -10,4 +10,6 @@ include("samples:dynamic-vault-jwks-authorization-server")
 include("dynamic-redis-jwks")
 include("dynamic-redis-jwks-spring-boot")
 include("dynamic-redis-jwks-spring-boot-starter")
+/* Samples */
+include("samples:dynamic-redis-jwks-resource-server")
 include("samples:dynamic-redis-jwks-authorization-server")
