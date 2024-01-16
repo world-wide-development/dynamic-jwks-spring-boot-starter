@@ -51,6 +51,57 @@ class DynamicJwkSetUnitTest extends BaseUnitTest {
     }
 
     @Test
+    void testGetForJwksWithAlgorithm() {
+        /* Given */
+        final List<JWK> givenJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk(),
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final JWKSet givenJwkSet = new JWKSet(givenJwkKeys);
+        final JWKMatcher jwkMatcher = new JWKMatcher.Builder()
+                .algorithm(JWSAlgorithm.RS256)
+                .build();
+        final JwkSetData givenJwkSetData = JwkSetData.builder()
+                .certificateData(CertificateData.builder().build())
+                .jwkSet(givenJwkSet)
+                .build();
+        final JWKSelector jwkSelector = new JWKSelector(jwkMatcher);
+        BDDMockito.given(jwkSetDataHolder.getActual()).willReturn(givenJwkSetData);
+        /* When */
+        final List<JWK> result = dynamicJwkSet.get(jwkSelector, null);
+        // Then
+        Assertions.assertNotNull(result);
+        /* And */
+        BDDMockito.then(jwkSetDataHolder).should().getActual();
+    }
+
+    @Test
+    void testGetForJwksWithAlgorithmAndKeyType() {
+        /* Given */
+        final List<JWK> givenJwkKeys = List.of(
+                JwkSetTestDataUtils.issueJwk(),
+                JwkSetTestDataUtils.issueJwk()
+        );
+        final JWKSet givenJwkSet = new JWKSet(givenJwkKeys);
+        final JWKMatcher jwkMatcher = new JWKMatcher.Builder()
+                .algorithm(JWSAlgorithm.RS256)
+                .keyType(KeyType.RSA)
+                .build();
+        final JwkSetData givenJwkSetData = JwkSetData.builder()
+                .certificateData(CertificateData.builder().build())
+                .jwkSet(givenJwkSet)
+                .build();
+        final JWKSelector jwkSelector = new JWKSelector(jwkMatcher);
+        BDDMockito.given(jwkSetDataHolder.getActual()).willReturn(givenJwkSetData);
+        /* When */
+        final List<JWK> result = dynamicJwkSet.get(jwkSelector, null);
+        // Then
+        Assertions.assertNotNull(result);
+        /* And */
+        BDDMockito.then(jwkSetDataHolder).should().getActual();
+    }
+
+    @Test
     void testGetForJwtEncoder() {
         /* Given */
         final List<JWK> givenJwkKeys = List.of(
