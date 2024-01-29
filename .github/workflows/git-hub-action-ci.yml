@@ -18,7 +18,7 @@ jobs:
           java-version: 17
           distribution: corretto
       - uses: docker/setup-buildx-action@v3
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v3
         with:
           arguments: clean test testCodeCoverageReport
       - uses: codecov/codecov-action@v3
@@ -35,7 +35,7 @@ jobs:
         with:
           java-version: 17
           distribution: corretto
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v3
         with:
           arguments: clean integrationTest integrationTestCodeCoverageReport
       - uses: codecov/codecov-action@v3
