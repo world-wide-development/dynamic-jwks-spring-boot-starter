@@ -24,9 +24,10 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           verbose: true
+          disable_search: true
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: "./testCodeCoverageReport.xml"
+          file: "./testCodeCoverageReport.xml"
           directory: "./build/reports/jacoco/testCodeCoverageReport"
   integration-test:
     needs: unit-test
@@ -44,7 +45,8 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           verbose: true
+          disable_search: true
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: "./integrationTestCodeCoverageReport.xml"
+          file: "./integrationTestCodeCoverageReport.xml"
           directory: "./build/reports/jacoco/integrationTestCodeCoverageReport"
