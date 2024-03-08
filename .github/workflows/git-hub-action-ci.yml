@@ -27,7 +27,6 @@ jobs:
           disable_search: true
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: "./testCodeCoverageReport.xml"
           directory: "./build/reports/jacoco/testCodeCoverageReport"
   integration-test:
     needs: unit-test
@@ -48,5 +47,4 @@ jobs:
           disable_search: true
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: "./integrationTestCodeCoverageReport.xml"
           directory: "./build/reports/jacoco/integrationTestCodeCoverageReport"
