@@ -108,8 +108,8 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
                 JwkSetTestDataUtils.issueJwk()
         );
         final List<JWK> givenNextJwkKeys = List.of(
-                givenNewJwkKeys.get(0),
-                givenLastJwkKeys.get(0)
+                givenNewJwkKeys.getFirst(),
+                givenLastJwkKeys.getFirst()
         );
         final Duration givenRotateBefore = Duration.ZERO;
         final JwkSetData givenNewJwkSetData = JwkSetData.builder()
@@ -196,8 +196,8 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
                 JwkSetTestDataUtils.issueJwk()
         );
         final List<JWK> givenNextJwkKeys = List.of(
-                givenNewJwkKeys.get(0),
-                givenLastJwkKeys.get(0)
+                givenNewJwkKeys.getFirst(),
+                givenLastJwkKeys.getFirst()
         );
         final Duration givenRotateBefore = Duration.ofDays(3);
         final JwkSetData givenNewJwkSetData = JwkSetData.builder()
@@ -241,8 +241,8 @@ class AtomicJwkSetDataHolderUnitTest extends BaseUnitTest {
                 JwkSetTestDataUtils.issueJwk()
         );
         final List<JWK> givenNextJwkKeys = List.of(
-                givenNewJwkKeys.get(0),
-                givenLastJwkKeys.get(0)
+                givenNewJwkKeys.getFirst(),
+                givenLastJwkKeys.getFirst()
         );
         final Duration givenRotateBefore = Duration.ofDays(3);
         final JwkSetData givenNewJwkSetData = JwkSetData.builder()
