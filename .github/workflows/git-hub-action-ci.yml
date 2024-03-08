@@ -23,6 +23,8 @@ jobs:
           arguments: clean test testCodeCoverageReport
       - uses: codecov/codecov-action@v4
         with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: "testCodeCoverageReport.xml"
           directory: "./build/reports/jacoco/testCodeCoverageReport"
   integration-test:
@@ -40,5 +42,7 @@ jobs:
           arguments: clean integrationTest integrationTestCodeCoverageReport
       - uses: codecov/codecov-action@v4
         with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: "integrationTestCodeCoverageReport.xml"
           directory: "./build/reports/jacoco/integrationTestCodeCoverageReport"
