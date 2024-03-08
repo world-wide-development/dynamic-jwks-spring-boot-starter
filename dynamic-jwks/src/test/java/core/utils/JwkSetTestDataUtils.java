@@ -24,7 +24,7 @@ public interface JwkSetTestDataUtils {
     CertificateIssuer certificateIssuer = new BouncyCastleCertificateIssuer(certificateService, bcProperties);
 
     static JWK issueJwk() {
-        return issueJwkSet().getKeys().get(0);
+        return issueJwkSet().getKeys().getFirst();
     }
 
     static JWKSet issueJwkSet() {

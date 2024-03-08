@@ -124,7 +124,7 @@ class DynamicJwkSetUnitTest extends BaseUnitTest {
         final List<JWK> result = dynamicJwkSet.get(jwkSelector, null);
         // Then
         Assertions.assertNotNull(result);
-        Assertions.assertIterableEquals(List.of(givenJwkKeys.get(0)), result);
+        Assertions.assertIterableEquals(List.of(givenJwkKeys.getFirst()), result);
         /* And */
         BDDMockito.then(jwkSetDataHolder).should().getActual();
     }
