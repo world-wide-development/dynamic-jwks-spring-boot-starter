@@ -4,23 +4,24 @@ plugins {
     id("java")
     id("jvm-test-suite")
     id("jacoco-report-aggregation")
-    id("org.owasp.dependencycheck") version "9.0.8"
+    id("org.owasp.dependencycheck") version "9.0.9"
     id("io.spring.dependency-management") version "1.1.4"
 }
 
-extra["slf4jVersion"] = "2.0.9"
+extra["slf4jVersion"] = "2.0.12"
 extra["snakeYamlVersion"] = "2.2"
 extra["jacksonVersion"] = "2.16.1"
-extra["nimbusJoseVersion"] = "9.36"
-extra["springBootVersion"] = "3.1.7"
+extra["springBootVersion"] = "3.2.3"
+extra["nimbusJoseVersion"] = "9.37.3"
 extra["springRetryVersion"] = "2.0.5"
 extra["springVaultVersion"] = "3.1.1"
 extra["bouncyCastleVersion"] = "1.77"
-extra["equalsVerifierVersion"] = "3.15.4"
-extra["testcontainersVersion"] = "1.18.3"
-extra["springFrameworkVersion"] = "6.1.2"
-extra["springIntegrationVersion"] = "6.2.1"
+extra["equalsVerifierVersion"] = "3.15.8"
+extra["testcontainersVersion"] = "1.19.7"
+extra["springFrameworkVersion"] = "6.1.4"
+extra["springIntegrationVersion"] = "6.2.2"
 extra["springVaultStarterVersion"] = "4.1.0"
+
 extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
 
 tasks.jar {
