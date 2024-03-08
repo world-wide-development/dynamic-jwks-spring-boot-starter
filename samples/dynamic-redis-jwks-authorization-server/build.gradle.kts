@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.2.1"
+    id("org.springframework.boot") version "3.2.3"
 }
 
 val springCloudVersion = "2023.0.0"
@@ -26,6 +26,8 @@ java {
 
 dependencies {
     implementation(project(":dynamic-redis-jwks-spring-boot-starter"))
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("org.springframework.session:spring-session-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
     /* Tool */
