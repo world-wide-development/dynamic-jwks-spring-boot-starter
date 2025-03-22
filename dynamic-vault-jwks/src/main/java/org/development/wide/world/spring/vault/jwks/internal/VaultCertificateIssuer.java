@@ -3,7 +3,7 @@ package org.development.wide.world.spring.vault.jwks.internal;
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.vault.jwks.property.VaultPkiInternalProperties;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.vault.core.VaultPkiOperations;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.support.VaultCertificateRequest;

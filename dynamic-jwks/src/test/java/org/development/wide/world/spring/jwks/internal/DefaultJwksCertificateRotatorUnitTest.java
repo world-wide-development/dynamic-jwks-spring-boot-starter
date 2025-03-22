@@ -10,13 +10,13 @@ import org.development.wide.world.spring.jwks.property.BCCertificateInternalProp
 import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.spi.CertificateService;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 import java.util.Optional;

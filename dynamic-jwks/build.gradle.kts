@@ -15,9 +15,9 @@ tasks.javadoc {
 }
 
 dependencies {
+    implementation("org.jspecify:jspecify")
     implementation("org.slf4j:jul-to-slf4j")
     implementation("com.nimbusds:nimbus-jose-jwt")
-    implementation("org.springframework:spring-core")
     implementation("org.bouncycastle:bcpkix-jdk18on")
     implementation("com.fasterxml.jackson.core:jackson-annotations")
 }

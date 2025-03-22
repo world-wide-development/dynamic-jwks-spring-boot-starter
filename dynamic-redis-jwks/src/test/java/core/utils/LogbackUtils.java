@@ -2,8 +2,8 @@ package core.utils;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
 
 public final class LogbackUtils {
 

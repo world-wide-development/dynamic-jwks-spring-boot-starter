@@ -1,6 +1,6 @@
 package org.development.wide.world.spring.jwks.util;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.math.BigInteger;
 import java.security.PrivateKey;

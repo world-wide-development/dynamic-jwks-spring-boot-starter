@@ -8,8 +8,10 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 }
 
+extra["nettyVersion"] = "4.1.119.Final"
+
 extra["slf4jVersion"] = "2.0.17"
-extra["snakeYamlVersion"] = "2.4"
+extra["jSpecifyVersion"] = "1.0.0"
 extra["jacksonVersion"] = "2.18.3"
 extra["springBootVersion"] = "3.4.4"
 extra["nimbusJoseVersion"] = "10.0.2"
@@ -18,8 +20,6 @@ extra["bouncyCastleVersion"] = "1.80"
 extra["springRetryVersion"] = "2.0.11"
 extra["equalsVerifierVersion"] = "3.19.1"
 extra["testcontainersVersion"] = "1.20.6"
-extra["springFrameworkVersion"] = "6.2.5"
-extra["commonsCompressVersion"] = "1.27.1"
 extra["springIntegrationVersion"] = "6.4.3"
 extra["springVaultStarterVersion"] = "4.2.1"
 
@@ -86,22 +86,18 @@ allprojects {
 
     dependencyManagement {
         dependencies {
-            dependency("org.yaml:snakeyaml:${property("snakeYamlVersion")}")
+            dependency("io.netty:netty-common:${property("nettyVersion")}")
+
             dependency("org.slf4j:jul-to-slf4j:${property("slf4jVersion")}")
+            dependency("org.jspecify:jspecify:${property("jSpecifyVersion")}")
             dependency("com.nimbusds:nimbus-jose-jwt:${property("nimbusJoseVersion")}")
             dependency("org.testcontainers:vault:${property("testcontainersVersion")}")
             dependency("org.bouncycastle:bcpkix-jdk18on:${property("bouncyCastleVersion")}")
-            dependency("org.springframework:spring-aop:${property("springFrameworkVersion")}")
-            dependency("org.springframework:spring-web:${property("springFrameworkVersion")}")
-            dependency("org.springframework:spring-core:${property("springFrameworkVersion")}")
             dependency("org.testcontainers:junit-jupiter:${property("testcontainersVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-core:${property("jacksonVersion")}")
-            dependency("org.springframework:spring-context:${property("springFrameworkVersion")}")
             dependency("org.springframework.retry:spring-retry:${property("springRetryVersion")}")
-            dependency("org.apache.commons:commons-compress:${property("commonsCompressVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-databind:${property("jacksonVersion")}")
             dependency("nl.jqno.equalsverifier:equalsverifier:${property("equalsVerifierVersion")}")
-            dependency("org.springframework:spring-expression:${property("springFrameworkVersion")}")
             dependency("org.springframework.data:spring-data-redis:${property("springBootVersion")}")
             dependency("com.fasterxml.jackson.core:jackson-annotations:${property("jacksonVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")

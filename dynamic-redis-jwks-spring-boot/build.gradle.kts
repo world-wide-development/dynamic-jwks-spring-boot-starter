@@ -15,6 +15,7 @@ tasks.javadoc {
 }
 
 dependencies {
+    implementation("org.jspecify:jspecify")
     implementation(project(":dynamic-jwks"))
     implementation(project(":dynamic-redis-jwks"))
     implementation("com.nimbusds:nimbus-jose-jwt")

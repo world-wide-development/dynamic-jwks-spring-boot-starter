@@ -1,6 +1,6 @@
 package org.development.wide.world.spring.jwks.property;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 

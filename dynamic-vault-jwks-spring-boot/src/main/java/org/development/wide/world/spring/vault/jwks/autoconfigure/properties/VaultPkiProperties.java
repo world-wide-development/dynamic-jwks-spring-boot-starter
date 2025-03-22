@@ -1,9 +1,9 @@
 package org.development.wide.world.spring.vault.jwks.autoconfigure.properties;
 
 import org.development.wide.world.spring.vault.jwks.property.VaultPkiInternalProperties;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 

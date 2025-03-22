@@ -1,10 +1,10 @@
 package org.development.wide.world.spring.redis.jwks.autoconfigure.properties;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 

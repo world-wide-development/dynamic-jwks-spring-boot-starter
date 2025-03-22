@@ -8,7 +8,7 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.development.wide.world.spring.jwks.spi.CertificateService;
 import org.development.wide.world.spring.jwks.util.CertificateUtils;
 import org.development.wide.world.spring.jwks.util.KeyPairUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.math.BigInteger;
 import java.security.KeyPair;

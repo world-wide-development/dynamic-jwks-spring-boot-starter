@@ -1,7 +1,8 @@
 package org.development.wide.world.spring.jwks.data;
 
 import com.nimbusds.jose.jwk.JWKSet;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 
@@ -32,7 +33,9 @@ public record JwkSetData(
 
     public static final class Builder {
 
+        @Nullable
         private JWKSet jwkSet;
+        @Nullable
         private CertificateData certificateData;
 
         public Builder jwkSet(JWKSet jwkSet) {

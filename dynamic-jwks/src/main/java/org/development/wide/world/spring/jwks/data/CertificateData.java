@@ -1,7 +1,8 @@
 package org.development.wide.world.spring.jwks.data;
 
 import org.development.wide.world.spring.jwks.util.CertificateUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -63,10 +64,15 @@ public record CertificateData(
 
     public static final class Builder {
 
+        @Nullable
         private Integer version;
+        @Nullable
         private String serialNumber;
+        @Nullable
         private PrivateKey privateKey;
+        @Nullable
         private X509Certificate x509Certificate;
+        @Nullable
         private List<X509Certificate> x509Certificates;
 
         public Builder version(Integer version) {

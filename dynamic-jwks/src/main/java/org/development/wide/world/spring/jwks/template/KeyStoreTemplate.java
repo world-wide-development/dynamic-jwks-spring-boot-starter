@@ -3,7 +3,7 @@ package org.development.wide.world.spring.jwks.template;
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.data.KeyStoreSource;
 import org.development.wide.world.spring.jwks.internal.InternalKeyStore;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;

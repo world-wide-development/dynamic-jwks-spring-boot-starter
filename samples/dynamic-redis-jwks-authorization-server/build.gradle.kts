@@ -25,6 +25,7 @@ java {
 }
 
 dependencies {
+    implementation("org.jspecify:jspecify")
     implementation(project(":dynamic-redis-jwks-spring-boot-starter"))
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.session:spring-session-data-redis")

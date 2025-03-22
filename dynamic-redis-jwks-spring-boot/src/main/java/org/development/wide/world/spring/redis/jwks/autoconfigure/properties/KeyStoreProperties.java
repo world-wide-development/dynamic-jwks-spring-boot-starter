@@ -2,9 +2,9 @@ package org.development.wide.world.spring.redis.jwks.autoconfigure.properties;
 
 import jakarta.validation.constraints.NotBlank;
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
