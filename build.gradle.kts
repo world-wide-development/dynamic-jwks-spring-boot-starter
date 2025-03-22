@@ -20,6 +20,8 @@ extra["bouncyCastleVersion"] = "1.80"
 extra["springRetryVersion"] = "2.0.11"
 extra["equalsVerifierVersion"] = "3.19.1"
 extra["testcontainersVersion"] = "1.20.6"
+extra["springFrameworkVersion"] = "6.2.5"
+extra["commonsCompressVersion"] = "1.27.1"
 extra["springIntegrationVersion"] = "6.4.3"
 extra["springVaultStarterVersion"] = "4.2.1"
 
@@ -87,6 +89,9 @@ allprojects {
     dependencyManagement {
         dependencies {
             dependency("io.netty:netty-common:${property("nettyVersion")}")
+            dependency("org.springframework:spring-web:${property("springFrameworkVersion")}")
+            dependency("org.springframework:spring-context:${property("springFrameworkVersion")}")
+            dependency("org.apache.commons:commons-compress:${property("commonsCompressVersion")}")
 
             dependency("org.slf4j:jul-to-slf4j:${property("slf4jVersion")}")
             dependency("org.jspecify:jspecify:${property("jSpecifyVersion")}")
