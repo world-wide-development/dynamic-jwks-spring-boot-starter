@@ -4,24 +4,24 @@ plugins {
     id("java")
     id("jvm-test-suite")
     id("jacoco-report-aggregation")
-    id("org.owasp.dependencycheck") version "12.0.1"
+    id("org.owasp.dependencycheck") version "12.1.0"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
-extra["slf4jVersion"] = "2.0.16"
-extra["snakeYamlVersion"] = "2.3"
-extra["jacksonVersion"] = "2.18.2"
-extra["springBootVersion"] = "3.4.1"
-extra["nimbusJoseVersion"] = "10.0.1"
+extra["slf4jVersion"] = "2.0.17"
+extra["snakeYamlVersion"] = "2.4"
+extra["jacksonVersion"] = "2.18.3"
+extra["springBootVersion"] = "3.4.4"
+extra["nimbusJoseVersion"] = "10.0.2"
 extra["springVaultVersion"] = "3.1.2"
 extra["bouncyCastleVersion"] = "1.80"
 extra["springRetryVersion"] = "2.0.11"
-extra["equalsVerifierVersion"] = "3.18.1"
-extra["testcontainersVersion"] = "1.20.4"
-extra["springFrameworkVersion"] = "6.2.2"
+extra["equalsVerifierVersion"] = "3.19.1"
+extra["testcontainersVersion"] = "1.20.6"
+extra["springFrameworkVersion"] = "6.2.5"
 extra["commonsCompressVersion"] = "1.27.1"
-extra["springIntegrationVersion"] = "6.4.1"
-extra["springVaultStarterVersion"] = "4.2.0"
+extra["springIntegrationVersion"] = "6.4.3"
+extra["springVaultStarterVersion"] = "4.2.1"
 
 extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
 
@@ -41,11 +41,9 @@ testing {
     suites {
         val test by getting(JvmTestSuite::class) {
             useJUnitJupiter()
-            testType.set(TestSuiteType.UNIT_TEST)
         }
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()
-            testType.set(TestSuiteType.INTEGRATION_TEST)
         }
     }
 }

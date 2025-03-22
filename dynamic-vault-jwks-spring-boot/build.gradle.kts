@@ -28,14 +28,12 @@ testing {
     suites {
         val test by getting(JvmTestSuite::class) {
             useJUnitJupiter()
-            testType.set(TestSuiteType.UNIT_TEST)
             dependencies {
                 implementation("org.springframework.boot:spring-boot-starter-test")
             }
         }
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()
-            testType.set(TestSuiteType.INTEGRATION_TEST)
             dependencies {
                 implementation(project())
                 implementation("org.springframework.boot:spring-boot-starter-test")
