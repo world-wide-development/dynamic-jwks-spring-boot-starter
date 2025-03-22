@@ -1,6 +1,7 @@
 package org.development.wide.world.spring.jwks.data;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 
@@ -16,8 +17,9 @@ public record CertificateRotationData(
     }
 
     public static final class Builder {
-
+        @Nullable
         private String key;
+        @Nullable
         private Duration rotateBefore;
 
         public Builder key(String key) {

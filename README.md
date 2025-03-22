@@ -78,3 +78,7 @@ Update `gradlew` file owner:
 ```shell
 git update-index --chmod=+x gradlew
 ```
+
+## Notice!
+
+This product uses the NVD API but is not endorsed or certified by the NVD.

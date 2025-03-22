@@ -1,6 +1,6 @@
 package org.development.wide.world.spring.jwks.util;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.security.*;
@@ -39,7 +39,7 @@ public final class KeyStoreUtils {
     }
 
     @NonNull
-    public static KeyStore initialize(@NonNull final KeyStore keyStore, @NonNull final char[] password) {
+    public static KeyStore initialize(@NonNull final KeyStore keyStore, final char[] password) {
         try {
             keyStore.load(() -> new KeyStore.PasswordProtection(password));
             return keyStore;

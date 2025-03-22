@@ -1,7 +1,7 @@
 package org.development.wide.world.spring.redis.data;
 
 import org.development.wide.world.spring.jwks.data.KeyStoreSource;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serial;
 import java.io.Serializable;

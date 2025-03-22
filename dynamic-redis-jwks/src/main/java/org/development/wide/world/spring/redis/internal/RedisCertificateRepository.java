@@ -8,8 +8,8 @@ import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
 import org.development.wide.world.spring.redis.exception.RedisOperationException;
 import org.development.wide.world.spring.redis.template.KeyStoreRedisTemplate;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.lang.NonNull;
 
 import java.security.cert.X509Certificate;
 import java.util.Collections;

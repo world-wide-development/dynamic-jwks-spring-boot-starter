@@ -3,8 +3,7 @@ package org.development.wide.world.spring.jwks.internal;
 import org.development.wide.world.spring.jwks.property.KeyStoreInternalProperties;
 import org.development.wide.world.spring.jwks.util.CharSequenceUtils;
 import org.development.wide.world.spring.jwks.util.KeyStoreUtils;
-import org.springframework.lang.NonNull;
-import org.springframework.util.Assert;
+import org.jspecify.annotations.NonNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +13,7 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 
 public class InternalKeyStore {
 
@@ -27,8 +27,8 @@ public class InternalKeyStore {
 
     public InternalKeyStore(@NonNull final KeyStore keyStore,
                             @NonNull final KeyStoreInternalProperties properties) {
-        Assert.notNull(keyStore, "keyStore cannot be null");
-        Assert.notNull(properties, "properties cannot be null");
+        Objects.requireNonNull(keyStore, "keyStore cannot be null");
+        Objects.requireNonNull(properties, "properties cannot be null");
         final char[] passwordCharArray = CharSequenceUtils.toCharArray(properties.password());
         this.keyStore = KeyStoreUtils.initialize(keyStore, passwordCharArray);
         this.password = passwordCharArray;
@@ -51,7 +51,7 @@ public class InternalKeyStore {
         return (X509Certificate) this.getCertificate();
     }
 
-    public InternalKeyStore reloadFromByteArray(@NonNull final byte[] sources) {
+    public InternalKeyStore reloadFromByteArray(final byte[] sources) {
         final var byteArrayInputStream = new ByteArrayInputStream(sources);
         return this.reloadFromInputStream(byteArrayInputStream);
     }

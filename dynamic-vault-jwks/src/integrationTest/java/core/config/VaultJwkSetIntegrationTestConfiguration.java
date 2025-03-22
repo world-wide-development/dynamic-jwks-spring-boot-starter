@@ -13,9 +13,9 @@ import org.development.wide.world.spring.vault.jwks.internal.VaultCertificateRep
 import org.development.wide.world.spring.vault.jwks.property.DynamicVaultJwksInternalProperties;
 import org.development.wide.world.spring.vault.jwks.property.VaultPkiInternalProperties;
 import org.development.wide.world.spring.vault.jwks.property.VaultVersionedKvInternalProperties;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.lang.NonNull;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.core.VaultVersionedKeyValueOperations;
 

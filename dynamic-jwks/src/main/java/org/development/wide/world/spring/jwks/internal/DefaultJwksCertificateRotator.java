@@ -8,9 +8,9 @@ import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.jwks.spi.CertificateRepository;
 import org.development.wide.world.spring.jwks.spi.JwkSetRotationFunction;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 

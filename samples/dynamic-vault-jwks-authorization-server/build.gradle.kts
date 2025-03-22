@@ -25,6 +25,7 @@ java {
 }
 
 dependencies {
+    implementation("org.jspecify:jspecify")
     implementation(project(":dynamic-vault-jwks-spring-boot-starter"))
     implementation("org.springframework.cloud:spring-cloud-starter-vault-config")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")

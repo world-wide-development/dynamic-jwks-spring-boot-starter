@@ -7,9 +7,9 @@ import org.development.wide.world.spring.jwks.spi.CertificateRotationFunction;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
 import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
 import org.development.wide.world.spring.vault.jwks.property.DynamicVaultJwksInternalProperties;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.vault.VaultException;
 

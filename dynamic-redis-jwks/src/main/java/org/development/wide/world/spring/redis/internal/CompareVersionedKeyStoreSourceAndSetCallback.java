@@ -4,13 +4,13 @@ import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.data.KeyStoreSource;
 import org.development.wide.world.spring.jwks.template.KeyStoreTemplate;
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.lang.NonNull;
 
 import java.util.List;
 import java.util.Optional;

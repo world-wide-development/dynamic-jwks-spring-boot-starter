@@ -3,7 +3,7 @@ package org.development.wide.world.spring.jwks.internal;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.development.wide.world.spring.jwks.data.CertificateData;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;

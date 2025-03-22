@@ -5,10 +5,9 @@ import com.nimbusds.jose.jwk.JWKSet;
 import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.spi.JwkSetDataHolder;
 import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.NonNull;
-import org.springframework.util.Assert;
 
 import java.time.Duration;
 import java.util.List;
@@ -34,8 +33,8 @@ public class AtomicJwkSetDataHolder implements JwkSetDataHolder {
 
     public AtomicJwkSetDataHolder(final RetryableJwksCertificateRotator certificateRotator,
                                   final AtomicReference<JwkSetData> jwkSetHolderAtomicReference) {
-        Assert.notNull(certificateRotator, "certificateRotator cannot be null");
-        Assert.notNull(jwkSetHolderAtomicReference, "jwkSetHolderAtomicReference cannot be null");
+        Objects.requireNonNull(certificateRotator, "certificateRotator cannot be null");
+        Objects.requireNonNull(jwkSetHolderAtomicReference, "jwkSetHolderAtomicReference cannot be null");
         this.certificateRotator = certificateRotator;
         this.jwkSetHolderAtomicReference = jwkSetHolderAtomicReference;
     }

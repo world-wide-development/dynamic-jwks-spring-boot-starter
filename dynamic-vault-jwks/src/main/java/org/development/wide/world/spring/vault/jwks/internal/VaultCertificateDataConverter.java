@@ -3,7 +3,7 @@ package org.development.wide.world.spring.vault.jwks.internal;
 import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.spi.CertificateDataConverter;
 import org.development.wide.world.spring.jwks.util.KeyPairUtils;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.vault.support.CertificateBundle;
 
 import java.security.PrivateKey;

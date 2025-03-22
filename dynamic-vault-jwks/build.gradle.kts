@@ -15,6 +15,7 @@ tasks.javadoc {
 }
 
 dependencies {
+    implementation("org.jspecify:jspecify")
     implementation(project(":dynamic-jwks"))
     implementation("org.slf4j:jul-to-slf4j")
     implementation("com.nimbusds:nimbus-jose-jwt")
@@ -34,6 +35,7 @@ testing {
             useJUnitJupiter()
             dependencies {
                 implementation(project())
+                implementation("org.jspecify:jspecify")
                 implementation("org.testcontainers:vault")
                 implementation("com.nimbusds:nimbus-jose-jwt")
                 implementation(project(":dynamic-jwks"))

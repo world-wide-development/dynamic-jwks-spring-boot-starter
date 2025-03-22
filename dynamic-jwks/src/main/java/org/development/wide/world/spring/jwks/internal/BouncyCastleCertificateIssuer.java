@@ -9,7 +9,7 @@ import org.development.wide.world.spring.jwks.data.CertificateData;
 import org.development.wide.world.spring.jwks.property.BCCertificateInternalProperties;
 import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
 import org.development.wide.world.spring.jwks.spi.CertificateService;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.math.BigInteger;
 import java.security.KeyPair;

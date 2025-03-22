@@ -1,10 +1,10 @@
 package org.development.wide.world.spring.redis.template;
 
 import org.development.wide.world.spring.redis.data.VersionedKeyStoreSource;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.lang.NonNull;
 
 /**
  * Redis template, designed especially for {@link VersionedKeyStoreSource}

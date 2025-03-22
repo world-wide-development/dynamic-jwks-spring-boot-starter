@@ -12,12 +12,12 @@ import org.development.wide.world.spring.redis.internal.RedisCertificateRotation
 import org.development.wide.world.spring.redis.internal.RetryableRedisJwksCertificateRotator;
 import org.development.wide.world.spring.redis.property.*;
 import org.development.wide.world.spring.redis.template.KeyStoreRedisTemplate;
+import org.jspecify.annotations.NonNull;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.integration.redis.util.RedisLockRegistry;
 import org.springframework.integration.support.locks.LockRegistry;
-import org.springframework.lang.NonNull;
 
 import java.time.Duration;
 

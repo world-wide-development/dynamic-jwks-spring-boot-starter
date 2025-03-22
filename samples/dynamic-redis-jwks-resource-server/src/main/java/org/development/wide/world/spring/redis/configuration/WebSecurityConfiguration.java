@@ -1,9 +1,9 @@
 package org.development.wide.world.spring.redis.configuration;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.lang.NonNull;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,7 +22,7 @@ public class WebSecurityConfiguration {
     }
 
     /* Private methods */
-    private void setUpAuthorizeHttpRequestsConfigurer(@NonNull final AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry requestAuthorizationConfigurer) {
+    private void setUpAuthorizeHttpRequestsConfigurer(final AuthorizeHttpRequestsConfigurer<HttpSecurity>.@NonNull AuthorizationManagerRequestMatcherRegistry requestAuthorizationConfigurer) {
         requestAuthorizationConfigurer.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
         requestAuthorizationConfigurer.requestMatchers(HttpMethod.GET,
                 "/swagger-ui.html",

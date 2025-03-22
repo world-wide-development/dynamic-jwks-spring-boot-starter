@@ -1,7 +1,6 @@
 package org.development.wide.world.spring.jwks.util;
 
 import com.nimbusds.jose.jwk.JWKSet;
-import org.springframework.lang.NonNull;
 
 /**
  * A set of utilities for {@link CharSequence} interaction
@@ -14,7 +13,6 @@ public final class CharSequenceUtils {
         // Suppresses default constructor
     }
 
-    @NonNull
     public static char[] toCharArray(final CharSequence charSequence) {
         if (charSequence == null || charSequence.isEmpty()) {
             return new char[0];
