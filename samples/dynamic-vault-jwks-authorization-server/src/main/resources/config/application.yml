@@ -5,7 +5,6 @@ spring:
   security:
     user:
       name: "user"
-      password: "password"
   application:
     name: "authorization-service"
   cloud:
