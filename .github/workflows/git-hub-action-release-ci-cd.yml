@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: corretto
+          distribution: liberica
       - uses: docker/setup-buildx-action@v3
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew clean test
@@ -32,7 +32,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: corretto
+          distribution: liberica
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew clean integrationTest
   release:
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           java-version: 21
-          distribution: corretto
+          distribution: liberica
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew clean build jreleaserFullRelease -x test -x integrationTest
         env:
