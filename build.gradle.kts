@@ -1,8 +1,5 @@
 @file:Suppress("unused", "UnstableApiUsage")
 
-import org.jreleaser.model.Active
-import org.jreleaser.model.Stereotype
-
 plugins {
     id("java")
     id("jvm-test-suite")
@@ -116,51 +113,6 @@ allprojects {
             dependency("org.springframework.integration:spring-integration-core:${property("springIntegrationVersion")}")
             dependency("org.springframework.integration:spring-integration-redis:${property("springIntegrationVersion")}")
             dependency("org.springframework.cloud:spring-cloud-starter-vault-config:${property("springVaultStarterVersion")}")
-        }
-    }
-
-}
-
-subprojects {
-
-    apply(plugin = "org.jreleaser")
-
-    jreleaser {
-        signing {
-            armored.set(true)
-            active.set(Active.ALWAYS)
-            passphrase.set(System.getenv("GPG_PASSPHRASE"))
-            publicKey.set(System.getenv("MAVEN_GPG_PUBLIC_KEY"))
-            secretKey.set(System.getenv("MAVEN_GPG_PRIVATE_KEY"))
-        }
-        deploy {
-            maven {
-                mavenCentral {
-                    create("${project.name}") {
-                        active.set(Active.ALWAYS)
-                        stagingRepository("target/staging-deploy")
-                        username.set(System.getenv("MAVEN_USERNAME"))
-                        password.set(System.getenv("MAVEN_PASSWORD"))
-                        url.set("https://central.sonatype.com/api/v1/publisher")
-                    }
-                }
-            }
-        }
-        project {
-            license.set("Apache-2.0")
-            inceptionYear.set("2023")
-            name.set("${project.name}")
-            stereotype.set(Stereotype.WEB)
-            maintainers.add("Serhey Doroshenko")
-            vendor.set("World Wide Development")
-            copyright.set("2023 Serhey Doroshenko")
-            tags.set(listOf("jwks", "dynamic-jwks", "spring-boot"))
-            description.set("Dynamic JWKS Spring Boot Starter developed by World Wide Development")
-            links {
-                homepage.set("https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter")
-                documentation.set("${homepage}/blob/release/0.1.x/README.md")
-                license.set("${homepage}/blob/release/0.1.x/LICENSE")
-            }
         }
     }
 
