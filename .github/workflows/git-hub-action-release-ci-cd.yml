@@ -3,6 +3,8 @@ on:
   push:
     tags:
       - "v*"
+permissions:
+  contents: read
 jobs:
   validation:
     name: "Validation"
