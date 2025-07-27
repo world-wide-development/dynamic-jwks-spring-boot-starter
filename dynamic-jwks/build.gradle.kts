@@ -45,6 +45,11 @@ testing {
 }
 
 jreleaser {
+    release {
+        github {
+            enabled.set(false)
+        }
+    }
     signing {
         armored.set(true)
         active.set(Active.ALWAYS)
@@ -57,7 +62,6 @@ jreleaser {
             mavenCentral {
                 create("dynamic-jwks") {
                     active.set(Active.ALWAYS)
-
                     stagingRepository("target/staging-deploy")
                     username.set(System.getenv("MAVEN_USERNAME"))
                     password.set(System.getenv("MAVEN_PASSWORD"))
@@ -67,7 +71,7 @@ jreleaser {
         }
     }
     project {
-        name.set("Dynamic JWKS")
+        name.set("dynamic-jwks")
         license.set("Apache-2.0")
         inceptionYear.set("2023")
         stereotype.set(Stereotype.WEB)

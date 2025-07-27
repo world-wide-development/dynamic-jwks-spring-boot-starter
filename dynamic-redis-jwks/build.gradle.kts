@@ -55,6 +55,11 @@ testing {
 }
 
 jreleaser {
+    release {
+        github {
+            enabled.set(false)
+        }
+    }
     signing {
         armored.set(true)
         active.set(Active.ALWAYS)
@@ -78,7 +83,7 @@ jreleaser {
     project {
         license.set("Apache-2.0")
         inceptionYear.set("2023")
-        name.set("Dynamic Redis JWKS")
+        name.set("dynamic-redis-jwks")
         stereotype.set(Stereotype.WEB)
         maintainers.add("Serhey Doroshenko")
         vendor.set("World Wide Development")

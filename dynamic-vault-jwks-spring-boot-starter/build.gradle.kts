@@ -21,6 +21,11 @@ dependencies {
 }
 
 jreleaser {
+    release {
+        github {
+            enabled.set(false)
+        }
+    }
     signing {
         armored.set(true)
         active.set(Active.ALWAYS)
@@ -49,7 +54,7 @@ jreleaser {
         vendor.set("World Wide Development")
         version.set("${rootProject.version}")
         copyright.set("2023 Serhey Doroshenko")
-        name.set("Dynamic Vault JWKS Spring Boot Starter")
+        name.set("dynamic-vault-jwks-spring-boot-starter")
         tags.set(listOf("jwks", "dynamic-jwks", "spring-boot"))
         description.set("Dynamic JWKS Spring Boot Starter developed by World Wide Development")
         links {
