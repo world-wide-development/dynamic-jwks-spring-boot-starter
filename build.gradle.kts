@@ -49,7 +49,7 @@ testing {
     }
 }
 
-subprojects {
+allprojects {
 
     apply(plugin = "java")
     apply(plugin = "jvm-test-suite")
@@ -59,10 +59,6 @@ subprojects {
 
     version = "0.1.7"
     group = "io.github.world-wide-development"
-
-}
-
-allprojects {
 
     repositories {
         mavenCentral()
