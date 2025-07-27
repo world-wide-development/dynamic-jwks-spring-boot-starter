@@ -88,12 +88,6 @@ allprojects {
         }
     }
 
-}
-
-subprojects {
-
-    apply(plugin = "org.jreleaser")
-
     dependencyManagement {
         dependencies {
             dependency("org.springframework:spring-web:${property("springFrameworkVersion")}")
@@ -124,6 +118,12 @@ subprojects {
             dependency("org.springframework.cloud:spring-cloud-starter-vault-config:${property("springVaultStarterVersion")}")
         }
     }
+
+}
+
+subprojects {
+
+    apply(plugin = "org.jreleaser")
 
     jreleaser {
         signing {
