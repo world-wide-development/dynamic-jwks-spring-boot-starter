@@ -46,9 +46,10 @@ jobs:
           java-version: 21
           distribution: corretto
       - uses: gradle/actions/setup-gradle@v4
-      - run: ./gradlew clean build publish -x test -x integrationTest
+      - run: ./gradlew clean build jreleaserFullRelease -x test -x integrationTest
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          MAVEN_GPG_PUBLIC_KEY: ${{ secrets.MAVEN_GPG_PUBLIC_KEY }}
           MAVEN_GPG_PRIVATE_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
