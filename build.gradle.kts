@@ -4,8 +4,8 @@ plugins {
     id("java")
     id("jvm-test-suite")
     id("jacoco-report-aggregation")
-    id("org.jreleaser") version "1.19.0"
     id("org.owasp.dependencycheck") version "12.1.3"
+    id("org.jreleaser") version "1.19.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
 }
 

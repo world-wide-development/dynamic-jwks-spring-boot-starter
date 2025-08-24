@@ -13,6 +13,7 @@ java {
 }
 
 tasks.javadoc {
+    options.quiet()
     options.encoding("UTF-8")
 }
 
@@ -35,6 +36,11 @@ testing {
         }
         register<JvmTestSuite>("integrationTest") {
             useJUnitJupiter()
+            targets.all {
+                testTask.configure {
+                    failOnNoDiscoveredTests.set(false)
+                }
+            }
             dependencies {
                 implementation(project())
                 implementation("com.nimbusds:nimbus-jose-jwt")
@@ -45,6 +51,7 @@ testing {
 }
 
 jreleaser {
+    gitRootSearch.set(true)
     release {
         github {
             enabled.set(false)
@@ -53,18 +60,18 @@ jreleaser {
     signing {
         armored.set(true)
         active.set(Active.ALWAYS)
-        passphrase.set(System.getenv("GPG_PASSPHRASE"))
-        publicKey.set(System.getenv("MAVEN_GPG_PUBLIC_KEY"))
-        secretKey.set(System.getenv("MAVEN_GPG_PRIVATE_KEY"))
+        publicKey.set(System.getenv("MAVEN_GPG_PUBLIC_KEY") ?: "demo")
+        secretKey.set(System.getenv("MAVEN_GPG_PRIVATE_KEY") ?: "demo")
+        passphrase.set(System.getenv("MAVEN_GPG_PASSPHRASE") ?: "demo")
     }
     deploy {
         maven {
             mavenCentral {
-                create("dynamic-jwks") {
+                create("sonatype") {
                     active.set(Active.ALWAYS)
                     stagingRepository("target/staging-deploy")
-                    username.set(System.getenv("MAVEN_USERNAME"))
-                    password.set(System.getenv("MAVEN_PASSWORD"))
+                    password.set(System.getenv("MAVEN_PASSWORD") ?: "demo")
+                    username.set(System.getenv("MAVEN_USERNAME") ?: "demo")
                     url.set("https://central.sonatype.com/api/v1/publisher")
                 }
             }

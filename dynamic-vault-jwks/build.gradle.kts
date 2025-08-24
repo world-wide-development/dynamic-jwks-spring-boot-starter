@@ -67,7 +67,7 @@ jreleaser {
     deploy {
         maven {
             mavenCentral {
-                create("dynamic-vault-jwks") {
+                create("sonatype") {
                     active.set(Active.ALWAYS)
                     stagingRepository("target/staging-deploy")
                     username.set(System.getenv("MAVEN_USERNAME"))
