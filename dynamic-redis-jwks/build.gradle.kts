@@ -62,7 +62,10 @@ jreleaser {
     gitRootSearch.set(true)
     release {
         github {
-            enabled.set(false)
+            sign.set(false)
+            skipTag.set(true)
+            token.set("no-op")
+            skipRelease.set(true)
         }
     }
     signing {
