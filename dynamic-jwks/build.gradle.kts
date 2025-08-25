@@ -51,7 +51,6 @@ testing {
 }
 
 jreleaser {
-    gitRootSearch.set(true)
     release {
         github {
             enabled.set(false)
@@ -70,8 +69,8 @@ jreleaser {
                 create("sonatype") {
                     active.set(Active.ALWAYS)
                     stagingRepository("target/staging-deploy")
-                    password.set(System.getenv("MAVEN_PASSWORD"))
                     username.set(System.getenv("MAVEN_USERNAME"))
+                    password.set(System.getenv("MAVEN_PASSWORD"))
                     url.set("https://central.sonatype.com/api/v1/publisher")
                 }
             }
