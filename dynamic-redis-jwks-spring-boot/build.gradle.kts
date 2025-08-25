@@ -1,10 +1,10 @@
 @file:Suppress("unused", "UnstableApiUsage")
 
 import org.jreleaser.model.Active
-import org.jreleaser.model.Stereotype
 
 plugins {
     id("org.jreleaser")
+    id("maven-publish")
 }
 
 java {
@@ -12,8 +12,12 @@ java {
     withSourcesJar()
 }
 
-tasks.javadoc {
-    options.encoding("UTF-8")
+tasks.withType<Javadoc> {
+    options {
+        this as CoreJavadocOptions
+        encoding("UTF-8")
+        addStringOption("Xdoclint:none", "-quiet")
+    }
 }
 
 dependencies {
@@ -48,6 +52,7 @@ testing {
 }
 
 jreleaser {
+    gitRootSearch.set(true)
     release {
         github {
             enabled.set(false)
@@ -63,9 +68,9 @@ jreleaser {
     deploy {
         maven {
             mavenCentral {
-                create("sonatype") {
+                register("sonatype") {
                     active.set(Active.ALWAYS)
-                    stagingRepository("target/staging-deploy")
+                    stagingRepository("build/staging-deploy")
                     username.set(System.getenv("MAVEN_USERNAME"))
                     password.set(System.getenv("MAVEN_PASSWORD"))
                     url.set("https://central.sonatype.com/api/v1/publisher")
@@ -73,21 +78,58 @@ jreleaser {
             }
         }
     }
-    project {
-        license.set("Apache-2.0")
-        inceptionYear.set("2023")
-        stereotype.set(Stereotype.WEB)
-        maintainers.add("Serhey Doroshenko")
-        vendor.set("World Wide Development")
-        version.set("${rootProject.version}")
-        copyright.set("2023 Serhey Doroshenko")
-        name.set("dynamic-redis-jwks-spring-boot")
-        tags.set(listOf("jwks", "dynamic-jwks", "spring-boot"))
-        description.set("Dynamic JWKS Spring Boot Starter developed by World Wide Development")
-        links {
-            homepage.set("https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter")
-            documentation.set("${homepage}/blob/release/0.1.x/README.md")
-            license.set("${homepage}/blob/release/0.1.x/LICENSE")
+}
+
+publishing {
+    repositories {
+        maven {
+            setUrl(layout.buildDirectory.dir("staging-deploy"))
+        }
+    }
+    publications {
+        register<MavenPublication>("dynamic-redis-jwks-spring-boot") {
+            from(components["java"])
+            versionMapping {
+                usage("java-runtime") {
+                    fromResolutionResult()
+                }
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+            }
+            pom {
+                inceptionYear.set("2023")
+                name.set("Dynamic Redis JWKS Spring Boot")
+                developers {
+                    developer {
+                        id.set("serhey")
+                        timezone.set("Europe/Kyiv")
+                        name.set("Serhey Doroshenko")
+                        organization.set("World Wide Development")
+                        email.set("serhey.doroshenko.work@gmail.com")
+                    }
+                }
+                organization {
+                    name.set("World Wide Development")
+                    url.set("https://github.com/world-wide-development")
+                }
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                url.set("https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter")
+                description.set("Dynamic JWKS Spring Boot Starter developed by World Wide Development")
+                scm {
+                    tag.set("dynamic-jwks")
+                    url.set("https://github.com/world-wide-development/dynamic-jwks-spring-boot-starter")
+                    // @formatter:off
+                    connection.set("scm:git:git://github.com:world-wide-development/dynamic-jwks-spring-boot-starter.git")
+                    developerConnection.set("scm:git:ssh://git@github.com:world-wide-development/dynamic-jwks-spring-boot-starter.git")
+                    // @formatter:on
+                }
+            }
         }
     }
 }
