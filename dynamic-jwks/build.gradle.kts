@@ -60,9 +60,9 @@ jreleaser {
     signing {
         armored.set(true)
         active.set(Active.ALWAYS)
-        publicKey.set(System.getenv("MAVEN_GPG_PUBLIC_KEY") ?: "demo")
-        secretKey.set(System.getenv("MAVEN_GPG_PRIVATE_KEY") ?: "demo")
-        passphrase.set(System.getenv("MAVEN_GPG_PASSPHRASE") ?: "demo")
+        publicKey.set(System.getenv("MAVEN_GPG_PUBLIC_KEY"))
+        secretKey.set(System.getenv("MAVEN_GPG_PRIVATE_KEY"))
+        passphrase.set(System.getenv("MAVEN_GPG_PASSPHRASE"))
     }
     deploy {
         maven {
@@ -70,8 +70,8 @@ jreleaser {
                 create("sonatype") {
                     active.set(Active.ALWAYS)
                     stagingRepository("target/staging-deploy")
-                    password.set(System.getenv("MAVEN_PASSWORD") ?: "demo")
-                    username.set(System.getenv("MAVEN_USERNAME") ?: "demo")
+                    password.set(System.getenv("MAVEN_PASSWORD"))
+                    username.set(System.getenv("MAVEN_USERNAME"))
                     url.set("https://central.sonatype.com/api/v1/publisher")
                 }
             }
