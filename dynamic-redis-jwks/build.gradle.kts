@@ -71,9 +71,9 @@ jreleaser {
     signing {
         armored.set(true)
         active.set(Active.ALWAYS)
-        passphrase.set(System.getenv("GPG_PASSPHRASE"))
         publicKey.set(System.getenv("MAVEN_GPG_PUBLIC_KEY"))
         secretKey.set(System.getenv("MAVEN_GPG_PRIVATE_KEY"))
+        passphrase.set(System.getenv("MAVEN_GPG_PASSPHRASE"))
     }
     deploy {
         maven {
