@@ -1,11 +1,9 @@
 services:
 
   redis:
-    expose:
-      - "6379:6379"
-    ports:
-      - "6379:6379"
     image: "redis:7-alpine"
+    ports:
+      - "127.0.0.1:6379:6379"
     container_name: "redis-container"
     networks:
       - "dynamic-redis-jwks-authorization-server-network"

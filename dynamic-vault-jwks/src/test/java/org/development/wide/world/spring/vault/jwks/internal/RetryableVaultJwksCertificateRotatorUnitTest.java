@@ -1,101 +1,142 @@
 package org.development.wide.world.spring.vault.jwks.internal;
 
+import ch.qos.logback.classic.Level;
 import core.base.BaseUnitTest;
-import org.development.wide.world.spring.jwks.internal.DefaultJwksCertificateRotator;
-import org.development.wide.world.spring.jwks.internal.JwkSetConverter;
-import org.development.wide.world.spring.jwks.spi.CertificateIssuer;
-import org.development.wide.world.spring.jwks.spi.CertificateRepository;
+import core.utils.LogbackUtils;
+import org.assertj.core.api.BDDAssertions;
+import org.development.wide.world.spring.jwks.data.CertificateData;
+import org.development.wide.world.spring.jwks.data.JwkSetData;
+import org.development.wide.world.spring.jwks.spi.JwkSetRotationFunction;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
-import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.development.wide.world.spring.vault.jwks.exception.CertificateRotationException;
 import org.development.wide.world.spring.vault.jwks.property.DynamicVaultJwksInternalProperties;
 import org.development.wide.world.spring.vault.jwks.property.VaultPkiInternalProperties;
 import org.development.wide.world.spring.vault.jwks.property.VaultVersionedKvInternalProperties;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.retry.RetryException;
+import org.springframework.core.retry.RetryTemplate;
+import org.springframework.core.retry.Retryable;
 
 import java.time.Duration;
-import java.util.Optional;
 
-@SpringJUnitConfig({
-        RetryableVaultJwksCertificateRotatorUnitTest.UnitTestConfiguration.class
-})
+@ExtendWith(MockitoExtension.class)
+@SuppressWarnings({"ResultOfMethodCallIgnored"})
 class RetryableVaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
 
-    public static final VaultPkiInternalProperties PKI_INTERNAL_PROPERTIES = VaultPkiInternalProperties.builder()
+    final VaultVersionedKvInternalProperties kvInternalProperties = VaultVersionedKvInternalProperties.builder()
+            .certificatePath("authorization.certificate")
+            .rootPath("secret")
+            .build();
+    final VaultPkiInternalProperties pkiInternalProperties = VaultPkiInternalProperties.builder()
             .certificateCommonName("authorization.certificate")
             .certificateTtl(Duration.ofMinutes(1))
             .roleName("jwks")
             .rootPath("pki")
             .build();
-    public static final VaultVersionedKvInternalProperties KV_INTERNAL_PROPERTIES = VaultVersionedKvInternalProperties.builder()
-            .certificatePath("authorization.certificate")
-            .rootPath("secret")
-            .build();
-    public static final DynamicVaultJwksInternalProperties JWKS_INTERNAL_PROPERTIES = DynamicVaultJwksInternalProperties.builder()
-            .versionedKv(KV_INTERNAL_PROPERTIES)
+    @Spy
+    final DynamicVaultJwksInternalProperties properties = DynamicVaultJwksInternalProperties.builder()
+            .versionedKv(kvInternalProperties)
             .certificateRotationRetries(3)
-            .pki(PKI_INTERNAL_PROPERTIES)
+            .pki(pkiInternalProperties)
             .enabled(Boolean.TRUE)
             .build();
 
-    @Autowired
-    JwkSetConverter jwkSetConverter;
-
     @Mock
-    CertificateIssuer certificateIssuer;
+    JwksCertificateRotator jwksRotator;
     @Mock
-    CertificateRepository certificateRepository;
+    RetryTemplate rotationRetryTemplate;
 
-    RetryableJwksCertificateRotator certificateRotator;
+    @InjectMocks
+    RetryableVaultJwksCertificateRotator retryableCertificateRotator;
 
-    @BeforeEach
-    void setUpEach() {
-        final JwksCertificateRotator jwksCertificateRotator = new DefaultJwksCertificateRotator(
-                jwkSetConverter,
-                certificateIssuer,
-                certificateRepository
-        );
-        this.certificateRotator = new RetryableVaultJwksCertificateRotator(
-                jwksCertificateRotator,
-                JWKS_INTERNAL_PROPERTIES
-        );
+    @Captor
+    ArgumentCaptor<Retryable<CertificateData>> retryableArgumentCaptor;
+    @Captor
+    ArgumentCaptor<JwkSetRotationFunction> jwksRotationFnArgumentCaptor;
+
+    @Test
+    void testRotateSuccess() throws Throwable {
+        // Given
+        final CertificateData givenCertificateData = CertificateData.builder()
+                .build();
+        final JwkSetData givenJwkSetData = JwkSetData.builder()
+                .build();
+        BDDMockito.given(jwksRotator.rotate(jwksRotationFnArgumentCaptor.capture()))
+                .willReturn(givenJwkSetData);
+        BDDMockito.given(rotationRetryTemplate.execute(retryableArgumentCaptor.capture()))
+                .willReturn(givenCertificateData);
+        // When
+        final JwkSetData rotationResult = retryableCertificateRotator.rotate();
+        final CertificateData functionResult = jwksRotationFnArgumentCaptor.getValue()
+                .apply(_ -> givenCertificateData);
+        final CertificateData retryResult = retryableArgumentCaptor.getValue()
+                .execute();
+        // Then
+        BDDAssertions.then(rotationResult).isNotNull();
+        BDDAssertions.then(functionResult).isNotNull();
+        BDDAssertions.then(retryResult).isNotNull();
+        // And
+        BDDMockito.then(rotationRetryTemplate).should().execute(retryableArgumentCaptor.capture());
+        BDDMockito.then(jwksRotator).should().rotate(jwksRotationFnArgumentCaptor.capture());
+        BDDMockito.then(properties).should().versionedKv();
     }
 
     @Test
-    void testRotate() {
+    void testRotateSuccessWithDebug() throws Throwable {
+        // Set up
+        LogbackUtils.changeLoggingLevel(Level.DEBUG, RetryableVaultJwksCertificateRotator.class);
+        // Given
+        final CertificateData givenCertificateData = CertificateData.builder()
+                .build();
+        final JwkSetData givenJwkSetData = JwkSetData.builder()
+                .build();
+        BDDMockito.given(jwksRotator.rotate(jwksRotationFnArgumentCaptor.capture()))
+                .willReturn(givenJwkSetData);
+        BDDMockito.given(rotationRetryTemplate.execute(retryableArgumentCaptor.capture()))
+                .willReturn(givenCertificateData);
         // When
-        Mockito.when(certificateRepository.findOne(Mockito.anyString()))
-                .thenReturn(Optional.of(VaultJwksCertificateRotatorUnitTestData.extractExpiredKeyStoreData()));
-        Mockito.when(certificateIssuer.issueOne())
-                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractExpiredKeyStoreData());
-        Mockito.when(certificateRepository.saveOne(Mockito.anyString(), Mockito.any()))
-                .thenReturn(VaultJwksCertificateRotatorUnitTestData.extractExpiredKeyStoreData());
+        final JwkSetData rotationResult = retryableCertificateRotator.rotate();
+        final CertificateData functionResult = jwksRotationFnArgumentCaptor.getValue()
+                .apply(_ -> givenCertificateData);
+        final CertificateData retryResult = retryableArgumentCaptor.getValue()
+                .execute();
         // Then
-        Assertions.assertDoesNotThrow(() -> certificateRotator.rotate());
-        // Verify
-        Mockito.verify(certificateRepository, Mockito.times(1))
-                .findOne(Mockito.anyString());
-        Mockito.verify(certificateIssuer, Mockito.times(1))
-                .issueOne();
-        Mockito.verify(certificateRepository, Mockito.times(1))
-                .saveOne(Mockito.anyString(), Mockito.any());
+        BDDAssertions.then(rotationResult).isNotNull();
+        BDDAssertions.then(functionResult).isNotNull();
+        BDDAssertions.then(retryResult).isNotNull();
+        // And
+        BDDMockito.then(rotationRetryTemplate).should().execute(retryableArgumentCaptor.capture());
+        BDDMockito.then(jwksRotator).should().rotate(jwksRotationFnArgumentCaptor.capture());
+        BDDMockito.then(properties).should().versionedKv();
     }
 
-    @Configuration(proxyBeanMethods = false)
-    static class UnitTestConfiguration {
-
-        @Bean
-        public JwkSetConverter jwkSetConverter() {
-            return new JwkSetConverter();
-        }
-
+    @Test
+    void testRotateThrowsCertificateRotationException() throws Throwable {
+        // Given
+        final CertificateData givenCertificateData = CertificateData.builder()
+                .build();
+        final JwkSetData givenJwkSetData = JwkSetData.builder()
+                .build();
+        BDDMockito.given(jwksRotator.rotate(jwksRotationFnArgumentCaptor.capture()))
+                .willReturn(givenJwkSetData);
+        BDDMockito.given(rotationRetryTemplate.execute(retryableArgumentCaptor.capture()))
+                .willThrow(RetryException.class);
+        // Then
+        BDDAssertions.thenExceptionOfType(CertificateRotationException.class)
+                .isThrownBy(() -> {
+                    retryableCertificateRotator.rotate();
+                    final CertificateData functionResult = jwksRotationFnArgumentCaptor.getValue()
+                            .apply(_ -> givenCertificateData);
+                    BDDAssertions.then(functionResult).isNotNull();
+                })
+                .withMessage("On retry a certificate rotation exception")
+                .withCauseInstanceOf(RetryException.class);
+        // And
+        BDDMockito.then(rotationRetryTemplate).should().execute(retryableArgumentCaptor.capture());
+        BDDMockito.then(jwksRotator).should().rotate(jwksRotationFnArgumentCaptor.capture());
+        BDDMockito.then(properties).should(BDDMockito.never()).versionedKv();
     }
-
 }

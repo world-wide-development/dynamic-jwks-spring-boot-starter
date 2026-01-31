@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.integration.redis.util.RedisLockRegistry;
-import org.springframework.integration.support.locks.LockRegistry;
 
 import java.time.Duration;
 
@@ -69,12 +68,6 @@ public class RedisJwkSetIntegrationTestConfiguration {
     }
 
     @Bean
-    public LockRegistry lockRegistry(final RedisConnectionFactory redisConnectionFactory) {
-        final String lockKey = CERTIFICATE_ROTATION_PROPERTIES.rotationLockKey();
-        return new RedisLockRegistry(redisConnectionFactory, lockKey);
-    }
-
-    @Bean
     public CertificateIssuer certificateIssuer(final CertificateService certificateService) {
         return new BouncyCastleCertificateIssuer(certificateService, CERTIFICATE_PROPERTIES);
     }
@@ -90,13 +83,19 @@ public class RedisJwkSetIntegrationTestConfiguration {
     }
 
     @Bean
+    public RedisLockRegistry lockRegistry(final RedisConnectionFactory redisConnectionFactory) {
+        final String lockKey = CERTIFICATE_ROTATION_PROPERTIES.rotationLockKey();
+        return new RedisLockRegistry(redisConnectionFactory, lockKey);
+    }
+
+    @Bean
     public CertificateRepository certificateRepository(@NonNull final KeyStoreTemplate keyStoreTemplate,
                                                        @NonNull final KeyStoreRedisTemplate redisTemplate) {
         return new RedisCertificateRepository(keyStoreTemplate, redisTemplate);
     }
 
     @Bean
-    public RedisCertificateRotationTask redisCertificateRotationTask(final LockRegistry lockRegistry,
+    public RedisCertificateRotationTask redisCertificateRotationTask(final RedisLockRegistry lockRegistry,
                                                                      final JwkSetDataHolder jwkSetDataHolder) {
         return new RedisCertificateRotationTask(lockRegistry, jwkSetDataHolder, CERTIFICATE_ROTATION_PROPERTIES);
     }

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: gradle/actions/wrapper-validation@v4
+      - uses: gradle/actions/wrapper-validation@v5
   verification:
     needs: validation
     runs-on: ubuntu-latest
@@ -20,9 +20,9 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: liberica
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew clean jreleaserConfig --build-cache
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
@@ -39,10 +39,10 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: liberica
       - uses: docker/setup-buildx-action@v3
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew clean test --build-cache
   integration-test:
     needs: unit-test
@@ -52,9 +52,9 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: liberica
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew clean integrationTest --build-cache
   release:
     runs-on: ubuntu-latest
@@ -64,9 +64,9 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: liberica
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
       - env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

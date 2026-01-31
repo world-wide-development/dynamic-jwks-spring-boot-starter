@@ -15,13 +15,10 @@ import org.development.wide.world.spring.redis.property.CertificateRotationInter
 import org.development.wide.world.spring.redis.property.DynamicRedisJwksInternalProperties;
 import org.development.wide.world.spring.redis.template.KeyStoreRedisTemplate;
 import org.jspecify.annotations.NonNull;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerJwtAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,10 +48,6 @@ import org.springframework.util.Assert;
         CertificateRotationProperties.class
 })
 @Configuration(proxyBeanMethods = false)
-@AutoConfiguration(
-        after = {UserDetailsServiceAutoConfiguration.class},
-        before = {OAuth2AuthorizationServerJwtAutoConfiguration.class}
-)
 @ConditionalOnProperty(matchIfMissing = true, name = {"dynamic-jwks.redis-storage.enabled"})
 public class DynamicRedisJwksAutoConfiguration {
 
@@ -90,7 +83,7 @@ public class DynamicRedisJwksAutoConfiguration {
     public static class JwksCertificateRotationScheduleConfiguration {
 
         /**
-         * Conditionally instantiates {@link LockRegistry} bean
+         * Conditionally instantiates {@link RedisLockRegistry} bean
          *
          * @param redisConnectionFactory required dependency of {@link RedisConnectionFactory} type
          * @param rotationProperties     required dependency of {@link CertificateRotationProperties} type
@@ -98,8 +91,8 @@ public class DynamicRedisJwksAutoConfiguration {
          */
         @Bean
         @ConditionalOnMissingBean
-        public LockRegistry lockRegistry(final RedisConnectionFactory redisConnectionFactory,
-                                         final CertificateRotationProperties rotationProperties) {
+        public RedisLockRegistry lockRegistry(final RedisConnectionFactory redisConnectionFactory,
+                                              final CertificateRotationProperties rotationProperties) {
             Assert.notNull(rotationProperties, "Certificate rotation properties cannot be null");
             final String lockKey = rotationProperties.rotationLockKey();
             return new RedisLockRegistry(redisConnectionFactory, lockKey);
@@ -115,7 +108,7 @@ public class DynamicRedisJwksAutoConfiguration {
          */
         @Bean
         @ConditionalOnMissingBean
-        public CertificateRotationTask certificateRotationTask(final LockRegistry lockRegistry,
+        public CertificateRotationTask certificateRotationTask(final RedisLockRegistry lockRegistry,
                                                                final JwkSetDataHolder jwkSetDataHolder,
                                                                final CertificateRotationProperties properties) {
             Assert.notNull(lockRegistry, "Lock registry cannot be null");
@@ -265,7 +258,7 @@ public class DynamicRedisJwksAutoConfiguration {
         /**
          * Instantiates {@link RetryableJwksCertificateRotator} bean
          *
-         * @param properties             required dependency of {@link DynamicRedisJwksProperties} type
+         * @param properties         required dependency of {@link DynamicRedisJwksProperties} type
          * @param certificateRotator required dependency of {@link JwksCertificateRotator} type
          * @return {@code RetryableJwksCertificateRotator}
          */

@@ -3,7 +3,6 @@ package org.development.wide.world.spring.jwks.internal;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.development.wide.world.spring.jwks.data.CertificateData;
-import org.jspecify.annotations.NonNull;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -22,7 +21,10 @@ public class JwkSetConverter {
      * @param certificateData source
      * @return {@code JWKSet}
      */
-    public JWKSet convert(@NonNull final CertificateData certificateData) {
+    public JWKSet convert(final CertificateData certificateData) {
+        if (certificateData == null) {
+            return null;
+        }
         final X509Certificate x509Certificate = certificateData.x509Certificate();
         final RSAPublicKey publicKey = (RSAPublicKey) x509Certificate.getPublicKey();
         final PrivateKey privateKey = certificateData.privateKey();
