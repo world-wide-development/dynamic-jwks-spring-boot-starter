@@ -32,13 +32,20 @@ public class RetryableVaultJwksCertificateRotator implements RetryableJwksCertif
 
     public RetryableVaultJwksCertificateRotator(@NonNull final JwksCertificateRotator jwksRotator,
                                                 @NonNull final DynamicVaultJwksInternalProperties properties) {
-        this.properties = properties;
-        this.jwksRotator = jwksRotator;
         final RetryPolicy rotationRetryPolicy = RetryPolicy.builder()
                 .maxRetries(properties.certificateRotationRetries())
                 .includes(VaultException.class)
                 .build();
-        this.rotationRetryTemplate = new RetryTemplate(rotationRetryPolicy);
+        final RetryTemplate retryTemplate = new RetryTemplate(rotationRetryPolicy);
+        this(jwksRotator, retryTemplate, properties);
+    }
+
+    public RetryableVaultJwksCertificateRotator(@NonNull final JwksCertificateRotator jwksRotator,
+                                                @NonNull final RetryTemplate rotationRetryTemplate,
+                                                @NonNull final DynamicVaultJwksInternalProperties properties) {
+        this.properties = properties;
+        this.jwksRotator = jwksRotator;
+        this.rotationRetryTemplate = rotationRetryTemplate;
     }
 
     /**
@@ -63,7 +70,7 @@ public class RetryableVaultJwksCertificateRotator implements RetryableJwksCertif
 
     private CertificateData rotateCertificateWithRetry(@NonNull final CertificateRotationFunction function) {
         try {
-            return rotationRetryTemplate.execute(() -> rotateCertificate(function));
+            return this.rotationRetryTemplate.execute(() -> rotateCertificate(function));
         } catch (RetryException e) {
             throw new CertificateRotationException("On retry a certificate rotation exception", e);
         }

@@ -33,14 +33,21 @@ public class RetryableRedisJwksCertificateRotator implements RetryableJwksCertif
 
     public RetryableRedisJwksCertificateRotator(@NonNull final JwksCertificateRotator jwksRotator,
                                                 @NonNull final DynamicRedisJwksInternalProperties properties) {
-        this.properties = properties;
-        this.jwksRotator = jwksRotator;
         final RetryPolicy rotationRetryPolicy = RetryPolicy.builder()
                 .maxRetries(properties.certificateRotation().retry().maxAttempts())
                 .delay(properties.certificateRotation().retry().fixedBackoff())
                 .includes(RedisOperationException.class)
                 .build();
-        this.rotationRetryTemplate = new RetryTemplate(rotationRetryPolicy);
+        final RetryTemplate retryTemplate = new RetryTemplate(rotationRetryPolicy);
+        this(jwksRotator, retryTemplate, properties);
+    }
+
+    public RetryableRedisJwksCertificateRotator(@NonNull final JwksCertificateRotator jwksRotator,
+                                                @NonNull final RetryTemplate rotationRetryTemplate,
+                                                @NonNull final DynamicRedisJwksInternalProperties properties) {
+        this.properties = properties;
+        this.jwksRotator = jwksRotator;
+        this.rotationRetryTemplate = rotationRetryTemplate;
     }
 
     /**
