@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.integration.support.locks.LockRegistry;
+import org.springframework.integration.redis.util.RedisLockRegistry;
 import org.springframework.integration.util.CheckedCallable;
 
 import java.time.Duration;
@@ -22,7 +22,7 @@ import java.time.Duration;
 class RedisCertificateRotationTaskUnitTest extends BaseUnitTest {
 
     @Mock
-    LockRegistry lockRegistry;
+    RedisLockRegistry lockRegistry;
     @Mock
     JwkSetDataHolder jwkSetDataHolder;
     @Mock

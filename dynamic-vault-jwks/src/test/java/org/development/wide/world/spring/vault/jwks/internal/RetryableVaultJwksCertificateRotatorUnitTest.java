@@ -13,8 +13,10 @@ import org.development.wide.world.spring.vault.jwks.property.VaultVersionedKvInt
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +25,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import java.time.Duration;
 import java.util.Optional;
 
-@SpringJUnitConfig({
-        RetryableVaultJwksCertificateRotatorUnitTest.UnitTestConfiguration.class
-})
+@ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig({RetryableVaultJwksCertificateRotatorUnitTest.UnitTestConfiguration.class})
 class RetryableVaultJwksCertificateRotatorUnitTest extends BaseUnitTest {
 
     public static final VaultPkiInternalProperties PKI_INTERNAL_PROPERTIES = VaultPkiInternalProperties.builder()

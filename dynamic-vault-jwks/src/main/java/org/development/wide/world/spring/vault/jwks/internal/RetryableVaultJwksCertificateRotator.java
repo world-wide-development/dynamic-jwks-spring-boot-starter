@@ -6,11 +6,14 @@ import org.development.wide.world.spring.jwks.data.JwkSetData;
 import org.development.wide.world.spring.jwks.spi.CertificateRotationFunction;
 import org.development.wide.world.spring.jwks.spi.JwksCertificateRotator;
 import org.development.wide.world.spring.jwks.spi.RetryableJwksCertificateRotator;
+import org.development.wide.world.spring.vault.jwks.exception.CertificateRotationException;
 import org.development.wide.world.spring.vault.jwks.property.DynamicVaultJwksInternalProperties;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.retry.support.RetryTemplate;
+import org.springframework.core.retry.RetryException;
+import org.springframework.core.retry.RetryPolicy;
+import org.springframework.core.retry.RetryTemplate;
 import org.springframework.vault.VaultException;
 
 /**
@@ -29,12 +32,13 @@ public class RetryableVaultJwksCertificateRotator implements RetryableJwksCertif
 
     public RetryableVaultJwksCertificateRotator(@NonNull final JwksCertificateRotator jwksRotator,
                                                 @NonNull final DynamicVaultJwksInternalProperties properties) {
-        this.jwksRotator = jwksRotator;
         this.properties = properties;
-        this.rotationRetryTemplate = RetryTemplate.builder()
-                .maxAttempts(properties.certificateRotationRetries())
-                .retryOn(VaultException.class)
+        this.jwksRotator = jwksRotator;
+        final RetryPolicy rotationRetryPolicy = RetryPolicy.builder()
+                .maxRetries(properties.certificateRotationRetries())
+                .includes(VaultException.class)
                 .build();
+        this.rotationRetryTemplate = new RetryTemplate(rotationRetryPolicy);
     }
 
     /**
@@ -58,7 +62,11 @@ public class RetryableVaultJwksCertificateRotator implements RetryableJwksCertif
     }
 
     private CertificateData rotateCertificateWithRetry(@NonNull final CertificateRotationFunction function) {
-        return rotationRetryTemplate.execute(context -> rotateCertificate(function));
+        try {
+            return rotationRetryTemplate.execute(() -> rotateCertificate(function));
+        } catch (RetryException e) {
+            throw new CertificateRotationException("On retry a certificate rotation exception", e);
+        }
     }
 
 }

@@ -41,9 +41,8 @@ public class KeyStoreTemplate {
     }
 
     /* Private methods */
-    @NonNull
-    private X509Certificate[] extractCertificatesChain(final boolean includeChain,
-                                                       final @NonNull CertificateData certificateData) {
+    private X509Certificate @NonNull [] extractCertificatesChain(final boolean includeChain,
+                                                                 final @NonNull CertificateData certificateData) {
         return Stream.concat(
                 Stream.of(certificateData.x509Certificate()),
                 streamIssuerCertificates(includeChain, certificateData)
