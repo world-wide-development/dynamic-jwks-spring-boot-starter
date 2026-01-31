@@ -57,7 +57,7 @@ allprojects {
     apply(plugin = "org.owasp.dependencycheck")
     apply(plugin = "io.spring.dependency-management")
 
-    version = "0.1.7"
+    version = "4.0.0"
     group = "io.github.world-wide-development"
 
     repositories {
