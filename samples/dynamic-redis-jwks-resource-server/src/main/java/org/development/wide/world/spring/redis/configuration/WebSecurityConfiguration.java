@@ -14,7 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain filterChain(@NonNull final HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(@NonNull final HttpSecurity http) {
         return http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .authorizeHttpRequests(this::setUpAuthorizeHttpRequestsConfigurer)
                 .csrf(AbstractHttpConfigurer::disable)

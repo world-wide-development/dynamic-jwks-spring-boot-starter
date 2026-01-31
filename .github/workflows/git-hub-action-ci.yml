@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: liberica
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew clean jreleaserConfig --build-cache
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: liberica
       - uses: docker/setup-buildx-action@v3
       - uses: gradle/actions/setup-gradle@v4
@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: liberica
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew clean integrationTest integrationTestCodeCoverageReport --build-cache

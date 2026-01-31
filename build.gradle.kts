@@ -4,25 +4,25 @@ plugins {
     id("java")
     id("jvm-test-suite")
     id("jacoco-report-aggregation")
-    id("org.owasp.dependencycheck") version "12.1.3"
-    id("org.jreleaser") version "1.19.0" apply false
+    id("org.owasp.dependencycheck") version "12.2.0"
+    id("org.jreleaser") version "1.22.0" apply false
     id("io.spring.dependency-management") version "1.1.7"
 }
 
+extra["jUnitVersion"] = "6.0.2"
 extra["slf4jVersion"] = "2.0.17"
+extra["jacksonVersion"] = "3.0.4"
 extra["jSpecifyVersion"] = "1.0.0"
-extra["jacksonVersion"] = "2.19.2"
-extra["springBootVersion"] = "3.5.5"
-extra["nimbusJoseVersion"] = "10.4.2"
-extra["springVaultVersion"] = "3.2.0"
-extra["bouncyCastleVersion"] = "1.81"
-extra["springRetryVersion"] = "2.0.12"
-extra["equalsVerifierVersion"] = "4.0.9"
-extra["testcontainersVersion"] = "1.21.3"
-extra["springFrameworkVersion"] = "6.2.10"
-extra["commonsCompressVersion"] = "1.28.0"
-extra["springIntegrationVersion"] = "6.5.1"
-extra["springVaultStarterVersion"] = "4.3.0"
+extra["nimbusJoseVersion"] = "10.7"
+extra["springBootVersion"] = "4.0.2"
+extra["nettyVersion"] = "4.2.9.Final"
+extra["springVaultVersion"] = "4.0.0"
+extra["bouncyCastleVersion"] = "1.83"
+extra["tomcatEmbedVersion"] = "11.0.18"
+extra["equalsVerifierVersion"] = "4.3.1"
+extra["testcontainersVersion"] = "1.21.4"
+extra["springIntegrationVersion"] = "7.0.2"
+extra["springVaultStarterVersion"] = "5.0.1"
 
 extra["nvdApiKey"] = findProperty("nvd.api.key") ?: System.getenv("NVD_API_KEY")
 
@@ -77,27 +77,33 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(21))
+            languageVersion.set(JavaLanguageVersion.of(25))
         }
     }
 
     dependencyManagement {
         dependencies {
-            dependency("org.springframework:spring-web:${property("springFrameworkVersion")}")
-            dependency("org.springframework:spring-context:${property("springFrameworkVersion")}")
-            dependency("org.apache.commons:commons-compress:${property("commonsCompressVersion")}")
+            dependency("org.junit.jupiter:junit-jupiter-api:${property("jUnitVersion")}")
+            dependency("org.junit.jupiter:junit-jupiter-engine:${property("jUnitVersion")}")
+            dependency("io.netty:netty-codec:${property("nettyVersion")}")
+            dependency("io.netty:netty-common:${property("nettyVersion")}")
+            dependency("io.netty:netty-buffer:${property("nettyVersion")}")
+            dependency("io.netty:netty-handler:${property("nettyVersion")}")
+            dependency("io.netty:netty-resolver:${property("nettyVersion")}")
+            dependency("io.netty:netty-transport:${property("nettyVersion")}")
+            dependency("io.netty:netty-transport-native-unix-common:${property("nettyVersion")}")
+//            dependency("org.apache.tomcat.embed:tomcat-embed-core:${property("tomcatEmbedVersion")}")
+//            dependency("org.apache.tomcat.embed:tomcat-embed-websocket:${property("tomcatEmbedVersion")}")
 
             dependency("org.slf4j:jul-to-slf4j:${property("slf4jVersion")}")
             dependency("org.jspecify:jspecify:${property("jSpecifyVersion")}")
             dependency("com.nimbusds:nimbus-jose-jwt:${property("nimbusJoseVersion")}")
             dependency("org.testcontainers:vault:${property("testcontainersVersion")}")
+            dependency("tools.jackson.core:jackson-core:${property("jacksonVersion")}")
+            dependency("tools.jackson.core:jackson-databind:${property("jacksonVersion")}")
             dependency("org.bouncycastle:bcpkix-jdk18on:${property("bouncyCastleVersion")}")
             dependency("org.testcontainers:junit-jupiter:${property("testcontainersVersion")}")
-            dependency("com.fasterxml.jackson.core:jackson-core:${property("jacksonVersion")}")
-            dependency("org.springframework.retry:spring-retry:${property("springRetryVersion")}")
-            dependency("com.fasterxml.jackson.core:jackson-databind:${property("jacksonVersion")}")
             dependency("nl.jqno.equalsverifier:equalsverifier:${property("equalsVerifierVersion")}")
-            dependency("com.fasterxml.jackson.core:jackson-annotations:${property("jacksonVersion")}")
             dependency("org.springframework.vault:spring-vault-core:${property("springVaultVersion")}")
             dependency("org.springframework.boot:spring-boot-starter-test:${property("springBootVersion")}")
             dependency("org.springframework.boot:spring-boot-autoconfigure:${property("springBootVersion")}")

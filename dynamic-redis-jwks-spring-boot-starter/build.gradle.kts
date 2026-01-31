@@ -35,11 +35,13 @@ jreleaser {
         }
     }
     signing {
-        armored.set(true)
         active.set(Active.ALWAYS)
-        publicKey.set(System.getenv("MAVEN_GPG_PUBLIC_KEY"))
-        secretKey.set(System.getenv("MAVEN_GPG_PRIVATE_KEY"))
-        passphrase.set(System.getenv("MAVEN_GPG_PASSPHRASE"))
+        pgp {
+            armored.set(true)
+            publicKey.set("${System.getenv("MAVEN_GPG_PUBLIC_KEY") ?: findProperty("gpg.public.key")}")
+            secretKey.set("${System.getenv("MAVEN_GPG_PRIVATE_KEY") ?: findProperty("gpg.private.key")}")
+            passphrase.set("${System.getenv("MAVEN_GPG_PASSPHRASE") ?: findProperty("gpg.key.passphrase")}")
+        }
     }
     deploy {
         maven {
@@ -47,9 +49,9 @@ jreleaser {
                 register("sonatype") {
                     active.set(Active.ALWAYS)
                     stagingRepository("build/staging-deploy")
-                    username.set(System.getenv("MAVEN_USERNAME"))
-                    password.set(System.getenv("MAVEN_PASSWORD"))
                     url.set("https://central.sonatype.com/api/v1/publisher")
+                    username.set("${System.getenv("MAVEN_USERNAME") ?: findProperty("sonatype.maven.username")}")
+                    password.set("${System.getenv("MAVEN_PASSWORD") ?: findProperty("sonatype.maven.password")}")
                 }
             }
         }

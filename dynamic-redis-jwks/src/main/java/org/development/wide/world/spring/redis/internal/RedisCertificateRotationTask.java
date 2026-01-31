@@ -5,7 +5,7 @@ import org.development.wide.world.spring.jwks.spi.JwkSetDataHolder;
 import org.development.wide.world.spring.redis.property.CertificateRotationInternalProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.integration.support.locks.LockRegistry;
+import org.springframework.integration.redis.util.RedisLockRegistry;
 
 import java.time.Duration;
 
@@ -13,11 +13,11 @@ public class RedisCertificateRotationTask implements CertificateRotationTask {
 
     private static final Logger logger = LoggerFactory.getLogger(RedisCertificateRotationTask.class);
 
-    private final LockRegistry lockRegistry;
+    private final RedisLockRegistry lockRegistry;
     private final JwkSetDataHolder jwkSetDataHolder;
     private final CertificateRotationInternalProperties rotationProperties;
 
-    public RedisCertificateRotationTask(final LockRegistry lockRegistry,
+    public RedisCertificateRotationTask(final RedisLockRegistry lockRegistry,
                                         final JwkSetDataHolder jwkSetDataHolder,
                                         final CertificateRotationInternalProperties rotationProperties) {
         this.lockRegistry = lockRegistry;
