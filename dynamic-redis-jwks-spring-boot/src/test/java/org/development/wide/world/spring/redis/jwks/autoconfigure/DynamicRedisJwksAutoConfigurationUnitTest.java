@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.integration.redis.util.RedisLockRegistry;
-import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -50,10 +49,10 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
             assertThat(context).hasSingleBean(SchedulingConfigurer.class);
             assertThat(context).hasSingleBean(CertificateService.class);
             assertThat(context).hasSingleBean(CertificateIssuer.class);
+            assertThat(context).hasSingleBean(RedisLockRegistry.class);
             assertThat(context).hasSingleBean(KeyStoreTemplate.class);
             assertThat(context).hasSingleBean(InternalKeyStore.class);
             assertThat(context).hasSingleBean(JwkSetConverter.class);
-            assertThat(context).hasSingleBean(LockRegistry.class);
             assertThat(context).hasSingleBean(JWKSource.class);
         });
     }
@@ -77,10 +76,10 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
             assertThat(context).hasSingleBean(SchedulingConfigurer.class);
             assertThat(context).hasSingleBean(CertificateService.class);
             assertThat(context).hasSingleBean(CertificateIssuer.class);
+            assertThat(context).hasSingleBean(RedisLockRegistry.class);
             assertThat(context).hasSingleBean(KeyStoreTemplate.class);
             assertThat(context).hasSingleBean(InternalKeyStore.class);
             assertThat(context).hasSingleBean(JwkSetConverter.class);
-            assertThat(context).hasSingleBean(LockRegistry.class);
             assertThat(context).hasSingleBean(JWKSource.class);
         });
     }
@@ -103,10 +102,10 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
             assertThat(context).doesNotHaveBean(SchedulingConfigurer.class);
             assertThat(context).doesNotHaveBean(CertificateService.class);
             assertThat(context).doesNotHaveBean(CertificateIssuer.class);
+            assertThat(context).doesNotHaveBean(RedisLockRegistry.class);
             assertThat(context).doesNotHaveBean(KeyStoreTemplate.class);
             assertThat(context).doesNotHaveBean(InternalKeyStore.class);
             assertThat(context).doesNotHaveBean(JwkSetConverter.class);
-            assertThat(context).doesNotHaveBean(LockRegistry.class);
             assertThat(context).doesNotHaveBean(JWKSource.class);
         });
     }
@@ -124,7 +123,7 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
             assertThat(context).doesNotHaveBean(JwksCertificateRotationScheduleConfiguration.class);
             assertThat(context).doesNotHaveBean(CertificateRotationTask.class);
             assertThat(context).doesNotHaveBean(SchedulingConfigurer.class);
-            assertThat(context).doesNotHaveBean(LockRegistry.class);
+            assertThat(context).doesNotHaveBean(RedisLockRegistry.class);
             assertThat(context).hasSingleBean(RetryableJwksCertificateRotator.class);
             assertThat(context).hasSingleBean(JwkSetDataHolderConfiguration.class);
             assertThat(context).hasSingleBean(JwksCertificateRotator.class);
@@ -156,7 +155,7 @@ class DynamicRedisJwksAutoConfigurationUnitTest extends BaseUnitTest {
                         "dynamic-jwks.redis-storage.certificate-rotation.schedule.enabled"
                 }
         )
-        LockRegistry lockRegistry() {
+        RedisLockRegistry lockRegistry() {
             return BDDMockito.mock(RedisLockRegistry.class);
         }
 

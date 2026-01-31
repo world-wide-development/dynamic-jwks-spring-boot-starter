@@ -1,8 +1,9 @@
 plugins {
-    id("org.springframework.boot") version "3.5.5"
+    id("org.springframework.boot") version "4.0.2"
 }
 
-val springCloudVersion = "2025.0.0"
+val authServerVersion = "1.5.5"
+val springCloudVersion = "2025.1.1"
 
 tasks.getByName("dependencyCheckAnalyze") {
     enabled = false
@@ -10,12 +11,6 @@ tasks.getByName("dependencyCheckAnalyze") {
 
 tasks.getByName("dependencyCheckAggregate") {
     enabled = false
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
 }
 
 dependencies {

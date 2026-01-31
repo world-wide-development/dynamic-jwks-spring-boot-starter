@@ -55,7 +55,7 @@ public class DefaultJwksCertificateRotator implements JwksCertificateRotator {
     }
 
     /* Private methods */
-    private CertificateData rotateCertificateData(@NonNull final CertificateRotationData rotationData) {
+    private @NonNull CertificateData rotateCertificateData(@NonNull final CertificateRotationData rotationData) {
         final String key = rotationData.key();
         final Duration rotateBefore = ofNullable(rotationData.rotateBefore())
                 .orElse(Duration.ZERO);
