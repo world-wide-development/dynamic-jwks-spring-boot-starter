@@ -46,7 +46,7 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew clean test testCodeCoverageReport --build-cache
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v6
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -64,7 +64,7 @@ jobs:
           distribution: liberica
       - uses: gradle/actions/setup-gradle@v5
       - run: ./gradlew clean integrationTest integrationTestCodeCoverageReport --build-cache
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v6
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
